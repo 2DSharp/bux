@@ -34,7 +34,8 @@ build/
 .cache/
 # dependencies
 node/
-/node_modules
+
+node_modules/
 /.pnp
 .pnp.js
 
