@@ -1,0 +1,10 @@
+@charset "utf-8";
+
+$blue: #3273DC;
+$primary: $blue;
+
+$navbar-height: 1rem;
+$modal-card-head-padding: 10px;
+$modal-card-title-size: 1rem;
+// Import the rest of Bulma
+@import "../../node_modules/bulma/bulma";
