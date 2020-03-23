@@ -1,23 +1,23 @@
 package me.twodee.bux.DTO.HelperValueObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Notification
 {
-    List<Error> errors = new ArrayList<>();
+    Map<String, String> errors = new HashMap<>();
 
     public void addError(Error error)
     {
-        errors.add(error);
+        errors.put(error.getKey(), error.getMessage());
     }
 
-    public List<Error> getErrors()
+    public Map<String, String> getErrors()
     {
         return errors;
     }
 
-    public void setErrors(List<Error> errors)
+    public void setErrors(Map<String, String> errors)
     {
         this.errors = errors;
     }
