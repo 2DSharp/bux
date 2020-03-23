@@ -58,7 +58,8 @@ public class User
         this.username = username;
         this.email = email;
         this.password = password;
-        this.hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
+        if (password != null)
+            this.hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
     public void setRole(Role role)
