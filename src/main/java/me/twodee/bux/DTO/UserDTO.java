@@ -36,6 +36,8 @@ public class UserDTO extends DataTransferObject
         this.type = Type.LOGIN;
     }
 
+    public UserDTO() {}
+
     public String getName()
     {
         return name;
