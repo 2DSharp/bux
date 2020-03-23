@@ -20,14 +20,14 @@ public class User
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Size(min = 3, max = 16, message = "Username must be between 3 to 16 characters")
-    @Pattern(regexp = "^(?=.*[a-zA-Z])([a-zA-Z0-9]+)$", message = "Username must be an alphanumeric string, contain one letter and no spaces")
+    @Size(min = 3, max = 16, message = "{validation.username.size}")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])([a-zA-Z0-9]+)$", message = "{validation.username.pattern}")
     @NotBlank
     @Column(unique = true)
     private String username;
 
-    @Pattern(regexp = "^[\\p{L}\\p{M}\\p{Pd} .'-]+$", message = "Only alphabets, spaces and dots allowed in your name")
-    @Size(min = 2, max = 255, message = "Please keep your name in 2-255 characters")
+    @Pattern(regexp = "^[\\p{L}\\p{M}\\p{Pd} .'-]+$", message = "{validation.name.pattern}")
+    @Size(min = 2, max = 255, message = "{validation.name.size}")
     @NotBlank
     private String name;
 
@@ -35,15 +35,15 @@ public class User
     @Enumerated(EnumType.STRING)
     private Role role = Role.STANDARD;
 
-    @Email
-    @NotBlank
+    @Email(message = "{validation.email.pattern}")
+    @NotBlank(message = "{validation.email.empty}")
     @Column(unique = true)
     private String email;
 
     @Transient
-    @NotBlank(message = "Password can't be empty")
-    @Size(min = 8, message = "Password too weak")
-    @Pattern(regexp = "^(?=.*[a-zA-Z]).{8,}$", message = "Password too weak")
+    @NotBlank(message = "{validation.password.empty}")
+    @Size(min = 8, message = "{validation.password.weak}")
+    @Pattern(regexp = "^(?=.*[a-zA-Z]).{8,}$", message = "{validation.password.weak}")
     private  String password;
 
     private String hashedPassword;
