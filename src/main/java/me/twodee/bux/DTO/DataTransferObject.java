@@ -18,4 +18,9 @@ public abstract class DataTransferObject
     {
         this.notification = notification;
     }
+
+    public void appendNotification(Notification notification)
+    {
+        this.notification.getErrors().putAll(notification.getErrors());
+    }
 }
