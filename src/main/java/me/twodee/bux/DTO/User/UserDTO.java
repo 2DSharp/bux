@@ -1,4 +1,6 @@
-package me.twodee.bux.DTO;
+package me.twodee.bux.DTO.User;
+
+import me.twodee.bux.DTO.DataTransferObject;
 
 public class UserDTO extends DataTransferObject
 {
@@ -7,10 +9,6 @@ public class UserDTO extends DataTransferObject
     private String email;
     private String password;
 
-    enum Type {
-        REGISTRATION, LOGIN, PUBLIC
-    }
-    private Type type;
 
     public UserDTO(String name, String username, String email, String password)
     {
@@ -18,22 +16,6 @@ public class UserDTO extends DataTransferObject
         this.username = username;
         this.email = email;
         this.password = password;
-        this.type = Type.REGISTRATION;
-    }
-
-    public UserDTO(String name, String username)
-    {
-        this.name = name;
-        this.username = username;
-        this.type = Type.PUBLIC;
-    }
-
-    public UserDTO(String username, String email, String password)
-    {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.type = Type.LOGIN;
     }
 
     public UserDTO() {}
@@ -56,10 +38,5 @@ public class UserDTO extends DataTransferObject
     public String getPassword()
     {
         return password;
-    }
-
-    public Type getType()
-    {
-        return type;
     }
 }

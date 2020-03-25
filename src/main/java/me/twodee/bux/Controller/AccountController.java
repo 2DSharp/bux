@@ -1,7 +1,7 @@
 package me.twodee.bux.Controller;
 
 import me.twodee.bux.DTO.HelperValueObject.Notification;
-import me.twodee.bux.DTO.UserDTO;
+import me.twodee.bux.DTO.User.UserDTO;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
