@@ -3,7 +3,7 @@ package me.twodee.bux.Controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.twodee.bux.BuxConfiguration;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
-import me.twodee.bux.DTO.UserDTO;
+import me.twodee.bux.DTO.User.UserDTO;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Service.AccountService;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ public class AccountControllerTest
     private AccountService service;
 
     @Test
-    public void testEmptyRequest() throws Exception
+    public void testEmptyRegistration() throws Exception
     {
         MvcResult mvcResult = this.mockMvc.perform(post("/accounts/create")).andDo(print())
                 .andExpect(status().isBadRequest())
@@ -52,7 +52,21 @@ public class AccountControllerTest
     }
 
     @Test
-    public void testFailedRequest() throws Exception
+    public void testSuccessfulRequest() throws Exception
+    {
+        Map<String, String> map = new HashMap<>();
+        map.put("username", "aas");
+
+        this.mockMvc.perform(post("/accounts/create").characterEncoding("UTF-8").contentType(MediaType.APPLICATION_JSON)
+                                     .content(asJsonString(map)))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.errors").isEmpty())
+                .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    public void testFailedRegistration() throws Exception
     {
         doAnswer((Answer<Void>) invocation -> {
 
