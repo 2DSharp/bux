@@ -16,14 +16,14 @@ import javax.validation.Validator;
 import java.util.Set;
 
 @Service
-public class Account
+public class AccountService
 {
     private final UserRepository repository;
     private final MessageByLocaleService messageByLocaleService;
     private final Validator validator;
 
     @Autowired
-    public Account(UserRepository repository, MessageByLocaleService messageByLocaleService, Validator validator)
+    public AccountService(UserRepository repository, MessageByLocaleService messageByLocaleService, Validator validator)
     {
         this.repository = repository;
         this.messageByLocaleService = messageByLocaleService;
@@ -37,9 +37,9 @@ public class Account
             user.setRole(role);
 
             Set<ConstraintViolation<User>> violations = validator.validate(user);
-
             dto.setNotification(DomainToDTOConverter.convert(violations));
-            dto.appendNotification(checkForDuplicates(dto.getUsername(), dto.getEmail()));
+            if (!dto.getNotification().hasErrors())
+                dto.appendNotification(checkForDuplicates(dto.getUsername(), dto.getEmail()));
 
             if (!dto.getNotification().hasErrors())
                 repository.save(user);
