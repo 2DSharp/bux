@@ -61,4 +61,22 @@ class UserRepositoryTest
         assertThrows(DataIntegrityViolationException.class,
                      () -> repository.saveAndFlush(new User("Donalds", "donald", "d2@2d.co", "helloworsld")));
     }
+
+    @Test
+    void findUserByEmailOrUsername()
+    {
+        repository.saveAndFlush(new User("Donald", "donald", "d2@2d.co", "helloworld"));
+
+        Optional<User> user = repository.findUserByEmailOrUsername("", "donald");
+        assertTrue(user.isPresent());
+        assertThat(user.get().getName(), equalTo("Donald"));
+
+        user = repository.findUserByEmailOrUsername("d2@2d.co", "");
+        assertTrue(user.isPresent());
+        assertThat(user.get().getName(), equalTo("Donald"));
+
+        user = repository.findUserByEmailOrUsername("d2@2d.co", "donald");
+        assertTrue(user.isPresent());
+        assertThat(user.get().getName(), equalTo("Donald"));
+    }
 }
