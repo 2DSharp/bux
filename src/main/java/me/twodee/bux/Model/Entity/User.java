@@ -22,7 +22,7 @@ public class User
 
     @Size(min = 3, max = 16, message = "{validation.username.size}")
     @Pattern(regexp = "^(?=.*[a-zA-Z])([a-zA-Z0-9]+)$", message = "{validation.username.pattern}")
-    @NotBlank
+    @NotBlank(message = "{validation.username.empty}")
     @Column(unique = true)
     private String username;
 
