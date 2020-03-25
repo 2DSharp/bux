@@ -3,7 +3,9 @@ package me.twodee.bux.Model.Repository;
 import me.twodee.bux.Model.Entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.annotation.Resource;
 
@@ -13,7 +15,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@DataJpaTest
 class UserRepositoryTest
 {
     @Resource
@@ -26,11 +28,14 @@ class UserRepositoryTest
     }
 
     @Test
-    void testUsernameFetchFail()
+    void testSuccessfulSave()
     {
         repository.save(new User("Donald", "donald", "d2@2d.co", "helloworld"));
         assertThat(repository.findAll().get(0).getName(), equalTo("Donald"));
-
+    }
+    @Test
+    void testUsernameFetchFail()
+    {
         Optional<User> user = repository.findUserByUsername("donalds");
         assertFalse(user.isPresent());
     }
@@ -44,5 +49,16 @@ class UserRepositoryTest
         Optional<User> user = repository.findUserByUsername("donald");
         assertTrue(user.isPresent());
         assertThat(user.get().getEmail(), equalTo("d2@2d.co"));
+    }
+
+    @Test
+    void testDuplicateEntry()
+    {
+        repository.saveAndFlush(new User("Donald", "donald", "d2@2d.co", "helloworld"));
+        assertThat(repository.findAll().get(0).getName(), equalTo("Donald"));
+        assertThat(repository.count(), equalTo(1L));
+
+        assertThrows(DataIntegrityViolationException.class,
+                     () -> repository.saveAndFlush(new User("Donalds", "donald", "d2@2d.co", "helloworsld")));
     }
 }
