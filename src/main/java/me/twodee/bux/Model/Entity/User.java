@@ -1,7 +1,7 @@
 package me.twodee.bux.Model.Entity;
 
 
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import me.twodee.bux.Util.CryptoUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -59,7 +59,7 @@ public class User
         this.email = email;
         this.password = password;
         if (password != null)
-            this.hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
+            this.hashedPassword = CryptoUtil.hashPassword(password);
     }
 
     public void setRole(Role role)
