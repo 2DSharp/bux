@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.twodee.bux.BuxConfiguration;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.User.UserDTO;
+import me.twodee.bux.DTO.User.UserLoginDTO;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Service.AccountService;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AccountController.class)
 @ImportAutoConfiguration(BuxConfiguration.class)
-public class AccountControllerTest
+public class AccountControllerIT
 {
     @Autowired
     private MockMvc mockMvc;
@@ -61,8 +63,52 @@ public class AccountControllerTest
                                      .content(asJsonString(map)))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.errors").isEmpty())
+                .andExpect(jsonPath("$.errors").doesNotExist())
                 .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    void testSuccessfulLogin() throws Exception
+    {
+        UserLoginDTO dto = new UserLoginDTO("dedipyaman", "somepassword");
+        when(service.login(any())).thenReturn("someJWTString");
+        this.mockMvc.perform(post("/accounts/login")
+                                     .characterEncoding("UTF-8")
+                                     .contentType(MediaType.APPLICATION_JSON).content(asJsonString(dto)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.errors").doesNotExist())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.auth-token").value("someJWTString"));
+    }
+
+    @Test
+    void testFailedLogin() throws Exception
+    {
+        UserLoginDTO senderDTO = new UserLoginDTO("dedipyaman", "somepassword");
+
+        doAnswer(invocationOnMock -> {
+            UserLoginDTO dto = invocationOnMock.getArgument(0);
+            Map<String, String> errors = new HashMap<>();
+            errors.put("identifier", "identifier.error");
+            errors.put("password", "password.error");
+
+            Notification note = new Notification();
+            note.setErrors(errors);
+            dto.setNotification(note);
+            return null;
+
+        }).when(service).login(any());
+
+        this.mockMvc.perform(post("/accounts/login").characterEncoding("UTF-8")
+                                     .contentType(MediaType.APPLICATION_JSON)
+                                     .content(asJsonString(senderDTO)))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errors.password", is("password.error")))
+                .andExpect(jsonPath("$.errors.identifier", is("identifier.error")))
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.auth-token").doesNotExist());
     }
 
     @Test
