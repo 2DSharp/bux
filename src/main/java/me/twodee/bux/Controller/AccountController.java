@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
-public class AccountController
+public class AccountController extends RestAPI
 {
     private final AccountService accountService;
 
@@ -51,4 +51,5 @@ public class AccountController
         response = new LoginResponse(jws);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 }
