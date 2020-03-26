@@ -6,7 +6,6 @@ import java.util.Map;
 public class Notification
 {
     Map<String, String> errors = new HashMap<>();
-    private boolean success = true;
 
     public void addError(Error error)
     {
@@ -26,11 +25,5 @@ public class Notification
     public boolean hasErrors()
     {
         return !errors.isEmpty();
-    }
-
-    public boolean getSuccess()
-    {
-        success = errors.isEmpty();
-        return success;
     }
 }
