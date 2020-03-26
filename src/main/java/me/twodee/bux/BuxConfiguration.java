@@ -11,7 +11,8 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 public class BuxConfiguration
 {
     @Bean
-    public MessageSource messageSource() {
+    public MessageSource messageSource()
+    {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:messages");
         messageSource.setDefaultEncoding("UTF-8");
@@ -20,7 +21,8 @@ public class BuxConfiguration
 
     @Primary
     @Bean
-    public LocalValidatorFactoryBean validator() {
+    public LocalValidatorFactoryBean validator()
+    {
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
         bean.setValidationMessageSource(messageSource());
         return bean;
