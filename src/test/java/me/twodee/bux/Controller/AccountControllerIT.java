@@ -79,7 +79,7 @@ public class AccountControllerIT
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.errors").doesNotExist())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.auth-token").value("someJWTString"));
+                .andExpect(jsonPath("$.auth_token").value("someJWTString"));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class AccountControllerIT
                 .andExpect(jsonPath("$.errors.password", is("password.error")))
                 .andExpect(jsonPath("$.errors.identifier", is("identifier.error")))
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.auth-token").doesNotExist());
+                .andExpect(jsonPath("$.auth_token").doesNotExist());
     }
 
     @Test
