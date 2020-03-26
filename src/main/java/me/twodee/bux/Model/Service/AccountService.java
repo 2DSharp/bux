@@ -9,31 +9,28 @@ import me.twodee.bux.DTO.User.UserDTO;
 import me.twodee.bux.DTO.User.UserLoginDTO;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.UserRepository;
-import me.twodee.bux.Provider.LocaleMessagingValidationProvider;
+import me.twodee.bux.Provider.SpringHelperDependencyProvider;
 import me.twodee.bux.Util.CryptoUtil;
 import me.twodee.bux.Util.DomainToDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import java.security.Key;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 
 @Service
 public class AccountService
 {
+
     private final UserRepository repository;
-    private final LocaleMessagingValidationProvider provider;
+    private final SpringHelperDependencyProvider provider;
 
     @Autowired
     public AccountService(UserRepository repository,
-                          LocaleMessagingValidationProvider provider)
+                          SpringHelperDependencyProvider provider)
     {
         this.repository = repository;
         this.provider = provider;
@@ -87,8 +84,9 @@ public class AccountService
     private String getJWTStringIfValidPassword(User user, UserLoginDTO dto)
     {
         if (CryptoUtil.verifyPassword(dto.getPassword(), user.getHashedPassword())) {
-            Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-            return Jwts.builder().setSubject("Joe").signWith(key).compact();
+            Key key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(
+                    Objects.requireNonNull(provider.getEnvironment().getProperty("jwt.secret"))));
+            return Jwts.builder().setSubject("Joe").signWith(key, SignatureAlgorithm.HS256).compact();
         }
         dto.setNotification(createNotificationForInvalidLogin("password"));
         return null;

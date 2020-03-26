@@ -1,8 +1,10 @@
 package me.twodee.bux.Model.Service;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import me.twodee.bux.DTO.User.UserDTO;
 import me.twodee.bux.DTO.User.UserLoginDTO;
-import me.twodee.bux.Provider.LocaleMessagingValidationProvider;
+import me.twodee.bux.Provider.SpringHelperDependencyProvider;
 import me.twodee.bux.Util.MessageByLocaleService;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.UserRepository;
@@ -10,11 +12,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
 
+import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,7 +34,7 @@ class AccountServiceTest
     UserRepository repository;
 
     @Mock
-    LocaleMessagingValidationProvider provider;
+    SpringHelperDependencyProvider provider;
 
     @Mock
     MessageByLocaleService messageByLocaleService;
@@ -128,9 +132,18 @@ class AccountServiceTest
         Optional<User> user = Optional.of(new User("John", "dedipyaman", "2d@twodee.me", "qwerty1234"));
 
         when(repository.findUserByEmailOrUsername(anyString(), anyString())).thenReturn(user);
+        Environment env = mock(Environment.class);
+        when(provider.getEnvironment()).thenReturn(env);
+        when(env.getProperty("jwt.secret")).thenReturn("Rr59hcBFAEUup+ivs2UIUXmRgKpKPaaLyowQweqyPPA=");
 
-        System.out.println(accountService.login(dto));
-        assertThat(accountService.login(dto), is(not(emptyString())));
+        String jws = accountService.login(dto);
+        assertThat(jws, is(not(emptyString())));
+        System.out.println(jws);
+
+        assertThat(Jwts.parserBuilder().setSigningKey(
+                Keys.hmacShaKeyFor(Base64.getDecoder().decode(
+                        "Rr59hcBFAEUup+ivs2UIUXmRgKpKPaaLyowQweqyPPA="))).build().parseClaimsJws(
+                jws).getBody().getSubject(), equalTo("Joe"));
     }
 
     @Test
@@ -153,7 +166,8 @@ class AccountServiceTest
 
         Optional<User> user = Optional.of(new User("John", "dedipyaman", "2d@twodee.me", "qwerty1234"));
         when(repository.findUserByEmailOrUsername(anyString(), anyString())).thenReturn(user);
-        when(messageByLocaleService.getMessage("validation.login.password.invalid")).thenReturn("{validation.login.password.invalid}");
+        when(messageByLocaleService.getMessage("validation.login.password.invalid")).thenReturn(
+                "{validation.login.password.invalid}");
 
         assertNull(accountService.login(dto));
         assertTrue(dto.getNotification().hasErrors());
@@ -168,11 +182,13 @@ class AccountServiceTest
         UserLoginDTO dto = new UserLoginDTO("dedipyaman", "helloworld");
 
         when(repository.findUserByEmailOrUsername(anyString(), anyString())).thenReturn(Optional.empty());
-        when(messageByLocaleService.getMessage("validation.login.identifier.invalid")).thenReturn("{validation.login.identifier.invalid}");
+        when(messageByLocaleService.getMessage("validation.login.identifier.invalid")).thenReturn(
+                "{validation.login.identifier.invalid}");
 
         assertNull(accountService.login(dto));
         assertTrue(dto.getNotification().hasErrors());
         assertThat(dto.getNotification().getErrors().size(), equalTo(1));
-        assertThat(dto.getNotification().getErrors().get("identifier"), equalTo("{validation.login.identifier.invalid}"));
+        assertThat(dto.getNotification().getErrors().get("identifier"),
+                   equalTo("{validation.login.identifier.invalid}"));
     }
 }
