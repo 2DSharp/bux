@@ -6,5 +6,18 @@ $primary: $blue;
 $navbar-height: 1rem;
 $modal-card-head-padding: 10px;
 $modal-card-title-size: 1rem;
+
+.spc-10 {
+  margin: 10px !important;
+  &.bottom {
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+  }
+  &.top {
+    margin-bottom: 0 !important;
+    margin-top: 10px !important;
+  }
+}
+
 // Import the rest of Bulma
 @import "../../node_modules/bulma/bulma";
