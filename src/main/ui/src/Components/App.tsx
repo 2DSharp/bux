@@ -3,8 +3,9 @@ import 'bulma/css/bulma.css'
 import '../sass/base.scss'
 import Axios from "axios";
 
-import GlobalNavbar from "./Layout/GlobalNavbar";
-import EmptyProjectsPrompt from "./WorkspaceContent/EmptyProjectsPrompt";
+import Login from "./Page/Login";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
+import Registration from "./Page/Registration";
 
 
 const App = (props: any) => {
@@ -30,10 +31,17 @@ const App = (props: any) => {
             });
     };
     return (
-        <>
-            <GlobalNavbar/>
+        <BrowserRouter>
 
-        </>
+            <Switch>
+                <Route exact path="/">
+                    <Login/>
+                </Route>
+                <Route path="/accounts/create">
+                    <Registration />
+                </Route>
+            </Switch>
+        </BrowserRouter>
     );
 };
 
