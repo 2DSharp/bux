@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FormEvent, FormEventHandler, useState} from 'react';
+import React, {ChangeEvent, FormEvent, useState} from 'react';
 import 'bulma/css/bulma.css'
 import '../sass/base.scss'
 import Axios from "axios";
