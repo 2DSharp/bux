@@ -1,8 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
+import axios from 'axios';
+import App from "./Components/App";
+
+axios.defaults.baseURL = 'http://localhost:2310/api/';
+//axios.defaults.headers.common['Authorization'] = 'AUTH TOKEN';
+axios.defaults.headers.post['Content-Type'] = 'application/text';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
