@@ -44,7 +44,7 @@ public class AccountControllerIT
     @Test
     public void testEmptyRegistration() throws Exception
     {
-        MvcResult mvcResult = this.mockMvc.perform(post("/accounts/create")).andDo(print())
+        MvcResult mvcResult = this.mockMvc.perform(post("/api/accounts/create")).andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(
                         "Malformed request. You either sent nothing or there is a formatting error."))
@@ -59,7 +59,7 @@ public class AccountControllerIT
         Map<String, String> map = new HashMap<>();
         map.put("username", "aas");
 
-        this.mockMvc.perform(post("/accounts/create").characterEncoding("UTF-8").contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/api/accounts/create").characterEncoding("UTF-8").contentType(MediaType.APPLICATION_JSON)
                                      .content(asJsonString(map)))
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -72,7 +72,7 @@ public class AccountControllerIT
     {
         UserLoginDTO dto = new UserLoginDTO("dedipyaman", "somepassword");
         when(service.login(any())).thenReturn("someJWTString");
-        this.mockMvc.perform(post("/accounts/login")
+        this.mockMvc.perform(post("/api/accounts/login")
                                      .characterEncoding("UTF-8")
                                      .contentType(MediaType.APPLICATION_JSON).content(asJsonString(dto)))
                 .andDo(print())
@@ -100,7 +100,7 @@ public class AccountControllerIT
 
         }).when(service).login(any());
 
-        this.mockMvc.perform(post("/accounts/login").characterEncoding("UTF-8")
+        this.mockMvc.perform(post("/api/accounts/login").characterEncoding("UTF-8")
                                      .contentType(MediaType.APPLICATION_JSON)
                                      .content(asJsonString(senderDTO)))
                 .andDo(print())
@@ -132,7 +132,7 @@ public class AccountControllerIT
         Map<String, String> map = new HashMap<>();
         map.put("username", "aas");
 
-        this.mockMvc.perform(post("/accounts/create").characterEncoding("UTF-8").contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/api/accounts/create").characterEncoding("UTF-8").contentType(MediaType.APPLICATION_JSON)
                                      .content(asJsonString(map)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
