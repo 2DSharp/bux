@@ -12,7 +12,6 @@ public class UserLoginDTO extends DataTransferObject
     private String identifier;
 
     @NotBlank(message = "{validation.login.password.invalid}")
-    @Size(min = 8, message = "{validation.login.password.invalid}")
     private String password;
 
     public UserLoginDTO(@NotBlank @Size(min = 3) String identifier, @NotBlank @Size(min = 8) String password)
