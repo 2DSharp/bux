@@ -4,6 +4,7 @@ import HeroFullPage from "../Layout/HeroFullPageProps";
 import {useForm} from "react-hook-form";
 import {Link} from "react-router-dom";
 import cx from 'classnames';
+import "../../sass/card-form.scss"
 
 const Registration = () => {
     type FormData = {
@@ -130,11 +131,11 @@ const Registration = () => {
                                            minLength: {value: 8, message: errorMsgs.passwordSize},
                                        })}
                                        placeholder="Password"/>
-                                <span className="icon is-small is-left">
-                                    <i className="mdi mdi-lock"/>
+                                    <span className="icon is-small is-left">
+                                        <i className="mdi mdi-lock"/>
                                     </span>
-                                <span onClick={togglePassword} className="icon clickable is-small is-right">
-                                    <i className={eyeStatus}/>
+                                    <span onClick={togglePassword} className="icon clickable is-small is-right">
+                                        <i className={eyeStatus}/>
                                     </span>
                                 {errors.password && <p className="help is-danger">{errors.password.message}</p>}
                             </div>
@@ -143,6 +144,11 @@ const Registration = () => {
                             <button className="button is-fullwidth is-primary">
                                 Register
                             </button>
+                        </div>
+                        <div className="field vertically-spaced small">
+                            <span className={"formText"}>
+                                By registering you are agreeing to the <a href="#">terms and conditions</a>
+                            </span>
                         </div>
                     </form>
                     <hr/>
