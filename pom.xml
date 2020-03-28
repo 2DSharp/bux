@@ -102,7 +102,7 @@
                 <configuration>
                     <nodeVersion>v8.10.0</nodeVersion>
                     <npmVersion>6.13.1</npmVersion>
-                    <workingDirectory>src/main/ui</workingDirectory>
+                    <workingDirectory>src/main/react</workingDirectory>
                 </configuration>
                 <executions>
                     <execution>
@@ -142,7 +142,7 @@
                             <outputDirectory>${basedir}/target/classes/resources</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${basedir}/src/main/ui/build</directory>
+                                    <directory>${basedir}/src/main/react/build</directory>
                                     <filtering>true</filtering>
                                 </resource>
                             </resources>
