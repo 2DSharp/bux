@@ -1,4 +1,3 @@
-@import "base";
 
 $card-content-padding: 2rem;
 
@@ -18,11 +17,17 @@ strong {
   }
 }
 
-.icon {
-  &.clickable {
-    cursor: pointer !important;
+.clickable {
+  pointer-events: initial !important;
+  cursor: pointer;
+}
+.mdi {
+  &.active-gray {
+    color: #4a4a4a;
   }
-  &.clickable:hover {
-    color: $primary;
+  &.active-red {
+    color: #ad2739;
   }
 }
+
+@import "base";
