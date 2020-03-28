@@ -11,10 +11,12 @@ const Login = () => {
             <>
                 <Card>
                     <>
-                        <div className="field">
-                            <label className="label">Username or email address</label>
+                        <div className="spc-10 bottom has-text-centered">
+                            <strong className="head">Login</strong>
+                        </div>
+                        <div className="field vertically-spaced">
                             <p className="control has-icons-left has-icons-right">
-                                <input className="input" type="email" placeholder="Email"/>
+                                <input className="input" type="email" placeholder="Email or Username"/>
                                 <span className="icon is-small is-left">
                                     <i className="mdi mdi-face-profile"/>
                                 </span>
@@ -23,8 +25,7 @@ const Login = () => {
                                 </span>
                             </p>
                         </div>
-                        <div className="field">
-                            <label className="label">Password</label>
+                        <div className="field vertically-spaced">
                             <p className="control has-icons-left has-icons-right">
                                 <input className="input" type="password" placeholder="Password"/>
                                 <span className="icon is-small is-left">
@@ -36,15 +37,17 @@ const Login = () => {
                             </p>
                         </div>
                         <div className="container has-text-centered">
-                            <button className="button is-primary">
+                            <button className="button is-fullwidth is-primary">
                                 Login
                             </button>
                         </div>
+                        <hr />
+                        <div className="container has-text-centered spc-10">
+                            <Link to="/accounts/create">Don't have an account yet? Create one!</Link>
+                        </div>
                     </>
                 </Card>
-                <div className="container has-text-centered spc-10">
-                    <Link to="/accounts/create">Don't have an account yet? Create one!</Link>
-                </div>
+
             </>
         </HeroFullPage>
     );
