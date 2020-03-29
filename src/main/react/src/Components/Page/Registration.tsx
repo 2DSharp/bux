@@ -47,7 +47,7 @@ const Registration = () => {
 
 
     return (
-        <HeroFullPage width={4} title={"Get started with Bux!"}>
+        <HeroFullPage width={4}>
             <Card>
                 <>
                     <div className="spc-10 bottom has-text-centered">
