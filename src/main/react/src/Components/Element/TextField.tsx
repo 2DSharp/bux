@@ -10,9 +10,10 @@ export interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLA
     hasRightErrorIcon?: boolean
     rightIcon?: string
     onChange?: ChangeEventHandler<HTMLInputElement>
-    forwardRef: React.Ref<HTMLInputElement>
+    forwardRef?: React.Ref<HTMLInputElement>
     rightIconClickable?: boolean;
     onRightIconClick?: MouseEventHandler<HTMLSpanElement>
+    label?: string
 }
 
 const TextField = (props: TextFieldProps) => {
@@ -38,6 +39,9 @@ const TextField = (props: TextFieldProps) => {
     });
     return (
         <div className={controlClass}>
+            {props.label &&
+            <label className="label">{props.label} {props.required && <span style={{color: "red"}}>*</span>}</label>
+            }
             <input type={(props.type) ? props.type : "text"} placeholder={props.placeholder} name={props.name}
                    onChange={props.onChange}
                    className={inputClass}
@@ -46,14 +50,14 @@ const TextField = (props: TextFieldProps) => {
             />
             {props.leftIcon &&
             <span className="icon is-small is-left">
-                        <i className={`mdi ${props.leftIcon}`}/>
-                    </span>
+                <i className={`mdi ${props.leftIcon}`}/>
+            </span>
             }
             {((props.error && props.hasRightErrorIcon) || props.rightIcon) &&
 
             <span onClick={props.onRightIconClick} className={rightIconContainerClass}>
-                        <i className={`${rightIconClass} ${(props.rightIconClickable) ? props.rightIcon : "mdi-exclamation-thick"}`}/>
-                    </span>
+                <i className={`${rightIconClass} ${(props.rightIconClickable) ? props.rightIcon : "mdi-exclamation-thick"}`}/>
+            </span>
             }
             {props.error &&
             <p className="help is-danger">{props.errorMsg}</p>

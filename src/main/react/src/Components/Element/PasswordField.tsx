@@ -12,7 +12,7 @@ const PasswordField = (props: TextFieldProps) => {
         }
     };
     return (
-        <TextField error={props.error }
+        <TextField error={props.error}
                    errorMsg={props.errorMsg}
                    forwardRef={props.forwardRef}
                    onChange={props.onChange}
@@ -22,6 +22,7 @@ const PasswordField = (props: TextFieldProps) => {
                    rightIcon="mdi-eye"
                    rightIconClickable={true}
                    onRightIconClick={togglePassword}
+                   label={props.label}
         />
     );
 };
