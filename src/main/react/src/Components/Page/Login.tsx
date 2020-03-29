@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import '@mdi/font/css/materialdesignicons.min.css'
 import {Link} from "react-router-dom";
 import HeroFullPage from "../Layout/HeroFullPageProps";
@@ -6,6 +6,9 @@ import Card from "../Layout/Card";
 import {useForm} from "react-hook-form";
 import cx from "classnames";
 import Axios, {AxiosError, AxiosResponse} from "axios";
+import TextField from "../Element/TextField";
+import PasswordField from "../Element/PasswordField";
+import InputContainer from "../Element/InputContainer";
 
 interface LoginResponse {
     success: boolean
@@ -56,7 +59,9 @@ const Login = () => {
     });
     const [passwordType, setPasswordType] = useState("password");
 
-
+    useEffect(() => {
+        console.log(errors)
+    });
     const togglePassword = () => {
         if (passwordType == "password") {
             setPasswordType("text");
@@ -88,7 +93,7 @@ const Login = () => {
             });
     };
     return (
-        <HeroFullPage width={4} title={"Bux"}>
+        <HeroFullPage width={4}>
             <>
                 <Card>
                     <>
@@ -97,49 +102,31 @@ const Login = () => {
                         </div>
                         <form onSubmit={onSubmit}>
 
-                            <div className="field vertically-spaced">
-                                <p className="control has-icons-left has-icons-right">
-                                    <input type="text" placeholder="Email or Username" name="identifier"
-                                           onChange={(event) => removeServerError('identifier')}
-                                           className={inputStatus('identifier', serverErrors?.identifier)}
-                                           ref={register({
-                                               required: {value: true, message: errorMsgs.required},
-                                           })}
-                                           autoComplete={"off"}
-                                    />
-                                    <span className="icon is-small is-left">
-                                    <i className="mdi mdi-face-profile"/>
-                                </span>
-                                    {(errors.identifier || serverErrors?.identifier) &&
-                                    <>
-                                        <span className="icon is-small is-right">
-                                            <i className="mdi active-red mdi-exclamation-thick"/>
-                                        </span>
-                                        <p className="help is-danger">{(errors.identifier) ? errors.identifier.message : serverErrors?.identifier}</p>
-                                    </>
-                                    }
-                                </p>
-                            </div>
-                            <div className="field vertically-spaced">
-                                <div className="control has-icons-left has-icons-right">
-                                    <input type={passwordType} placeholder="Password" name="password"
-                                           className={inputStatus('password', serverErrors?.password)}
-                                           ref={register({
-                                               required: {value: true, message: errorMsgs.required},
-                                           })}
-                                           onChange={(event) => removeServerError('password')}
-                                    />
-                                    <span className="icon is-small is-left">
-                                    <i className="mdi mdi-lock"/>
-                                    </span>
-                                    <span onClick={togglePassword} className="icon clickable is-small is-right">
-                                        <i className={eyeStatus}/>
-                                    </span>
-                                    {(errors.password || serverErrors?.password) &&
-                                    <p className="help is-danger">{(errors.password) ? errors.password.message : serverErrors?.password}</p>
-                                    }
-                                </div>
-                            </div>
+                            <InputContainer>
+                                <TextField
+                                    error={(errors.identifier != undefined || serverErrors?.identifier != undefined)}
+                                    errorMsg={(errors.identifier) ? errors.identifier.message : serverErrors?.identifier}
+                                    forwardRef={register({
+                                        required: {value: true, message: errorMsgs.required},
+                                    })}
+                                    onChange={(event) => removeServerError('identifier')}
+                                    placeholder="Email or Username" name="identifier"
+                                    leftIcon="mdi-face-profile"
+                                    hasRightErrorIcon={true}
+                                />
+                            </InputContainer>
+                            <InputContainer>
+                                <PasswordField
+                                    error={(errors.password != undefined || serverErrors?.password != undefined)}
+                                    errorMsg={(errors.password) ? errors.password.message : serverErrors?.password}
+                                    forwardRef={register({
+                                        required: {value: true, message: errorMsgs.required},
+                                    })}
+                                    onChange={(event) => removeServerError('password')}
+                                    placeholder="Password" name="password"
+                                    leftIcon="mdi-lock"
+                                />
+                            </InputContainer>
 
                             <div className="container has-text-centered">
                                 <button className={btnStatus}>
