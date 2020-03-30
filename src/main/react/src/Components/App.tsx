@@ -6,6 +6,9 @@ import Axios from "axios";
 import Login from "./Page/Login";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Registration from "./Page/Registration";
+import Projects from "./Page/Projects";
+import Dashboard from "./WorkspaceContent/Dashboard";
+import Workspace from "./Page/Workspace";
 
 
 const App = (props: any) => {
@@ -39,6 +42,12 @@ const App = (props: any) => {
                 </Route>
                 <Route path="/accounts/create">
                     <Registration />
+                </Route>
+                <Route path="/projects">
+                    <Projects />
+                </Route>
+                <Route path="/dashboard">
+                    <Workspace/>
                 </Route>
             </Switch>
         </BrowserRouter>
