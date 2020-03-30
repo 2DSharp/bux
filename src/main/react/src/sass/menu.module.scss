@@ -9,15 +9,17 @@
   width: 215px;
 }
 
-.icon {
+.iconContainer {
   margin-left: 5px;
   margin-right: 10px;
 }
-
+.icon {
+  font-size: 20px;
+}
 .item {
   margin-top: 7px;
   margin-bottom: 7px;
-  padding-left: 2em !important;
+  padding-left: 1em !important;
 }
 
 .fixedColumn {
