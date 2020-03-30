@@ -1,0 +1,39 @@
+@import "base";
+.customNav {
+  box-shadow: 0 3px 3px -2px rgba(0, 0, 0, .2) !important;
+  font-size: 14px;
+}
+
+.input {
+  font-size: 14px !important;
+  padding-bottom: 3px !important;
+}
+.input::placeholder {
+  color: #333333 !important;
+}
+.icon {
+  font-size: 0.9rem !important;
+}
+
+.mdiCustom {
+  font-size: 20px;
+  color: $primary;
+}
+
+.isActive {
+  border-bottom: 2px solid !important;
+  color: $primary !important;
+}
+
+.navItem {
+  margin-right: 5px !important;
+  margin-left: 5px !important;
+}
+
+.blued {
+  color: #1d72aa !important;
+}
+
+.branding {
+  padding-right: 40px;
+}

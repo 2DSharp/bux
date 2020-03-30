@@ -1,106 +1,97 @@
 import React, {Suspense} from 'react';
 import 'bulma/css/bulma.css'
 import '@mdi/font/css/materialdesignicons.min.css'
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
-const Projects = React.lazy(() => import('../Page/Projects'));
+import style from '../../sass/nav.module.scss'
+import { Link } from "react-router-dom";
+
 
 const GlobalNavbar = () => {
     return (
-        <Router>
-            <nav className="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-                <div className="navbar-brand">
-                    <a className="navbar-item" href="https://bulma.io">
-                        {/*<img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" />*/}
+        <nav className={`navbar is-fixed-top ${style.customNav}`} role="navigation" aria-label="main navigation">
+            <div className={`navbar-brand ${style.branding} `}>
+                <a className={`navbar-item ${style.navItem}`} href="/">
+                    <img style={{height: 28}} src={process.env.PUBLIC_URL + '/bux_big.png'} alt="Bux"/>
+                </a>
+                <a role="button" className="navbar-burger burger" aria-label="menu" aria-expanded="false">
+                    <span aria-hidden="true"/>
+                    <span aria-hidden="true"/>
+                    <span aria-hidden="true"/>
+                </a>
+            </div>
+
+            <div id="navbarBasicExample" className="navbar-menu">
+                <div className="navbar-start">
+                    <a className={`navbar-item ${style.navItem}`}>
+                        <span>Home</span>
+
                     </a>
 
-                    <a role="button" className="navbar-burger burger" aria-label="menu" aria-expanded="false">
-                        <span aria-hidden="true"/>
-                        <span aria-hidden="true"/>
-                        <span aria-hidden="true"/>
-                    </a>
-                </div>
+                    <Link to="/projects" className={`navbar-item ${style.navItem} is-active ${style.isActive}`}>
+                        Projects
+                    </Link>
 
-                <div id="navbarBasicExample" className="navbar-menu">
-                    <div className="navbar-start">
-                        <a className="navbar-item is-active">
-                            <span>Dashboard</span>
+                    <Link to="#" className={`navbar-item ${style.navItem}`}>
+                        Collaborators
+                    </Link>
 
+                    <div className="navbar-item has-dropdown is-hoverable">
+                        <a className="navbar-link">
+                            More
                         </a>
 
-                        <Link to="/projects" className="navbar-item">
-                            Projects
-                        </Link>
-
-                        <div className="navbar-item has-dropdown is-hoverable">
-                            <a className="navbar-link">
-                                More
+                        <div className="navbar-dropdown">
+                            <a className={`navbar-item ${style.navItem}`}>
+                                About
                             </a>
-
-                            <div className="navbar-dropdown">
-                                <a className="navbar-item">
-                                    About
-                                </a>
-                                <a className="navbar-item">
-                                    Jobs
-                                </a>
-                                <a className="navbar-item">
-                                    Contact
-                                </a>
-                                <hr className="navbar-divider"/>
-                                <a className="navbar-item">
-                                    Report an issue
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div className="navbar-end">
-                        <div className="navbar-item">
-                            <div className="control has-icons-left ">
-                                <input className="input is-small is-rounded" type="text" placeholder="Search"/>
-                                <span className="icon is-left">
-                                <i className="mdi mdi-18px mdi-magnify "/>
-                            </span>
-                            </div>
-                        </div>
-                        <a className="navbar-item">
-                        <span className="icon">
-                            <i className="mdi mdi-24px mdi-comment" aria-hidden="true"/>
-                        </span>
-                        </a>
-                        <a className="navbar-item">
-                        <span className="icon">
-                            <i className="mdi mdi-24px mdi-bell" aria-hidden="true"/>
-                        </span>
-                        </a>
-                        <div className="navbar-item">
-
-                            <div className="buttons">
-                                <a className="button is-small is-dark">
-                                <span className="icon">
-                                    <i className="mdi mdi-18px mdi-cog-outline" aria-hidden="true"/>
-                                </span>
-                                    <strong>Settings</strong>
-                                </a>
-                            </div>
+                            <a className={`navbar-item ${style.navItem}`}>
+                                Jobs
+                            </a>
+                            <a className={`navbar-item ${style.navItem}`}>
+                                Contact
+                            </a>
+                            <hr className="navbar-divider"/>
+                            <a className={`navbar-item ${style.navItem}`}>
+                                Report an issue
+                            </a>
                         </div>
                     </div>
                 </div>
-            </nav>
-            <Switch>
-                <Route path="/projects">
-                    <Suspense fallback={<div>Loading...</div>}>
-                        <Projects/>
-                    </Suspense>
-                </Route>
-            </Switch>
-        </Router>
+
+
+                <div className="navbar-end">
+                    <div className={`navbar-item ${style.navItem}`}>
+                        <div className="control has-icons-left ">
+                            <input className={`input is-small is-rounded ${style.input}`} type="text"
+                                   placeholder="Search"/>
+                            <span className={`icon is-left ${style.icon}`}>
+                                <i className={`mdi mdi-magnify ${style.mdiCustom} `}/>
+                            </span>
+                        </div>
+                    </div>
+                    <a className={`navbar-item ${style.navItem}`}>
+                        <span className={`icon `}>
+                            <i className="mdi mdi-24px mdi-inbox" aria-hidden="true"/>
+                        </span>
+                    </a>
+                    <a className={`navbar-item ${style.navItem}`}>
+                        <span className="icon">
+                            <i className="mdi mdi-24px mdi-bell mdi-rotate-45" aria-hidden="true"/>
+                        </span>
+                    </a>
+                    <a className={`navbar-item ${style.navItem}`}>
+                            <span className="icon">
+                                <i className="mdi mdi-24px mdi-cog" aria-hidden="true"/>
+                            </span>
+                    </a>
+                    <a className={`navbar-item ${style.navItem}`}>
+                            <span className="icon">
+                                <i className={`mdi mdi-24px mdi-account-circle ${style.blued}`} aria-hidden="true"/>
+                            </span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
     );
 };
 
