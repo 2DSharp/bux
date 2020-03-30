@@ -1,0 +1,26 @@
+@import "base";
+.menu {
+  background-color: $primary-dark !important;
+  -moz-box-shadow:    0 -3px 0 2px rgba(85, 85, 85, 0.2);
+  //-webkit-box-shadow: -3px 0 5px 0 #555;
+  box-shadow:        0 -3px 0 2px rgba(85, 85, 85, 0.2);
+  height: 100% !important;
+  padding-top: 50px !important;
+  width: 215px;
+}
+
+.icon {
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+.item {
+  margin-top: 7px;
+  margin-bottom: 7px;
+  padding-left: 2em !important;
+}
+
+.fixedColumn {
+  position: fixed;
+  height: 100vh;
+}

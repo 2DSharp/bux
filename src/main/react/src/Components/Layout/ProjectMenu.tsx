@@ -1,43 +1,24 @@
 import * as React from 'react';
 import 'bulma/css/bulma.css'
-//import '../../sass/base.scss'
+import '../../sass/base.scss'
+import styles from '../../sass/menu.module.scss';
 
 const ProjectMenu = () => {
     return (
-            <aside className="menu column is-2 is-fullheight-with-navbar">
-                <p className="menu-label">
-                    General
-                </p>
+        <div className={`hero column sticky is-2 is-fullheight ${styles.fixedColumn}`}>
+            <aside className={`menu  ${styles.menu}`}>
+
                 <ul className="menu-list">
-                    <li><a>Dashboard</a></li>
-                    <li><a>Customers</a></li>
-                </ul>
-                <p className="menu-label">
-                    Administration
-                </p>
-                <ul className="menu-list">
-                    <li><a>Team Settings</a></li>
-                    <li>
-                        <a className="is-active">Manage Your Team</a>
-                        <ul>
-                            <li><a>Members</a></li>
-                            <li><a>Plugins</a></li>
-                            <li><a>Add a member</a></li>
-                        </ul>
-                    </li>
-                    <li><a>Invitations</a></li>
-                    <li><a>Cloud Storage Environment Settings</a></li>
-                    <li><a>Authentication</a></li>
-                </ul>
-                <p className="menu-label">
-                    Transactions
-                </p>
-                <ul className="menu-list">
-                    <li><a>Payments</a></li>
-                    <li><a>Transfers</a></li>
-                    <li><a>Balance</a></li>
+                    <li className={styles.item}><a className={`is-active ${styles.isActive}`}><span className={`icon ${styles.icon}`}><i className="mdi mdi-math-compass"/> </span>Dashboard</a></li>
+                    <li className={styles.item}><a><span className={`icon ${styles.icon}`}><i className="mdi mdi-bug"/> </span>Issues</a></li>
+                    <li className={styles.item}><a><span className={`icon ${styles.icon}`}><i className="mdi mdi-view-grid"/> </span>Tasks</a></li>
+                    <li className={styles.item}><a><span className={`icon ${styles.icon}`}><i className="mdi mdi-account-group"/> </span>Teams</a></li>
+                    <li className={styles.item}><a><span className={`icon ${styles.icon}`}><i className="mdi mdi-text"/> </span>Docs</a></li>
+                    <li className={styles.item}><a><span className={`icon ${styles.icon}`}><i className="mdi mdi-chart-bell-curve-cumulative"/> </span>Progress</a></li>
+                    <li className={styles.item}><a><span className={`icon ${styles.icon}`}><i className="mdi mdi-cog"/> </span>Settings</a></li>
                 </ul>
             </aside>
+        </div>
     );
 };
 
