@@ -6,6 +6,7 @@ import me.twodee.bux.DTO.User.UserDTO;
 import me.twodee.bux.DTO.User.UserLoginDTO;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.UserRepository;
+import me.twodee.bux.Provider.NotificationBuilder;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
 import me.twodee.bux.Util.CryptoUtil;
 import me.twodee.bux.Util.DomainToDTOConverter;
@@ -37,30 +38,22 @@ public class AccountService
 
     public void register(UserDTO dto, User.Role role)
     {
-        try {
-            User user = new User(dto.getName(), dto.getUsername(), dto.getEmail(), dto.getPassword());
-            user.setRole(role);
+        User user = new User(dto.getName(), dto.getUsername(), dto.getEmail(), dto.getPassword());
+        user.setRole(role);
 
-            Set<ConstraintViolation<User>> violations = provider.getValidator().validate(user);
-            dto.setNotification(DomainToDTOConverter.convert(violations));
-            if (!dto.getNotification().hasErrors()) {
-                dto.appendNotification(checkForDuplicates(dto.getUsername(), dto.getEmail()));
-            }
-
-            if (!dto.getNotification().hasErrors()) {
-                repository.save(user);
-            }
-
-        } catch (DataIntegrityViolationException e) {
-            // This is mainly for race conditions, uniqueness should be checked above beforehand.
-            // If we have to get the offending field and the cause, we need to parse the error string
-            // Can't do it while being DB-agnostic, let it fail with a generic message, let the user try again
-            // Can show the proper error then
-            Notification notification = new Notification();
-            notification.addError(
-                    new Error("global", provider.getMessageByLocaleService().getMessage("validation.exception")));
-            dto.setNotification(notification);
+        Set<ConstraintViolation<User>> violations = provider.getValidator().validate(user);
+        dto.setNotification(DomainToDTOConverter.convert(violations));
+        if (!dto.getNotification().hasErrors()) {
+            dto.appendNotification(checkForDuplicates(dto.getUsername(), dto.getEmail()));
         }
+
+        if (!dto.getNotification().hasErrors()) {
+            //repository.save(user);
+            ServiceHelper.safeSaveToRepository(repository, user, () -> dto.setNotification(
+                    NotificationBuilder.createAmbiguousErrorNotification(provider.getMessageByLocaleService())));
+
+        }
+
     }
 
     public void login(UserLoginDTO dto, HttpSession session)
