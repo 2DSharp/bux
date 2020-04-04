@@ -1,6 +1,6 @@
 package me.twodee.bux.Controller;
 
-import me.twodee.bux.DTO.ProjectDTO;
+import me.twodee.bux.DTO.Project.ProjectDTO;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -8,10 +8,10 @@ import java.util.Set;
 
 public class DomainToDTOConverter
 {
-    public static <T> Notification convert(Set<ConstraintViolation<T>> violation)
+    public static <T> Notification convert(Set<ConstraintViolation<T>> violations)
     {
         Notification note = new Notification();
-        violation.forEach(error -> note.addError(new Error(error.getPropertyPath().toString(), error.getMessage())));
+        violations.forEach(error -> note.addError(new Error(error.getPropertyPath().toString(), error.getMessage())));
         return note;
     }
 }

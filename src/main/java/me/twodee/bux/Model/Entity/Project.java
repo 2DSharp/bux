@@ -1,27 +1,43 @@
 package me.twodee.bux.Model.Entity;
 
-import org.hibernate.validator.constraints.Length;
+import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 public class Project
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @NotNull(message = "Project name can't be empty")
-    @Length(max = 255, message = "Project name has to be between 0 to 255 characters")
+    @Pattern(regexp = "^[a-zA-Z].*", message = "{validation.project.name.pattern}")
+    @Size(min = 2, max = 50, message = "{validation.project.name.size}")
+    @NotBlank(message = "{validation.project.name.empty}")
+    @Column(unique = true)
     private String name;
 
-    @GeneratedValue
-    private LocalDateTime creationTime;
+    @Pattern(regexp = "^[A-Z][A-Z0-9]+$", message = "{validation.project.key.pattern}")
+    @Size(min = 2, max = 8, message = "{validation.project.name.size}")
+    @NotBlank(message = "{validation.project.name.empty}")
+    @Column(unique = true)
+    private String key;
 
-    @Transient
-    private User projectLead;
+    @GeneratedValue
+    private LocalDateTime creationTime = LocalDateTime.now();
+
+    public Project(String name, String key)
+    {
+        this.name = name;
+        this.key = key;
+    }
+
+    public Project()
+    {
+    }
 }
