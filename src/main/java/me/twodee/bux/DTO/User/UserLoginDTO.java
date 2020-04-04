@@ -1,10 +1,12 @@
 package me.twodee.bux.DTO.User;
 
+import lombok.Getter;
 import me.twodee.bux.DTO.DataTransferObject;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+@Getter
 public class UserLoginDTO extends DataTransferObject
 {
     @NotBlank(message = "{validation.login.identifier.invalid}")
@@ -18,15 +20,5 @@ public class UserLoginDTO extends DataTransferObject
     {
         this.identifier = identifier;
         this.password = password;
-    }
-
-    public String getIdentifier()
-    {
-        return identifier;
-    }
-
-    public String getPassword()
-    {
-        return password;
     }
 }

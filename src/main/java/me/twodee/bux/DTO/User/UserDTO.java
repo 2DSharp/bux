@@ -1,7 +1,9 @@
 package me.twodee.bux.DTO.User;
 
+import lombok.Getter;
 import me.twodee.bux.DTO.DataTransferObject;
 
+@Getter
 public class UserDTO extends DataTransferObject
 {
     private String name;
@@ -20,23 +22,4 @@ public class UserDTO extends DataTransferObject
 
     public UserDTO() {}
 
-    public String getName()
-    {
-        return name;
-    }
-
-    public String getUsername()
-    {
-        return username;
-    }
-
-    public String getEmail()
-    {
-        return email;
-    }
-
-    public String getPassword()
-    {
-        return password;
-    }
 }
