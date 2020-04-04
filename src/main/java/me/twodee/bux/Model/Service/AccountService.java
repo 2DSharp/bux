@@ -1,8 +1,5 @@
 package me.twodee.bux.Model.Service;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import me.twodee.bux.DTO.HelperValueObject.Error;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.User.UserDTO;
@@ -16,17 +13,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
-import java.security.Key;
 import java.util.*;
+import java.util.function.Consumer;
 
 
 @Service
 public class AccountService
 {
-
     private final UserRepository repository;
     private final SpringHelperDependencyProvider provider;
+
+    private final String SESS_USER_ID = "user_id";
 
     @Autowired
     public AccountService(UserRepository repository,
@@ -64,32 +63,25 @@ public class AccountService
         }
     }
 
-    public String login(UserLoginDTO dto)
+    public void login(UserLoginDTO dto, HttpSession session)
     {
         Set<ConstraintViolation<UserLoginDTO>> violations = provider.getValidator().validate(dto);
-        if (violations.isEmpty()) {
-            Optional<User> user = repository.findUserByEmailOrUsername(dto.getIdentifier(), dto.getIdentifier());
-            if (user.isPresent()) {
-                return getJWTStringIfValidPassword(user.get(), dto);
-            }
-            dto.setNotification(createNotificationForInvalidLogin("identifier"));
-        }
-        else {
+        if (!violations.isEmpty()) {
             dto.setNotification(DomainToDTOConverter.convert(violations));
+            return;
         }
-
-        return null;
+        Optional<User> user = repository.findUserByEmailOrUsername(dto.getIdentifier(), dto.getIdentifier());
+        user.ifPresentOrElse(u -> persistSession(u, dto, session),
+                             () -> dto.setNotification(createNotificationForInvalidLogin("identifier")));
     }
 
-    private String getJWTStringIfValidPassword(User user, UserLoginDTO dto)
+    private void persistSession(User user, UserLoginDTO dto, HttpSession session)
     {
         if (CryptoUtil.verifyPassword(dto.getPassword(), user.getHashedPassword())) {
-            Key key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(
-                    Objects.requireNonNull(provider.getEnvironment().getProperty("jwt.secret"))));
-            return Jwts.builder().setSubject("Joe").signWith(key, SignatureAlgorithm.HS256).compact();
+            session.setAttribute(SESS_USER_ID, user);
+            return;
         }
         dto.setNotification(createNotificationForInvalidLogin("password"));
-        return null;
     }
 
     private Notification createNotificationForInvalidLogin(String cause)

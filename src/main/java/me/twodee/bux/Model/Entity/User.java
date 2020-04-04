@@ -15,7 +15,6 @@ public class User
     public enum Role {
         ADMIN, LEADER, STANDARD
     };
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -28,7 +27,7 @@ public class User
 
     @Pattern(regexp = "^[\\p{L}\\p{M}\\p{Pd} .'-]+$", message = "{validation.name.pattern}")
     @Size(min = 2, max = 255, message = "{validation.name.size}")
-    @NotBlank
+    @NotBlank(message = "{validation.name.empty}")
     private String name;
 
     @Column(columnDefinition = "ENUM('ADMIN', 'LEADER', 'STANDARD')")

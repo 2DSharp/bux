@@ -11,11 +11,10 @@ public class LoginResponse
 {
     private Map<String, String> errors;
     private boolean success = true;
-    private String authToken;
 
-    public LoginResponse(String authToken)
+    public LoginResponse(boolean success)
     {
-        this.authToken = authToken;
+        this.success = success;
     }
 
     public LoginResponse(Map<String, String> errors)

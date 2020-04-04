@@ -25,7 +25,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -40,6 +39,7 @@ public class AccountControllerIT
 
     @MockBean
     private AccountService service;
+
 
     @Test
     public void testEmptyRegistration() throws Exception
@@ -59,8 +59,9 @@ public class AccountControllerIT
         Map<String, String> map = new HashMap<>();
         map.put("username", "aas");
 
-        this.mockMvc.perform(post("/api/accounts/create").characterEncoding("UTF-8").contentType(MediaType.APPLICATION_JSON)
-                                     .content(asJsonString(map)))
+        this.mockMvc.perform(
+                post("/api/accounts/create").characterEncoding("UTF-8").contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(map)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.errors").doesNotExist())
@@ -71,15 +72,13 @@ public class AccountControllerIT
     void testSuccessfulLogin() throws Exception
     {
         UserLoginDTO dto = new UserLoginDTO("dedipyaman", "somepassword");
-        when(service.login(any())).thenReturn("someJWTString");
         this.mockMvc.perform(post("/api/accounts/login")
                                      .characterEncoding("UTF-8")
                                      .contentType(MediaType.APPLICATION_JSON).content(asJsonString(dto)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.errors").doesNotExist())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.auth_token").value("someJWTString"));
+                .andExpect(jsonPath("$.success").value(true));
     }
 
     @Test
@@ -98,7 +97,7 @@ public class AccountControllerIT
             dto.setNotification(note);
             return null;
 
-        }).when(service).login(any());
+        }).when(service).login(any(), any());
 
         this.mockMvc.perform(post("/api/accounts/login").characterEncoding("UTF-8")
                                      .contentType(MediaType.APPLICATION_JSON)
@@ -132,8 +131,9 @@ public class AccountControllerIT
         Map<String, String> map = new HashMap<>();
         map.put("username", "aas");
 
-        this.mockMvc.perform(post("/api/accounts/create").characterEncoding("UTF-8").contentType(MediaType.APPLICATION_JSON)
-                                     .content(asJsonString(map)))
+        this.mockMvc.perform(
+                post("/api/accounts/create").characterEncoding("UTF-8").contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(map)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors").exists())

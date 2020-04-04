@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
+
 @CrossOrigin(maxAge = 3600)
 @RestController
 public class AccountController extends RestAPI
@@ -27,29 +29,32 @@ public class AccountController extends RestAPI
     }
 
     @PostMapping("/accounts/create")
-    public ResponseEntity<RegistrationResponse> createNewAccount(@RequestBody UserDTO dto)
+    public ResponseEntity<RegistrationResponse> createNewAccount(@RequestBody UserDTO dto, HttpSession session)
     {
-        if (!accountService.usersExist())
+        if (!accountService.usersExist()) {
             accountService.register(dto, User.Role.ADMIN);
-        else
+        }
+        else {
             accountService.register(dto, User.Role.STANDARD);
+        }
 
-        if (dto.getNotification().hasErrors())
-            return new ResponseEntity<>(new RegistrationResponse(dto.getNotification().getErrors()), HttpStatus.BAD_REQUEST);
+        if (dto.getNotification().hasErrors()) {
+            return new ResponseEntity<>(new RegistrationResponse(dto.getNotification().getErrors()),
+                                        HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(new RegistrationResponse(!dto.getNotification().hasErrors()), HttpStatus.CREATED);
     }
 
     @PostMapping("/accounts/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody UserLoginDTO dto)
+    public ResponseEntity<LoginResponse> login(@RequestBody UserLoginDTO dto, HttpSession session)
     {
-        String jws = accountService.login(dto);
+        accountService.login(dto, session);
         LoginResponse response;
         if (dto.getNotification().hasErrors()) {
-           response = new LoginResponse(dto.getNotification().getErrors());
+            response = new LoginResponse(dto.getNotification().getErrors());
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
-        response = new LoginResponse(jws);
+        response = new LoginResponse(true);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 }

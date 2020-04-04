@@ -1,30 +1,27 @@
 package me.twodee.bux.Model.Service;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import me.twodee.bux.DTO.User.UserDTO;
 import me.twodee.bux.DTO.User.UserLoginDTO;
-import me.twodee.bux.Provider.SpringHelperDependencyProvider;
-import me.twodee.bux.Util.MessageByLocaleService;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.UserRepository;
+import me.twodee.bux.Provider.SpringHelperDependencyProvider;
+import me.twodee.bux.Util.MessageByLocaleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Validation;
 import javax.validation.Validator;
-
-import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -38,6 +35,9 @@ class AccountServiceTest
 
     @Mock
     MessageByLocaleService messageByLocaleService;
+
+    @Mock
+    HttpSession session;
 
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -132,18 +132,9 @@ class AccountServiceTest
         Optional<User> user = Optional.of(new User("John", "dedipyaman", "2d@twodee.me", "qwerty1234"));
 
         when(repository.findUserByEmailOrUsername(anyString(), anyString())).thenReturn(user);
-        Environment env = mock(Environment.class);
-        when(provider.getEnvironment()).thenReturn(env);
-        when(env.getProperty("jwt.secret")).thenReturn("Rr59hcBFAEUup+ivs2UIUXmRgKpKPaaLyowQweqyPPA=");
 
-        String jws = accountService.login(dto);
-        assertThat(jws, is(not(emptyString())));
-        System.out.println(jws);
-
-        assertThat(Jwts.parserBuilder().setSigningKey(
-                Keys.hmacShaKeyFor(Base64.getDecoder().decode(
-                        "Rr59hcBFAEUup+ivs2UIUXmRgKpKPaaLyowQweqyPPA="))).build().parseClaimsJws(
-                jws).getBody().getSubject(), equalTo("Joe"));
+        accountService.login(dto, session);
+        assertFalse(dto.getNotification().hasErrors());
     }
 
     @Test
@@ -152,7 +143,7 @@ class AccountServiceTest
         AccountService accountService = new AccountService(repository, provider);
         UserLoginDTO dto = new UserLoginDTO("dedipyaman", "");
 
-        assertNull(accountService.login(dto));
+        accountService.login(dto, session);
         assertTrue(dto.getNotification().hasErrors());
         assertThat(dto.getNotification().getErrors().size(), equalTo(1));
         assertThat(dto.getNotification().getErrors().get("password"), equalTo("{validation.login.password.invalid}"));
@@ -169,7 +160,7 @@ class AccountServiceTest
         when(messageByLocaleService.getMessage("validation.login.password.invalid")).thenReturn(
                 "{validation.login.password.invalid}");
 
-        assertNull(accountService.login(dto));
+        accountService.login(dto, session);
         assertTrue(dto.getNotification().hasErrors());
         assertThat(dto.getNotification().getErrors().size(), equalTo(1));
         assertThat(dto.getNotification().getErrors().get("password"), equalTo("{validation.login.password.invalid}"));
@@ -185,7 +176,7 @@ class AccountServiceTest
         when(messageByLocaleService.getMessage("validation.login.identifier.invalid")).thenReturn(
                 "{validation.login.identifier.invalid}");
 
-        assertNull(accountService.login(dto));
+        accountService.login(dto, session);
         assertTrue(dto.getNotification().hasErrors());
         assertThat(dto.getNotification().getErrors().size(), equalTo(1));
         assertThat(dto.getNotification().getErrors().get("identifier"),
