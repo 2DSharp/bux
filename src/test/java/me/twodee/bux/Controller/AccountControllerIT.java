@@ -1,7 +1,7 @@
 package me.twodee.bux.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.twodee.bux.BuxConfiguration;
+import me.twodee.bux.Configuration.BuxConfiguration;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.User.UserDTO;
 import me.twodee.bux.DTO.User.UserLoginDTO;

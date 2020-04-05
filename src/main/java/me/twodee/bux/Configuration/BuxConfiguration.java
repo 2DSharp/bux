@@ -1,4 +1,4 @@
-package me.twodee.bux;
+package me.twodee.bux.Configuration;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
