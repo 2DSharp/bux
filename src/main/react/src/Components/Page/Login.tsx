@@ -35,33 +35,31 @@ const Login = () => {
         identifier: string
         password: string
     };
+
     const {register, handleSubmit, errors} = useForm<FormData>();
     const [loading, setLoading] = useState(false);
     const [serverErrors, setServerErrors] = useState<ServerErrors>();
 
     const onSubmit = handleSubmit(({identifier, password}) => {
         setLoading(true);
+
         Axios.post('/accounts/login', {
             identifier: identifier,
             password: password
         }).then((response: AxiosResponse<LoginResponse>) => {
             setLoading(false);
-
         }).catch((error) => {
             const {data} = error.response;
             if (!data.success) {
                 setServerErrors(data.errors);
             }
             setLoading(false);
-
         });
 
     });
     const [passwordType, setPasswordType] = useState("password");
 
-    useEffect(() => {
-        console.log(errors)
-    });
+
     const togglePassword = () => {
         if (passwordType == "password") {
             setPasswordType("text");
