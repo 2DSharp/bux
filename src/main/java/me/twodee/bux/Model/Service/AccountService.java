@@ -71,7 +71,7 @@ public class AccountService
     private void persistSession(User user, UserLoginDTO dto, HttpSession session)
     {
         if (CryptoUtil.verifyPassword(dto.getPassword(), user.getHashedPassword())) {
-            session.setAttribute(SESS_USER_ID, user);
+            session.setAttribute(SESS_USER_ID, user.getId());
             return;
         }
         dto.setNotification(createNotificationForInvalidLogin("password"));
