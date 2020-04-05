@@ -45,7 +45,7 @@ public class ProjectManagement
                                                                                provider.getMessageByLocaleService().getMessage(
                                                                                        "validation.project.key.exists")));
         }
-        if (repository.existsProjectByKey(dto.getKey())) {
+        if (repository.existsProjectByProjectKey(dto.getKey())) {
             dto.appendNotification(NotificationBuilder.createErrorNotification("key",
                                                                                provider.getMessageByLocaleService().getMessage(
                                                                                        "validation.project.key.exists")));

@@ -26,7 +26,7 @@ public class Project
     @Size(min = 2, max = 8, message = "{validation.project.name.size}")
     @NotBlank(message = "{validation.project.name.empty}")
     @Column(unique = true)
-    private String key;
+    private String projectKey;
 
     @GeneratedValue
     private LocalDateTime creationTime = LocalDateTime.now();
@@ -34,7 +34,7 @@ public class Project
     public Project(String name, String key)
     {
         this.name = name;
-        this.key = key;
+        this.projectKey = key;
     }
 
     public Project()

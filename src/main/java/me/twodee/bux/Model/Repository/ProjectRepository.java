@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProjectRepository extends JpaRepository<Project, Integer>
 {
-    boolean existsProjectByKey(String key);
+    boolean existsProjectByProjectKey(String key);
     boolean existsProjectByName(String name);
     @Override
     <S extends Project> S save(S s);
