@@ -24,7 +24,7 @@ public class Project
 
     @Pattern(regexp = "^[A-Z][A-Z0-9]+$", message = "{validation.project.key.pattern}")
     @Size(min = 2, max = 8, message = "{validation.project.name.size}")
-    @NotBlank(message = "{validation.project.name.empty}")
+    @NotBlank(message = "{validation.project.key.empty}")
     @Column(unique = true)
     private String projectKey;
 
