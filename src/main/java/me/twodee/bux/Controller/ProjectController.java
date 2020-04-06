@@ -1,21 +1,54 @@
 package me.twodee.bux.Controller;
 
 import me.twodee.bux.DTO.Project.ProjectDTO;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import me.twodee.bux.Model.Service.AccountService;
+import me.twodee.bux.Model.Service.ProjectManagement;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
-@CrossOrigin(maxAge = 3600)
 @RestController
-public class ProjectController
+public class ProjectController extends RestAPI
 {
-    @GetMapping("/projects")
-    public List<ProjectDTO> projects()
+    private AccountService accountService;
+    private ProjectManagement projectManagement;
+
+    @Autowired
+    public ProjectController(AccountService accountService, ProjectManagement projectManagement)
     {
-        return new ArrayList<>();
+        this.accountService = accountService;
+        this.projectManagement = projectManagement;
     }
 
+    @GetMapping("/projects")
+    public ResponseEntity<List<ProjectDTO>> projects(HttpSession session)
+    {
+        if (!accountService.isLoggedIn(session)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(projectManagement.getProjects(), HttpStatus.OK);
+    }
+
+    @PostMapping("/projects/create")
+    public ResponseEntity<Map<String, String>> createNewProject(HttpSession session, @RequestBody ProjectDTO dto)
+    {
+        if (!accountService.isLoggedIn(session) || !accountService.canCreateProjects(session)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        projectManagement.createProject(dto);
+        if (dto.getNotification().hasErrors()) {
+            return new ResponseEntity<>(dto.getNotification().getErrors(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }
