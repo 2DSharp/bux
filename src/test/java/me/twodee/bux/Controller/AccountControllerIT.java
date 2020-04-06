@@ -106,8 +106,7 @@ public class AccountControllerIT
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.errors.password", is("password.error")))
                 .andExpect(jsonPath("$.errors.identifier", is("identifier.error")))
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.auth_token").doesNotExist());
+                .andExpect(jsonPath("$.success").value(false));
     }
 
     @Test
