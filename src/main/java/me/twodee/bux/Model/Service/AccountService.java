@@ -11,13 +11,14 @@ import me.twodee.bux.Provider.SpringHelperDependencyProvider;
 import me.twodee.bux.Util.CryptoUtil;
 import me.twodee.bux.Util.DomainToDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -51,9 +52,7 @@ public class AccountService
             //repository.save(user);
             ServiceHelper.safeSaveToRepository(repository, user, () -> dto.setNotification(
                     NotificationBuilder.createAmbiguousErrorNotification(provider.getMessageByLocaleService())));
-
         }
-
     }
 
     public void login(UserLoginDTO dto, HttpSession session)
@@ -66,6 +65,18 @@ public class AccountService
         Optional<User> user = repository.findUserByEmailOrUsername(dto.getIdentifier(), dto.getIdentifier());
         user.ifPresentOrElse(u -> persistSession(u, dto, session),
                              () -> dto.setNotification(createNotificationForInvalidLogin("identifier")));
+    }
+
+    public boolean isLoggedIn(HttpSession session)
+    {
+        return session.getAttribute(SESS_USER_ID) != null;
+    }
+
+    public boolean canCreateProjects(HttpSession session)
+    {
+        Integer id = (Integer)(session.getAttribute(SESS_USER_ID));
+        User.Role role = repository.getOne(id).getRole();
+        return role == User.Role.ADMIN || role == User.Role.LEADER;
     }
 
     private void persistSession(User user, UserLoginDTO dto, HttpSession session)
