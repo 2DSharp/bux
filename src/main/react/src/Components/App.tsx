@@ -9,6 +9,7 @@ import Registration from "./Page/Registration";
 import Projects from "./Page/Projects";
 import Dashboard from "./WorkspaceContent/Dashboard";
 import Workspace from "./Page/Workspace";
+import CreateNewProject from "./WorkspaceContent/CreateNewProject";
 
 
 const App = (props: any) => {
@@ -46,8 +47,11 @@ const App = (props: any) => {
                 <Route path="/projects">
                     <Projects />
                 </Route>
-                <Route path="/dashboard">
+                <Route path="/project">
                     <Workspace/>
+                </Route>
+                <Route path="/new/project">
+                    <CreateNewProject/>
                 </Route>
             </Switch>
         </BrowserRouter>
