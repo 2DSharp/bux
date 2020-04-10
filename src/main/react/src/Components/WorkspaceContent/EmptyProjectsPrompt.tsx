@@ -2,11 +2,7 @@ import React from 'react';
 import HeroFullPage from "../Layout/HeroFullPageProps";
 import {Link} from "react-router-dom";
 
-interface EmptyProjectsPrompt {
-    onClick: () => void
-}
-
-const EmptyProjectsPrompt = (props: EmptyProjectsPrompt) => {
+const EmptyProjectsPrompt = () => {
     return (
         <HeroFullPage width={5} title={"You don't have any projects yet"}>
             <div className="container has-text-centered">
