@@ -1,14 +1,16 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useReducer, useState} from 'react';
 import '@mdi/font/css/materialdesignicons.min.css'
 import {Link} from "react-router-dom";
 import HeroFullPage from "../Layout/HeroFullPageProps";
 import Card from "../Layout/Card";
 import {useForm} from "react-hook-form";
 import cx from "classnames";
-import Axios, {AxiosError, AxiosResponse} from "axios";
+import Axios, {AxiosResponse} from "axios";
 import TextField from "../Element/TextField";
 import PasswordField from "../Element/PasswordField";
 import InputContainer from "../Element/InputContainer";
+import { Redirect } from "react-router-dom";
+import { removeFieldFromState } from "../../Helpers/removeFieldFromState";
 
 interface LoginResponse {
     success: boolean
@@ -26,10 +28,6 @@ interface Action {
     field: string
 }
 
-function reducer(state: ServerErrors, action: Action) {
-    return {...state, [action.field]: action.value};
-}
-
 const Login = () => {
     type FormData = {
         identifier: string
@@ -39,57 +37,38 @@ const Login = () => {
     const {register, handleSubmit, errors} = useForm<FormData>();
     const [loading, setLoading] = useState(false);
     const [serverErrors, setServerErrors] = useState<ServerErrors>();
+    const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
-    const onSubmit = handleSubmit(({identifier, password}) => {
-        setLoading(true);
-
-        Axios.post('/accounts/login', {
-            identifier: identifier,
-            password: password
-        }).then((response: AxiosResponse<LoginResponse>) => {
+    const loginUser = async (identifier: string, password: string) => {
+        try {
+            const response : AxiosResponse<LoginResponse> = await Axios.post('/accounts/login', {
+                identifier: identifier,
+                password: password
+            });
             setLoading(false);
-        }).catch((error) => {
+            setLoggedIn(response.data.success);
+        } catch (error) {
             const {data} = error.response;
             if (!data.success) {
                 setServerErrors(data.errors);
             }
             setLoading(false);
-        });
-
-    });
-    const [passwordType, setPasswordType] = useState("password");
-
-
-    const togglePassword = () => {
-        if (passwordType == "password") {
-            setPasswordType("text");
-        } else {
-            setPasswordType("password");
         }
     };
-    const inputStatus = (field: string, status?: string) => cx({
-        input: true,
-        'is-danger': (errors as any)[field] || status,
+
+    const onSubmit = handleSubmit(({identifier, password}) => {
+        setLoading(true);
+        loginUser(identifier, password);
     });
-    const eyeStatus = cx({
-        mdi: true,
-        'active-gray': true,
-        'mdi-eye': passwordType == "password",
-        'mdi-eye-off': passwordType == "text"
-    });
+
     const btnStatus = cx("button", "is-fullwidth", "is-primary", {
         "is-loading": loading
     });
     const errorMsgs = {
         required: "This field is required",
     };
-
-    const removeServerError = (field: string) => {
-        setServerErrors(
-            prevState => {
-                return {...prevState, [field]: undefined}
-            });
-    };
+    if (loggedIn)
+        return <Redirect to="/projects"/>;
     return (
         <HeroFullPage width={4}>
             <>
@@ -102,12 +81,11 @@ const Login = () => {
 
                             <InputContainer>
                                 <TextField
-                                    error={(errors.identifier != undefined || serverErrors?.identifier != undefined)}
                                     errorMsg={(errors.identifier) ? errors.identifier.message : serverErrors?.identifier}
                                     forwardRef={register({
                                         required: {value: true, message: errorMsgs.required},
                                     })}
-                                    onChange={(event) => removeServerError('identifier')}
+                                    onChange={event => {removeFieldFromState(setServerErrors, "identifier")}}
                                     placeholder="Email or Username" name="identifier"
                                     leftIcon="mdi-face-profile"
                                     hasRightErrorIcon={true}
@@ -115,12 +93,11 @@ const Login = () => {
                             </InputContainer>
                             <InputContainer>
                                 <PasswordField
-                                    error={(errors.password != undefined || serverErrors?.password != undefined)}
                                     errorMsg={(errors.password) ? errors.password.message : serverErrors?.password}
                                     forwardRef={register({
                                         required: {value: true, message: errorMsgs.required},
                                     })}
-                                    onChange={(event) => removeServerError('password')}
+                                    onChange={event => {removeFieldFromState(setServerErrors, "password")}}
                                     placeholder="Password" name="password"
                                     leftIcon="mdi-lock"
                                 />

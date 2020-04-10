@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import TextField, {TextFieldProps} from "./TextField";
 
 const PasswordField = (props: TextFieldProps) => {
@@ -12,14 +12,14 @@ const PasswordField = (props: TextFieldProps) => {
         }
     };
     return (
-        <TextField error={props.error}
+        <TextField
                    errorMsg={props.errorMsg}
                    forwardRef={props.forwardRef}
-                   onChange={props.onChange}
                    placeholder={props.placeholder} name={props.name}
                    leftIcon={props.leftIcon}
                    type={passwordType}
                    rightIcon="mdi-eye"
+                   onChange={props.onChange}
                    rightIconClickable={true}
                    onRightIconClick={togglePassword}
                    label={props.label}

@@ -1,8 +1,7 @@
-import React, {ChangeEventHandler, EventHandler, LegacyRef, MouseEventHandler, useState} from 'react';
+import React, {ChangeEventHandler, MouseEventHandler, useEffect, useState} from 'react';
 import cx from "classnames";
 
 export interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
-    error: boolean;
     type?: string;
     success?: boolean;
     errorMsg?: string;
@@ -14,6 +13,7 @@ export interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLA
     rightIconClickable?: boolean;
     onRightIconClick?: MouseEventHandler<HTMLSpanElement>
     label?: string
+    error?: boolean
 }
 
 const TextField = (props: TextFieldProps) => {
@@ -23,10 +23,16 @@ const TextField = (props: TextFieldProps) => {
         "has-icons-right": props.rightIcon || props.hasRightErrorIcon
 
     });
+    const [hasError, setHasError] = useState<boolean>(false);
+    const [error, setError] = useState<string>();
+    useEffect(() => {
+        setError(props.errorMsg);
+        setHasError(error != undefined && error != "");
+    });
 
     const inputClass = cx("input", {
-        'is-danger': props.error,
-        'is-success': props.success && !props.error
+        'is-danger': hasError,
+        'is-success': props.success && !hasError
     });
 
     const rightIconClass = cx("mdi", {
@@ -43,8 +49,8 @@ const TextField = (props: TextFieldProps) => {
             <label className="label">{props.label} {props.required && <span style={{color: "red"}}>*</span>}</label>
             }
             <input type={(props.type) ? props.type : "text"} placeholder={props.placeholder} name={props.name}
-                   onChange={props.onChange}
                    className={inputClass}
+                   onChange={props.onChange}
                    autoComplete={props.autoComplete}
                    ref={props.forwardRef}
             />
@@ -53,13 +59,13 @@ const TextField = (props: TextFieldProps) => {
                 <i className={`mdi ${props.leftIcon}`}/>
             </span>
             }
-            {((props.error && props.hasRightErrorIcon) || props.rightIcon) &&
+            {((hasError && props.hasRightErrorIcon) || props.rightIcon) &&
 
             <span onClick={props.onRightIconClick} className={rightIconContainerClass}>
                 <i className={`${rightIconClass} ${(props.rightIconClickable) ? props.rightIcon : "mdi-exclamation-thick"}`}/>
             </span>
             }
-            {props.error &&
+            {hasError &&
             <p className="help is-danger">{props.errorMsg}</p>
             }
 
@@ -67,4 +73,4 @@ const TextField = (props: TextFieldProps) => {
     );
 };
 
-export default TextField;
+export default (TextField);
