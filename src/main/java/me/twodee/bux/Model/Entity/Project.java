@@ -23,18 +23,18 @@ public class Project
     private String name;
 
     @Pattern(regexp = "^[A-Z][A-Z0-9]+$", message = "{validation.project.key.pattern}")
-    @Size(min = 2, max = 8, message = "{validation.project.name.size}")
+    @Size(min = 2, max = 8, message = "{validation.project.key.size}")
     @NotBlank(message = "{validation.project.key.empty}")
     @Column(unique = true)
     private String projectKey;
 
     @GeneratedValue
-    private LocalDateTime creationTime = LocalDateTime.now();
+    private final LocalDateTime creationTime = LocalDateTime.now();
 
     public Project(String name, String key)
     {
         this.name = name;
-        this.projectKey = key;
+        this.projectKey = key.toUpperCase();
     }
 
     public Project()
