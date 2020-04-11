@@ -36,10 +36,9 @@ const CreateNewProject = () => {
                 return;
             }
 
-            const {data} = error.response as AxiosResponse;
-            if (!data.success) {
-                setServerErrors(data.errors);
-            }
+            const response = error.response as AxiosResponse;
+            setServerErrors(response.data);
+
         }).finally(() => setLoading(false));
     });
     const errorMsgs = {
