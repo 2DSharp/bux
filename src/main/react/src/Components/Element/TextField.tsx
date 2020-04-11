@@ -13,7 +13,6 @@ export interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLA
     rightIconClickable?: boolean;
     onRightIconClick?: MouseEventHandler<HTMLSpanElement>
     label?: string
-    error?: boolean
 }
 
 const TextField = (props: TextFieldProps) => {
@@ -21,7 +20,6 @@ const TextField = (props: TextFieldProps) => {
     const controlClass = cx("control", {
         "has-icons-left": props.leftIcon,
         "has-icons-right": props.rightIcon || props.hasRightErrorIcon
-
     });
     const [hasError, setHasError] = useState<boolean>(false);
     const [error, setError] = useState<string>();
