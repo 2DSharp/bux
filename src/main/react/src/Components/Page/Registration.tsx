@@ -1,10 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Card from "../Layout/Card";
 import HeroFullPage from "../Layout/HeroFullPageProps";
 import {useForm} from "react-hook-form";
 import {Link} from "react-router-dom";
 import cx from 'classnames';
 import "../../sass/card-form.scss"
+import Axios from "axios";
+import TextField from "../Element/TextField";
+import InputContainer from "../Element/InputContainer";
+import {getFormErrors, removeFieldFromState} from "../../Helpers/util";
+import PasswordField from "../Element/PasswordField";
 
 const Registration = () => {
     type FormData = {
@@ -13,39 +18,53 @@ const Registration = () => {
         username: string
         password: string
     };
+
+    interface ServerErrors {
+        name?: string
+        email?: string
+        username?: string
+        password?: string
+        global?: string
+    }
+
     const {register, handleSubmit, errors} = useForm<FormData>();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [success, setSuccess] = useState<boolean>(false);
+    const [serverErrors, setServerErrors] = useState<ServerErrors>();
 
-    const onSubmit = handleSubmit(({name, email}) => {
-        console.log(name, email);
+    const onSubmit = handleSubmit(({name, email, username, password}) => {
+        setLoading(true);
+        Axios.post('/accounts/create', {
+            name: name,
+            email: email,
+            username: username,
+            password: password
+        }).then(response => {
+            setSuccess(true);
+        }).catch(error => {
+            const {data} = error.response;
+            if (!data.success) {
+                setServerErrors(data.errors);
+            }
+        }).finally(() => {
+            setLoading(false);
+        });
     });
-    const [passwordType, setPasswordType] = useState("password");
 
-    const togglePassword = () => {
-        if (passwordType == "password") {
-            setPasswordType("text");
-        } else {
-            setPasswordType("password");
-        }
-    };
-    const inputStatus = (field: string) => cx({
-        input: true,
-        'is-danger': (errors as any)[field],
-    });
-    const eyeStatus = cx({
-        mdi: true,
-        'active-gray': true,
-        'mdi-eye': passwordType == "password",
-        'mdi-eye-off': passwordType == "text"
-    });
+
     const errorMsgs = {
         required: "This field is required",
         emailInvalid: "Enter a valid email address",
         usernameSize: "Create a username between 3 to 12 characters",
-        usernamePattern: "A username has to be alphabets and can contain numbers, periods (.) and underscores(_) and dashes(-)",
+        usernamePattern: "A username has to be alphabets and can contain numbers," +
+            " periods (.) and underscores(_) and dashes(-)",
         passwordSize: "Create a unqiue password with at least 8 characters"
     };
 
 
+    const btnStatus = cx("button", "is-fullwidth", "is-primary", {
+        "is-loading": loading
+    });
     return (
         <HeroFullPage width={4}>
             <Card>
@@ -54,53 +73,47 @@ const Registration = () => {
                         <strong className="head">Sign up for Bux</strong>
                     </div>
                     <form onSubmit={onSubmit}>
-                        <div className="field vertically-spaced">
-                            <div className="control has-icons-left has-icons-right">
-                                <input className={inputStatus('name')} name="name" type="text"
-                                       ref={register({
-                                           required: {value: true, message: errorMsgs.required},
-                                       })}
-                                       placeholder="Enter your Name"/>
-                                <span className="icon is-small is-left">
-                                    <i className="mdi mdi-account"/>
-                                </span>
-                                {errors.name &&
-                                <>
-                                <span className="icon is-small is-right">
-                                    <i className="mdi active-red mdi-exclamation-thick"/>
-                                </span>
-                                    <p className="help is-danger">{errors.name.message}</p>
-                                </>
-                                }
-                            </div>
-                        </div>
-                        <div className="field vertically-spaced">
-                            <div className="control has-icons-left has-icons-right">
-                                <input className={inputStatus("email")} name="email" type="email"
-                                       ref={register({
+                        <InputContainer>
+                            <TextField name="name" placeholder="Enter your name"
+                                       onChange={event => {
+                                           removeFieldFromState(setServerErrors, "name")
+                                       }}
+                                       errorMsg={getFormErrors(errors, serverErrors, "name")}
+                                       leftIcon="mdi-account"
+                                       hasRightErrorIcon={true}
+                                       forwardRef={register(
+                                           {
+                                               required: {
+                                                   value: true,
+                                                   message: errorMsgs.required
+                                               }
+                                           })}
+                            />
+                        </InputContainer>
+                        <InputContainer>
+                            <TextField name="email" type="email" placeholder="Enter your email"
+                                       onChange={event => {
+                                           removeFieldFromState(setServerErrors, "email")
+                                       }}
+                                       forwardRef={register({
                                            required: {value: true, message: errorMsgs.required},
                                            // Keeping it simple: https://stackoverflow.com/a/48800/6109408
-                                           pattern: {value: new RegExp("^\\S+@\\S+$"), message: errorMsgs.emailInvalid}
+                                           pattern: {
+                                               value: new RegExp("^\\S+@\\S+$"),
+                                               message: errorMsgs.emailInvalid
+                                           }
                                        })}
-                                       placeholder="Enter your Email"/>
-                                <span className="icon is-small is-left">
-                                    <i className="mdi mdi-email"/>
-                                </span>
-                                {errors.email &&
-                                <>
-                                <span className="icon is-small is-right">
-                                    <i className="mdi active-red mdi-exclamation-thick"/>
-                                </span>
-                                    <p className="help is-danger">{errors.email.message}</p>
-                                </>}
-
-                            </div>
-                        </div>
-                        <div className="field vertically-spaced">
-                            <div className="control has-icons-left has-icons-right">
-                                <input className={inputStatus("username")}
-                                       name="username" type="text"
-                                       ref={register({
+                                       hasRightErrorIcon={true} leftIcon="mdi-email"
+                                       errorMsg={getFormErrors(errors, serverErrors, "email")}
+                            />
+                        </InputContainer>
+                        <InputContainer>
+                            <TextField name="username" placeholder="Create a username"
+                                       onChange={event => {
+                                           removeFieldFromState(setServerErrors, "email")
+                                       }}
+                                       errorMsg={getFormErrors(errors, serverErrors, "username")}
+                                       forwardRef={register({
                                            required: {value: true, message: errorMsgs.required},
                                            pattern: {
                                                // Reference: https://stackoverflow.com/a/12019115/6109408
@@ -110,38 +123,24 @@ const Registration = () => {
                                            minLength: {value: 3, message: errorMsgs.usernameSize},
                                            maxLength: {value: 12, message: errorMsgs.usernameSize}
                                        })}
-                                       placeholder="Create a username"/>
-                                <span className="icon is-small is-left">
-                                    <i className="mdi mdi-face"/>
-                                    </span>
-                                {errors.username &&
-                                <>
-                                    <span className="icon is-small is-right">
-                                        <i className="mdi active-red mdi-exclamation-thick"/>
-                                    </span> <p className="help is-danger">{errors.username.message}</p>
-                                </>}
-
-                            </div>
-                        </div>
-                        <div className="field vertically-spaced">
-                            <div className="control has-icons-left has-icons-right">
-                                <input className={inputStatus("password")} name="password" type={passwordType}
-                                       ref={register({
-                                           required: {value: true, message: errorMsgs.required},
-                                           minLength: {value: 8, message: errorMsgs.passwordSize},
-                                       })}
-                                       placeholder="Password"/>
-                                    <span className="icon is-small is-left">
-                                        <i className="mdi mdi-lock"/>
-                                    </span>
-                                    <span onClick={togglePassword} className="icon clickable is-small is-right">
-                                        <i className={eyeStatus}/>
-                                    </span>
-                                {errors.password && <p className="help is-danger">{errors.password.message}</p>}
-                            </div>
-                        </div>
+                                       hasRightErrorIcon={true} leftIcon="mdi-face"
+                            />
+                        </InputContainer>
+                        <InputContainer>
+                            <PasswordField
+                                errorMsg={getFormErrors(errors, serverErrors, "password")}
+                                forwardRef={register({
+                                    required: {value: true, message: errorMsgs.required},
+                                })}
+                                onChange={event => {
+                                    removeFieldFromState(setServerErrors, "password")
+                                }}
+                                placeholder="Password" name="password"
+                                leftIcon="mdi-lock"
+                            />
+                        </InputContainer>
                         <div className="container has-text-centered">
-                            <button className="button is-fullwidth is-primary">
+                            <button className={btnStatus}>
                                 Register
                             </button>
                         </div>
