@@ -11,7 +11,7 @@ interface HeroFullPageProps {
 const HeroFullPage = (props: HeroFullPageProps) => {
     const titleBar = () => {
         if (props.title)
-            return <div>{props.title}</div>;
+            return <span>{props.title}</span>;
         return <img style={{ height: 40 }} src={process.env.PUBLIC_URL + '/bux_big.png'} alt="Bux" />
 
     };
