@@ -6,13 +6,10 @@ import me.twodee.bux.DTO.HelperValueObject.Notification;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class DataTransferObject
 {
-    protected Notification notification;
+    protected Notification notification = new Notification();
 
     public Notification getNotification()
     {
-        if (notification == null) {
-            return new Notification();
-        }
         return notification;
     }
 
