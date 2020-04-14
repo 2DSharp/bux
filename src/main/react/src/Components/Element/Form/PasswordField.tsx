@@ -28,8 +28,8 @@ const PasswordField = (props: TextFieldProps) => {
             rightIcon={eyeStatus}
             onChange={props.onChange}
             rightIconClickable={true}
-                   onRightIconClick={togglePassword}
-                   label={props.label}
+            onRightIconClick={togglePassword}
+            label={props.label}
         />
     );
 };
