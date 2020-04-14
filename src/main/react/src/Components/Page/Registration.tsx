@@ -6,10 +6,10 @@ import {Link} from "react-router-dom";
 import cx from 'classnames';
 import "../../sass/card-form.scss"
 import Axios from "axios";
-import TextField from "../Element/TextField";
-import InputContainer from "../Element/InputContainer";
+import TextField from "../Element/Form/TextField";
+import InputContainer from "../Element/Form/InputContainer";
 import {getFormErrors, removeFieldFromState} from "../../Helpers/util";
-import PasswordField from "../Element/PasswordField";
+import PasswordField from "../Element/Form/PasswordField";
 
 const Registration = () => {
     type FormData = {
@@ -19,7 +19,7 @@ const Registration = () => {
         password: string
     };
 
-    interface ServerErrors {
+    type ServerErrors = {
         name?: string
         email?: string
         username?: string
@@ -81,13 +81,12 @@ const Registration = () => {
                                        errorMsg={getFormErrors(errors, serverErrors, "name")}
                                        leftIcon="mdi-account"
                                        hasRightErrorIcon={true}
-                                       forwardRef={register(
-                                           {
-                                               required: {
-                                                   value: true,
-                                                   message: errorMsgs.required
-                                               }
-                                           })}
+                                       forwardRef={register({
+                                           required: {
+                                               value: true,
+                                               message: errorMsgs.required
+                                           }
+                                       })}
                             />
                         </InputContainer>
                         <InputContainer>

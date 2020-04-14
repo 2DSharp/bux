@@ -6,9 +6,9 @@ import Card from "../Layout/Card";
 import {useForm} from "react-hook-form";
 import cx from "classnames";
 import Axios, {AxiosResponse} from "axios";
-import TextField from "../Element/TextField";
-import PasswordField from "../Element/PasswordField";
-import InputContainer from "../Element/InputContainer";
+import TextField from "../Element/Form/TextField";
+import PasswordField from "../Element/Form/PasswordField";
+import InputContainer from "../Element/Form/InputContainer";
 import {getFormErrors, removeFieldFromState} from "../../Helpers/util";
 
 interface LoginResponse {

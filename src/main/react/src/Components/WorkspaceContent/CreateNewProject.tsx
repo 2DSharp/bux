@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import HeroFullPage from "../Layout/HeroFullPageProps";
 import "../../sass/card-form.scss"
-import TextField from "../Element/TextField";
-import InputContainer from "../Element/InputContainer";
+import TextField from "../Element/Form/TextField";
+import InputContainer from "../Element/Form/InputContainer";
 import {useForm} from "react-hook-form";
 import cx from "classnames";
 import {getFormErrors, removeFieldFromState} from "../../Helpers/util";
