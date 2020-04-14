@@ -17,7 +17,7 @@ export interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLA
 
 const TextField = (props: TextFieldProps) => {
 
-    const controlClass = cx("control", {
+    const controlClass = cx("control", props.className, {
         "has-icons-left": props.leftIcon,
         "has-icons-right": props.rightIcon || props.hasRightErrorIcon
     });
@@ -28,7 +28,7 @@ const TextField = (props: TextFieldProps) => {
         setHasError(error != undefined && error != "");
     });
 
-    const inputClass = cx("input", {
+    const inputClass = cx("input", props.className, {
         'is-danger': hasError,
         'is-success': props.success && !hasError
     });
@@ -42,7 +42,7 @@ const TextField = (props: TextFieldProps) => {
         "clickable": props.rightIconClickable
     });
     return (
-        <div className="field">
+        <>
             {props.label &&
             <label className="label">{props.label} {props.required && <span style={{color: "red"}}>*</span>}</label>
             }
@@ -69,7 +69,7 @@ const TextField = (props: TextFieldProps) => {
                 <p className="help is-danger">{props.errorMsg}</p>
                 }
             </div>
-        </div>
+        </>
     );
 };
 
