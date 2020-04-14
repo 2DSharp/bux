@@ -28,13 +28,17 @@ public class Project
     @Column(unique = true)
     private String projectKey;
 
+    @ManyToOne
+    private User leader;
+
     @GeneratedValue
     private final LocalDateTime creationTime = LocalDateTime.now();
 
-    public Project(String name, String key)
+    public Project(String name, String key, User leader)
     {
         this.name = name;
         this.projectKey = key.toUpperCase();
+        this.leader = leader;
     }
 
     public Project()
