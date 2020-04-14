@@ -59,7 +59,8 @@ public class ProjectManagement
     {
         List<ProjectDTO> projects = new ArrayList<>();
         repository.findAll().forEach(
-                project -> projects.add(new ProjectDTO(project.getName(), project.getProjectKey())));
+                project -> projects.add(
+                        new ProjectDTO(project.getName(), project.getProjectKey(), project.getCreationTime())));
         return projects;
     }
 }
