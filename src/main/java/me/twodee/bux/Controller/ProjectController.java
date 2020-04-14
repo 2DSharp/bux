@@ -44,7 +44,7 @@ public class ProjectController extends RestAPI
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        projectManagement.createProject(dto);
+        projectManagement.createProject(dto, accountService.getUser(session));
         if (dto.getNotification().hasErrors()) {
             return new ResponseEntity<>(dto.getNotification().getErrors(), HttpStatus.BAD_REQUEST);
         }

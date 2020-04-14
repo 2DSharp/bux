@@ -4,9 +4,9 @@ import me.twodee.bux.DTO.HelperValueObject.Error;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.User.UserDTO;
 import me.twodee.bux.DTO.User.UserLoginDTO;
+import me.twodee.bux.Factory.NotificationFactory;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.UserRepository;
-import me.twodee.bux.Provider.NotificationBuilder;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
 import me.twodee.bux.Util.CryptoUtil;
 import me.twodee.bux.Util.DomainToDTOConverter;
@@ -51,7 +51,7 @@ public class AccountService
         if (!dto.getNotification().hasErrors()) {
             //repository.save(user);
             ServiceHelper.safeSaveToRepository(repository, user, () -> dto.setNotification(
-                    NotificationBuilder.createAmbiguousErrorNotification(provider.getMessageByLocaleService())));
+                    NotificationFactory.createAmbiguousErrorNotification(provider.getMessageByLocaleService())));
         }
     }
 
@@ -120,5 +120,11 @@ public class AccountService
     public boolean usersExist()
     {
         return repository.count() > 0;
+    }
+
+    public User getUser(HttpSession session)
+    {
+        Integer id = (Integer) (session.getAttribute(SESS_USER_ID));
+        return repository.getOne(id);
     }
 }
