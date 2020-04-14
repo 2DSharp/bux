@@ -1,25 +1,33 @@
-@charset "utf-8";
+@import "base-override";
 
-$blue: #3273DC;
-$primary: $blue;
-$primary-dark: #274d99;
-
-$modal-card-head-padding: 10px;
-$modal-card-title-size: 1rem;
-$navbar-bottom-box-shadow-size:  0 5px 0 0;
-$navbar-box-shadow-color: black;
-$navbar-box-shadow-size: 0 5px 0 0;
-$menu-item-color: rgb(209, 214, 237);
 .spc-10 {
-  margin: 10px !important;
+  margin: 10px;
+
   &.bottom {
-    margin-top: 0 !important;
-    margin-bottom: 10px !important;
+    margin-top: 0;
+    margin-bottom: 10px;
   }
+
   &.top {
-    margin-bottom: 0 !important;
-    margin-top: 10px !important;
+    margin-bottom: 0;
+    margin-top: 10px;
   }
 }
-// Import the rest of Bulma
-@import "../../node_modules/bulma/bulma";
+
+input.secondary-textfield {
+  border: 2px solid rgba(52, 52, 52, 0.2);
+}
+
+.control.secondary-textfield {
+  width: 200px;
+}
+
+.small-action-group {
+  font-size: .875rem;
+}
+
+.is-light-btn {
+  background-color: rgba(96, 149, 184, 0.1);
+  border: 1px solid rgba(89, 151, 193, 0.6);
+  color: #1d72aa;
+}
