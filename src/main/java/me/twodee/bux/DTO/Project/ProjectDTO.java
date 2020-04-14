@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 @Getter
 public class ProjectDTO extends DataTransferObject
 {
-    private final LocalDateTime creationTime;
-    private final String name;
-    private final String projectKey;
-    private final PublicUserDTO leader;
+    private LocalDateTime creationTime;
+    private String name;
+    private String projectKey;
+    private PublicUserDTO leader;
 
     private ProjectDTO(ProjectDTOBuilder builder)
     {
@@ -24,6 +24,13 @@ public class ProjectDTO extends DataTransferObject
         this.creationTime = builder.creationTime;
         this.leader = builder.leader;
     }
+
+    public ProjectDTO(String name, String projectKey)
+    {
+        this.name = name;
+        this.projectKey = projectKey;
+    }
+
 
     public static ProjectDTOBuilder getBuilder()
     {
