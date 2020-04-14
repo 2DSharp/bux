@@ -3,7 +3,7 @@ package me.twodee.bux.DTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public abstract class DataTransferObject
 {
     protected Notification notification = new Notification();
