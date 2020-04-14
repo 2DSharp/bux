@@ -1,17 +1,21 @@
 package me.twodee.bux.Model.Service;
 
 import me.twodee.bux.DTO.Project.ProjectDTO;
+import me.twodee.bux.Factory.NotificationFactory;
+import me.twodee.bux.Factory.ProjectDTOFactory;
 import me.twodee.bux.Model.Entity.Project;
+import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.ProjectRepository;
-import me.twodee.bux.Provider.NotificationBuilder;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
 import me.twodee.bux.Util.DomainToDTOConverter;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static me.twodee.bux.Util.BaseUtil.throwingFunctionWrapper;
 
 @Service
 public class ProjectManagement
@@ -25,9 +29,9 @@ public class ProjectManagement
         this.provider = provider;
     }
 
-    public void createProject(ProjectDTO dto)
+    public void createProject(ProjectDTO dto, User user)
     {
-        Project project = new Project(dto.getName(), dto.getProjectKey());
+        Project project = new Project(dto.getName(), dto.getProjectKey(), user);
         Set<ConstraintViolation<Project>> violations = provider.getValidator().validate(project);
         if (!violations.isEmpty()) {
             dto.setNotification(DomainToDTOConverter.convert(violations));
@@ -38,18 +42,18 @@ public class ProjectManagement
             return;
         }
         ServiceHelper.safeSaveToRepository(repository, project, () -> dto.setNotification(
-                NotificationBuilder.createAmbiguousErrorNotification(provider.getMessageByLocaleService())));
+                NotificationFactory.createAmbiguousErrorNotification(provider.getMessageByLocaleService())));
     }
 
     private void checkForRedundancy(ProjectDTO dto)
     {
         if (repository.existsProjectByName(dto.getName())) {
-            dto.appendNotification(NotificationBuilder.createErrorNotification("name",
+            dto.appendNotification(NotificationFactory.createErrorNotification("name",
                                                                                provider.getMessageByLocaleService().getMessage(
                                                                                        "validation.project.name.exists")));
         }
         if (repository.existsProjectByProjectKey(dto.getProjectKey())) {
-            dto.appendNotification(NotificationBuilder.createErrorNotification("projectKey",
+            dto.appendNotification(NotificationFactory.createErrorNotification("projectKey",
                                                                                provider.getMessageByLocaleService().getMessage(
                                                                                        "validation.project.key.exists")));
         }
@@ -57,10 +61,9 @@ public class ProjectManagement
 
     public List<ProjectDTO> getProjects()
     {
-        List<ProjectDTO> projects = new ArrayList<>();
-        repository.findAll().forEach(
-                project -> projects.add(
-                        new ProjectDTO(project.getName(), project.getProjectKey(), project.getCreationTime())));
-        return projects;
+        return repository.findAll()
+                .stream()
+                .map(throwingFunctionWrapper(ProjectDTOFactory::buildProjectDTO))
+                .collect(Collectors.toList());
     }
 }
