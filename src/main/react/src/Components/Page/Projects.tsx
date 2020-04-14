@@ -9,10 +9,14 @@ import {Link, Redirect} from "react-router-dom";
 import MdIcon from "../Element/Icon/MDIcon";
 import SmallTextField from "../Element/Form/SmallTextField";
 
+type Leader = {
+    name: string
+    username: string
+}
 type Project = {
     name: string;
     projectKey: string;
-    owner: string;
+    leader: Leader;
     creationTime: string
 };
 const Projects = () => {
@@ -29,7 +33,7 @@ const Projects = () => {
                 <td className="padded-card">{project.projectKey}</td>
                 <td className="padded-card">{(new Date(project.creationTime)).toLocaleDateString()}</td>
                 <td className="padded-card">Active</td>
-                <td className="padded-card">John Doe</td>
+                <td className="padded-card">{project.leader.name} (@{project.leader.username})</td>
                 <td className="padded-card">
                     <MdIcon value="mdi-dots-horizontal"/>
 
