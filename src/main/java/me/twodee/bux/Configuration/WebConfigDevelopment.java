@@ -9,14 +9,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * This is only for enabling CORS to work with react for development
  */
 @Configuration
-public class WebConfig implements WebMvcConfigurer
+public class WebConfigDevelopment implements WebMvcConfigurer
 {
     /**
      * Add cors for development with react server on 3000
+     *
      * @param registry Cors registry mappings
      */
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(CorsRegistry registry)
+    {
         registry.addMapping("/**")
                 .allowCredentials(true)
                 .maxAge(3600)
