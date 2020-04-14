@@ -1,11 +1,10 @@
-package me.twodee.bux.Provider;
+package me.twodee.bux.Factory;
 
-import me.twodee.bux.DTO.DataTransferObject;
 import me.twodee.bux.DTO.HelperValueObject.Error;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.Util.MessageByLocaleService;
 
-public class NotificationBuilder
+public class NotificationFactory
 {
     public static Notification createErrorNotification(String key, String errorMsg)
     {
