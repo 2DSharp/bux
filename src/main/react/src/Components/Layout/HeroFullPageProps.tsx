@@ -1,5 +1,6 @@
 import React, {ReactElement} from 'react';
 import cx from "classnames";
+import GoBack from "../Element/Button/GoBack";
 
 interface HeroFullPageProps {
     children: ReactElement;
@@ -20,6 +21,7 @@ const HeroFullPage = (props: HeroFullPageProps) => {
         });
     return (
         <section className="hero is-light">
+            <GoBack/>
             <section className="hero is-light is-fullheight">
                 <div className="hero-body">
                     <div className="container">
