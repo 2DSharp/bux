@@ -7,7 +7,7 @@ interface MDIconProps extends IconProps {
 
 const MdIcon = (props: MDIconProps) => {
     return (
-        <Icon value={`mdi ${props.value}`} color={props.color} size={props.size}/>
+        <Icon className={props.className} onClick={props.onClick} value={`mdi ${props.value}`} size={props.size}/>
     );
 };
 
