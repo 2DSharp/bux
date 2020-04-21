@@ -9,7 +9,14 @@ const Project = () => {
     return (
         <ContentWithMenu menu={<ProjectMenu/>}>
             <div className="project-container">
-                {id}
+                <nav className="breadcrumb" aria-label="breadcrumbs">
+                    <ul>
+                        <li><a href="#">Project</a></li>
+                        <li><a href="#">{id}</a></li>
+                        <li className="is-active"><a href="#" aria-current="page">Dashboard</a></li>
+                    </ul>
+                </nav>
+
             </div>
         </ContentWithMenu>
     );
