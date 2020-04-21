@@ -21,7 +21,7 @@ const HeroFullPage = (props: HeroFullPageProps) => {
         });
     return (
         <section className="hero is-light">
-            <GoBack/>
+            <span style={{position: "fixed"}}><GoBack/></span>
             <section className="hero is-light is-fullheight">
                 <div className="hero-body">
                     <div className="container">
