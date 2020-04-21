@@ -43,7 +43,6 @@ const ProjectMenu = () => {
         }
     ];
     const itemClass = (active: boolean | undefined) => classNames({
-        "is-active": active,
         [styles.isActive]: active
     });
     const generateMenu = (item: MenuItem) => {
@@ -59,10 +58,10 @@ const ProjectMenu = () => {
         );
     };
     return (
-        <div className={`hero column sticky is-2 is-fullheight ${styles.fixedColumn}`}>
+        <div className={`column sticky is-2 is-fullheight ${styles.fixedColumn}`}>
             <aside className={`menu  ${styles.menu}`}>
                 <ul className="menu-list">
-                    { menu.map(generateMenu) }
+                    {menu.map(generateMenu)}
                 </ul>
             </aside>
         </div>

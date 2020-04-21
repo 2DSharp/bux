@@ -1,25 +1,44 @@
 @import "base";
 .menu {
-  background-color: $primary-dark !important;
-  -moz-box-shadow:    0 -3px 0 2px rgba(85, 85, 85, 0.2);
+  background-color: #040849 !important;
+  -moz-box-shadow: 0 -3px 0 2px #010110;
   //-webkit-box-shadow: -3px 0 5px 0 #555;
-  box-shadow:        0 -3px 0 2px rgba(85, 85, 85, 0.2);
+  -webkit-box-shadow: 0 -3px 0 2px #010110;
+
+  box-shadow: 0 -3px 0 2px #010110;
   height: 100% !important;
   padding-top: 50px !important;
   width: 215px;
 }
 
+.isActive {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 .iconContainer {
   margin-left: 5px;
-  margin-right: 10px;
+  margin-right: 15px;
+  padding: 15px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 .icon {
-  font-size: 20px;
+  font-size: 16px;
 }
 .item {
-  margin-top: 7px;
-  margin-bottom: 7px;
-  padding-left: 1em !important;
+  font-size: 15px;
+
+  a {
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    &:hover {
+      background-color: rgba(47, 50, 106, 0.8);
+      color: #fff;
+    }
+  }
+
 }
 
 .fixedColumn {
