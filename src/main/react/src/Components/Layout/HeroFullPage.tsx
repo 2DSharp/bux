@@ -2,23 +2,23 @@ import React, {ReactElement} from 'react';
 import cx from "classnames";
 import GoBack from "../Element/Button/GoBack";
 
-interface HeroFullPageProps {
+interface HeroFullPage {
     children: ReactElement;
     title?: string
     width: number
     alignLeft?: boolean
 }
 
-const HeroFullPage = (props: HeroFullPageProps) => {
+const HeroFullPage = (props: HeroFullPage) => {
     const titleBar = () => {
         if (props.title)
             return <span>{props.title}</span>;
-        return <img style={{ height: 40 }} src={process.env.PUBLIC_URL + '/bux_big.png'} alt="Bux" />
+        return <img style={{height: 40}} src={process.env.PUBLIC_URL + '/bux_big.png'} alt="Bux"/>
 
     };
     const titleStyle = cx("title", {
-            "has-text-centered": !props.alignLeft
-        });
+        "has-text-centered": !props.alignLeft
+    });
     return (
         <section className="hero is-light">
             <span style={{position: "fixed"}}><GoBack/></span>
