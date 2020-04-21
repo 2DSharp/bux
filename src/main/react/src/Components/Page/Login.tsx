@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import '@mdi/font/css/materialdesignicons.min.css'
 import {Link, Redirect} from "react-router-dom";
-import HeroFullPage from "../Layout/HeroFullPageProps";
+import HeroFullPage from "../Layout/HeroFullPage";
 import Card from "../Layout/Card";
 import {useForm} from "react-hook-form";
 import cx from "classnames";

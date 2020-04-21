@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Card from "../Layout/Card";
-import HeroFullPage from "../Layout/HeroFullPageProps";
+import HeroFullPage from "../Layout/HeroFullPage";
 import {useForm} from "react-hook-form";
 import {Link} from "react-router-dom";
 import cx from 'classnames';

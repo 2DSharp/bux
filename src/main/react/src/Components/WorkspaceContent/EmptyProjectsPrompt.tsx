@@ -1,5 +1,5 @@
 import React from 'react';
-import HeroFullPage from "../Layout/HeroFullPageProps";
+import HeroFullPage from "../Layout/HeroFullPage";
 import {Link} from "react-router-dom";
 
 const EmptyProjectsPrompt = () => {

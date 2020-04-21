@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import HeroFullPage from "../Layout/HeroFullPageProps";
+import HeroFullPage from "../Layout/HeroFullPage";
 import "../../sass/card-form.scss"
 import TextField from "../Element/Form/TextField";
 import InputContainer from "../Element/Form/InputContainer";
