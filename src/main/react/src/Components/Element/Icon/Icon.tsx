@@ -9,7 +9,7 @@ export interface IconProps {
 
 const Icon = (props: IconProps) => {
     return (
-        <span onClick={props.onClick} className={`icon ${props.className} `}>
+        <span onClick={props.onClick} className={`icon ${props.className ? props.className : ""} `}>
             <i className={props.value}/>
         </span>
     );
