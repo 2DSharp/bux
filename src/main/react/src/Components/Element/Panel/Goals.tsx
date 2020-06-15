@@ -149,9 +149,10 @@ const Goals = () => {
                     {
                         goals[activeTab].length == 0
                             ? <div style={{margin: 10, fontSize: 14, color: "gray", textAlign: "center"}}>
-                                <div style={{width: 250, margin: "0 auto"}}><SharedGoalsPlaceholder
-                                    style={{width: 250, height: 200}}/></div>
-                                There are no {activeTab.toLowerCase()} goals. Create a new goal to get started!
+                                <div style={{width: 250, margin: "0 auto"}}>
+                                    <SharedGoalsPlaceholder style={{width: 250, height: 200}}/>
+                                </div>
+                                This area seems empty. Create a new goal to get started!
                             </div>
                             : goals[activeTab].map(goal => (
                                 <a className="panel-block">
