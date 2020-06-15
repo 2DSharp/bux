@@ -5,7 +5,7 @@ import Goals from "../Element/Panel/Goals";
 
 const useStyles = makeStyles({
     goalsPane: {
-        width: 400
+        width: 420
     }
 });
 const Dashboard = () => {
