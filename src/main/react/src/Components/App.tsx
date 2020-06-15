@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FormEvent, useState} from 'react';
+import React, {ChangeEvent, FormEvent, Suspense, useState} from 'react';
 import 'bulma/css/bulma.css'
 import '../sass/base.scss'
 import Axios from "axios";
@@ -7,9 +7,8 @@ import Login from "./Page/Login";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Registration from "./Page/Registration";
 import Projects from "./Page/Projects";
-import Dashboard from "./WorkspaceContent/Dashboard";
-import Workspace from "./Page/Workspace";
 import CreateNewProject from "./WorkspaceContent/CreateNewProject";
+import Loading from "./Page/Loading";
 
 
 const App = (props: any) => {
@@ -34,6 +33,9 @@ const App = (props: any) => {
                 console.log(response.data)
             });
     };
+
+    const Projects = React.lazy(() => import('./Page/Projects'));
+
     return (
         <BrowserRouter>
 
@@ -42,17 +44,18 @@ const App = (props: any) => {
                     <Login/>
                 </Route>
                 <Route path="/accounts/create">
-                    <Registration />
+                    <Registration/>
                 </Route>
                 <Route path="/projects">
-                    <Projects />
+                    <Suspense fallback={<Loading/>}>
+                        <Projects/>
+                    </Suspense>
                 </Route>
-                <Route path="/project">
-                    <Workspace/>
-                </Route>
+
                 <Route path="/new/project">
                     <CreateNewProject/>
                 </Route>
+
             </Switch>
         </BrowserRouter>
     );
