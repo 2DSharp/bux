@@ -1,7 +1,7 @@
 package me.twodee.bux.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.twodee.bux.Configuration.BuxConfiguration;
+import me.twodee.bux.Configuration.LocaleMessageConfig;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.User.UserDTO;
 import me.twodee.bux.DTO.User.UserLoginDTO;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AccountController.class)
-@ImportAutoConfiguration(BuxConfiguration.class)
+@ImportAutoConfiguration(LocaleMessageConfig.class)
 public class AccountControllerIT
 {
     @Autowired
