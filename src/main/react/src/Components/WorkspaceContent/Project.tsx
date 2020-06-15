@@ -11,7 +11,7 @@ const Project = () => {
             <div className="project-container">
                 <nav className="breadcrumb" aria-label="breadcrumbs">
                     <ul>
-                        <li><a href="#">Project</a></li>
+                        <li><a href="#">Projects</a></li>
                         <li><a href="#">{id}</a></li>
                         <li className="is-active"><a href="#" aria-current="page">Dashboard</a></li>
                     </ul>
