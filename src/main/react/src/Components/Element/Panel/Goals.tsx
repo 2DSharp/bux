@@ -3,6 +3,7 @@ import MdIcon from "../Icon/MDIcon";
 import {makeStyles} from "@material-ui/styles";
 import classNames from "classnames";
 import TabSwitcher from "./TabSwitcher";
+import {ReactComponent as SharedGoalsPlaceholder} from "../../../images/shared_goals.svg";
 
 const useStyles = makeStyles({
     priority: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles({
     },
     panelContainer: {
         minHeight: 150,
-        maxHeight: 300,
+        maxHeight: 320,
         overflowY: "auto"
     },
     progress: {
@@ -145,29 +146,34 @@ const Goals = () => {
                 </div>
                 <TabSwitcher tabs={goalTabs} default="Active" onSwitch={switchTab}/>
                 <div className={classes.panelContainer}>
-
                     {
-                        goals[activeTab].map(goal => (
-                            <a className="panel-block">
+                        goals[activeTab].length == 0
+                            ? <div style={{margin: 10, fontSize: 14, color: "gray", textAlign: "center"}}>
+                                <div style={{width: 250, margin: "0 auto"}}><SharedGoalsPlaceholder
+                                    style={{width: 250, height: 200}}/></div>
+                                There are no {activeTab.toLowerCase()} goals. Create a new goal to get started!
+                            </div>
+                            : goals[activeTab].map(goal => (
+                                <a className="panel-block">
                                 <span className="panel-icon">
                                     <Priority type={goal.priority}/>
                                 </span>
-                                <div className={classes.panelItem}>
-                                    <div>{goal.title}</div>
-                                    <div className={classes.statsContainer}>
-                                        <span className={classes.stat}><b>Team size: </b>{goal.teamSize}</span>
-                                        <span className={classes.stat}><b>Deadline: </b>{goal.deadline}</span>
-                                        <span className={classes.stat} style={{float: "right"}}>
+                                    <div className={classes.panelItem}>
+                                        <div>{goal.title}</div>
+                                        <div className={classes.statsContainer}>
+                                            <span className={classes.stat}><b>Team size: </b>{goal.teamSize}</span>
+                                            <span className={classes.stat}><b>Deadline: </b>{goal.deadline}</span>
+                                            <span className={classes.stat} style={{float: "right"}}>
                                             <progress
                                                 className={progressPressure(goal.pressure)}
                                                 value={goal.progress}
                                                 max="100">{goal.progress}%</progress>
                                              <> {goal.progress}%</>
                                         </span>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                        ))
+                                </a>
+                            ))
                     }
 
                 </div>
