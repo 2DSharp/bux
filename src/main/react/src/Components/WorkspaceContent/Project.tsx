@@ -2,6 +2,7 @@ import React from 'react';
 import ContentWithMenu from "../Layout/ContentWithMenu";
 import ProjectMenu from "../Layout/ProjectMenu";
 import {useParams} from "react-router-dom";
+import Dashboard from "./Dashboard";
 
 const Project = () => {
     const {id} = useParams();
@@ -16,7 +17,7 @@ const Project = () => {
                         <li className="is-active"><a href="#" aria-current="page">Dashboard</a></li>
                     </ul>
                 </nav>
-
+                <Dashboard/>
             </div>
         </ContentWithMenu>
     );

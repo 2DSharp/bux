@@ -1,16 +1,19 @@
 import React from 'react';
-import ProjectMenu from "../Layout/ProjectMenu";
 import "../../sass/project.scss";
+import {makeStyles} from "@material-ui/styles";
+import Goals from "../Element/Panel/Goals";
 
+const useStyles = makeStyles({
+    goalsPane: {
+        width: 400
+    }
+});
 const Dashboard = () => {
-    return (
-        <div className="columns">
-            <ProjectMenu/>
-            <div className="column project-subpage">
-                <div className="container is-fluid">
+    const classes = useStyles();
 
-                </div>
-            </div>
+    return (
+        <div className={classes.goalsPane}>
+            <Goals/>
         </div>
     );
 };
