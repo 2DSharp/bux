@@ -1,8 +1,8 @@
-import React, {ReactElement} from 'react';
+import React, {ReactElement, useState} from 'react';
 import MdIcon from "../Icon/MDIcon";
 import {makeStyles} from "@material-ui/styles";
 import classNames from "classnames";
-import styles from "../../../sass/std_component.module.scss"
+import TabSwitcher from "./TabSwitcher";
 
 const useStyles = makeStyles({
     priority: {
@@ -28,6 +28,7 @@ const useStyles = makeStyles({
         marginRight: "7px"
     },
     panelContainer: {
+        minHeight: 150,
         maxHeight: 300,
         overflowY: "auto"
     },
@@ -47,7 +48,7 @@ interface PriorityProps {
     type: "high" | "low" | "medium"
 }
 
-type GoalType = {
+type Goal = {
     id: string,
     title: string,
     teamSize: number,
@@ -56,7 +57,10 @@ type GoalType = {
     pressure: "high" | "low" | "medium",
     priority: "high" | "low" | "medium"
 }
-const goals: GoalType[] =
+
+const goalTabs = ['All', 'Upcoming', 'Active', 'Completed', 'Abandoned']
+
+const activeGoals: Goal[] =
     [
         {
             id: "1",
@@ -85,8 +89,25 @@ const goals: GoalType[] =
             priority: "low",
             pressure: "medium"
         },
-    ];
 
+    ];
+const upcomingGoals: Goal[] = [];
+const completedGoals: Goal[] = [];
+const abandonedGoals: Goal[] = [];
+const allGoals: Goal[] = [
+    ...activeGoals,
+    ...upcomingGoals,
+    ...completedGoals,
+    ...abandonedGoals
+];
+
+const goals: ({ [key: string]: Goal[] }) = {
+    'All': allGoals,
+    'Active': activeGoals,
+    'Upcoming': upcomingGoals,
+    'Completed': completedGoals,
+    'Abandoned': abandonedGoals
+}
 
 const Goals = () => {
     const classes = useStyles();
@@ -106,6 +127,10 @@ const Goals = () => {
             "is-danger": pressure === "high",
             "is-info": pressure === "medium"
         });
+    const [activeTab, setActiveTab] = useState<string>('Active');
+    const switchTab = (tab: string) => {
+        setActiveTab(tab);
+    }
     return (
         <div className={classes.root}>
             <nav className="panel">
@@ -118,17 +143,11 @@ const Goals = () => {
                         <input className="input" type="text" placeholder="Search"/>
                     </p>
                 </div>
-                <p className={`panel-tabs`}>
-                    <a className={styles.panelTabs}>All</a>
-                    <a className={`is-active ${styles.panelTabs}`}>Active</a>
-                    <a className={styles.panelTabs}>Upcoming</a>
-                    <a className={styles.panelTabs}>Completed</a>
-                    <a className={styles.panelTabs}>Abandoned</a>
-                </p>
+                <TabSwitcher tabs={goalTabs} default="Active" onSwitch={switchTab}/>
                 <div className={classes.panelContainer}>
 
                     {
-                        goals.map(goal => (
+                        goals[activeTab].map(goal => (
                             <a className="panel-block">
                                 <span className="panel-icon">
                                     <Priority type={goal.priority}/>
