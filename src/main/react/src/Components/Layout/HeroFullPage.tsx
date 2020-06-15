@@ -7,6 +7,7 @@ interface HeroFullPage {
     title?: string
     width: number
     alignLeft?: boolean
+    goBack?: boolean
 }
 
 const HeroFullPage = (props: HeroFullPage) => {
@@ -21,7 +22,10 @@ const HeroFullPage = (props: HeroFullPage) => {
     });
     return (
         <section className="hero is-light">
-            <span style={{position: "fixed"}}><GoBack/></span>
+            {
+                props.goBack && <span style={{position: "fixed"}}><GoBack/></span>
+
+            }
             <section className="hero is-light is-fullheight">
                 <div className="hero-body">
                     <div className="container">

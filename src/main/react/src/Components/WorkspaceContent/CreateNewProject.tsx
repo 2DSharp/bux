@@ -50,7 +50,7 @@ const CreateNewProject = () => {
     if (success)
         return <Redirect to="/projects"/>
     return (
-        <HeroFullPage width={4} title={"Create a new project"} alignLeft={true}>
+        <HeroFullPage width={4} title={"Create a new project"} alignLeft={true} goBack={true}>
             <>
                 <form onSubmit={onSubmit}>
                     <InputContainer>
