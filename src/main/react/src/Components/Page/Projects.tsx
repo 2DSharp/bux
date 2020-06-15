@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 
 import EmptyProjectsPrompt from "../WorkspaceContent/EmptyProjectsPrompt";
 import Axios, {AxiosError} from "axios";
 import Workspace from "./Workspace";
 import '../../sass/project.scss'
 import styles from '../../sass/workspace.module.scss'
-import {Link, Redirect, Route, Switch} from "react-router-dom";
+import {Link, Redirect, Route, Switch, useRouteMatch} from "react-router-dom";
 import MdIcon from "../Element/Icon/MDIcon";
 import SmallTextField from "../Element/Form/SmallTextField";
 import Project from "../WorkspaceContent/Project";
+import Loading from "./Loading";
 
 type Leader = {
     name: string
@@ -24,11 +25,14 @@ const Projects = () => {
     const [projects, setProjects] = useState<Project[]>();
     const [loaded, setLoaded] = useState(false);
     const [forbidden, setForbidden] = useState(false);
+    let {url} = useRouteMatch();
+    const Project = React.lazy(() => import('./../WorkspaceContent/Project'));
+
     const pushProject = (project: Project) => {
         return (
             <tbody key={project.projectKey}>
             <tr className={styles.tableRow} style={{border: "none !important"}}>
-                <Link to={`/projects/${project.projectKey}`}>
+                <Link to={`${url}/${project.projectKey}`}>
                     <td className="padded-card">
                         <MdIcon value="mdi-rocket"/>
                         {project.name}
@@ -67,7 +71,11 @@ const Projects = () => {
         <Workspace active="Projects">
             <>
                 <Switch>
-                    <Route path="/projects/:id" children={<Project/>}/>
+                    <Route path="/projects/:id">
+                        <Suspense fallback={<Loading/>}>
+                            <Project/>
+                        </Suspense>
+                    </Route>
                     <Route path="/projects/">
                         <div className="columns">
                             <div className="column project-container">
