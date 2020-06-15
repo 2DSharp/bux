@@ -8,7 +8,7 @@ import "../../sass/card-form.scss"
 import Axios from "axios";
 import TextField from "../Element/Form/TextField";
 import InputContainer from "../Element/Form/InputContainer";
-import {getFormErrors, removeFieldFromState} from "../../Helpers/util";
+import {getFormErrors, removeFieldFromState} from "../../service/util";
 import PasswordField from "../Element/Form/PasswordField";
 
 const Registration = () => {

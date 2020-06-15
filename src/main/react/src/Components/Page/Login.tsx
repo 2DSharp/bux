@@ -9,7 +9,7 @@ import Axios, {AxiosResponse} from "axios";
 import TextField from "../Element/Form/TextField";
 import PasswordField from "../Element/Form/PasswordField";
 import InputContainer from "../Element/Form/InputContainer";
-import {getFormErrors, removeFieldFromState} from "../../Helpers/util";
+import {getFormErrors, removeFieldFromState} from "../../service/util";
 
 interface LoginResponse {
     success: boolean
