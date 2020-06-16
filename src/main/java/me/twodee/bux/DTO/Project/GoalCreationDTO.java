@@ -6,7 +6,7 @@ import lombok.Getter;
 import me.twodee.bux.DTO.DataTransferObject;
 import me.twodee.bux.Model.Entity.Goal;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 public class GoalCreationDTO extends DataTransferObject {
     private String projectKey;
     private String title;
-    private LocalDateTime deadline;
+
+    private LocalDate deadline;
     private String milestone;
-    private String leader;
     private Goal.Priority priority;
 }

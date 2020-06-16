@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -26,7 +26,7 @@ public class Goal {
 
     private String title;
 
-    private LocalDateTime deadline;
+    private LocalDate deadline;
     private String milestone;
     @Builder.Default
     private Priority priority = Priority.MEDIUM;

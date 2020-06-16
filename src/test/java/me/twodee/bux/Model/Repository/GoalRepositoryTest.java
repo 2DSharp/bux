@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -38,7 +38,7 @@ class GoalRepositoryTest {
         Goal goal = Goal.builder()
                 .title("Goal 1")
                 .createdBy(usr)
-                .deadline(LocalDateTime.now())
+                .deadline(LocalDate.now())
                 .project(project)
                 .build();
         repository.save(goal);
@@ -56,7 +56,7 @@ class GoalRepositoryTest {
         Goal goal = Goal.builder()
                 .title("Goal 1")
                 .createdBy(usr)
-                .deadline(LocalDateTime.now())
+                .deadline(LocalDate.now())
                 .project(project)
                 .build();
         Goal result = repository.save(goal);
