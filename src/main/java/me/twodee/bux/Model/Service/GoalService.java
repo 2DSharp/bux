@@ -7,13 +7,17 @@ import me.twodee.bux.Model.Entity.Project;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.GoalRepository;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class GoalService {
 
     private final ProjectManagement projectManagement;
     private final GoalRepository repository;
     private final SpringHelperDependencyProvider provider;
 
+    @Autowired
     public GoalService(ProjectManagement projectManagement,
                        GoalRepository repository, SpringHelperDependencyProvider provider) {
         this.projectManagement = projectManagement;
