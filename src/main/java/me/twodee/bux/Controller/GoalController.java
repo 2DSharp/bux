@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +17,8 @@ import java.util.Map;
 
 @RestController
 public class GoalController extends RestAPI {
-    private AccountService accountService;
-    private GoalService goalService;
+    private final AccountService accountService;
+    private final GoalService goalService;
 
     public static class StringToEnumConverter implements Converter<String, Goal.Priority> {
         @Override
@@ -38,9 +37,8 @@ public class GoalController extends RestAPI {
         this.goalService = goalService;
     }
 
-    @PostMapping("/projects/{id}/goals/create")
-    public ResponseEntity<Map<String, String>> createNewGoal(HttpSession session, @PathVariable("id") String id,
-                                                             @RequestBody GoalCreationDTO dto) {
+    @PostMapping("/projects/goals/create")
+    public ResponseEntity<Map<String, String>> createNewGoal(HttpSession session, @RequestBody GoalCreationDTO dto) {
         if (!accountService.currentUserCanCreateProject(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
