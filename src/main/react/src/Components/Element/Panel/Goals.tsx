@@ -56,7 +56,8 @@ type Goal = {
     deadline: string,
     progress: number,
     pressure: "high" | "low" | "medium",
-    priority: "high" | "low" | "medium"
+    priority: "high" | "low" | "medium",
+    milestone?: string
 }
 
 const goalTabs = ['All', 'Upcoming', 'Active', 'Completed', 'Abandoned']
@@ -70,7 +71,8 @@ const activeGoals: Goal[] =
             deadline: "July 2, 2020",
             progress: 72,
             priority: "high",
-            pressure: "low"
+            pressure: "low",
+            milestone: "launch"
         },
         {
             id: "2",
@@ -160,7 +162,20 @@ const Goals = () => {
                                     <Priority type={goal.priority}/>
                                 </span>
                                     <div className={classes.panelItem}>
-                                        <div>{goal.title}</div>
+                                        <div>
+                                            {goal.title}
+                                            {goal.milestone &&
+                                            <span style={{
+                                                fontSize: 13,
+                                                color: "darkgray",
+                                                maxWidth: 100,
+                                                display: "inline-block",
+                                                float: "right",
+                                                marginRight: 10
+                                            }}>
+                                                <MdIcon value="mdi-flag-checkered"/>{goal.milestone}</span>
+                                            }
+                                        </div>
                                         <div className={classes.statsContainer}>
                                             <span className={classes.stat}><b>Team size: </b>{goal.teamSize}</span>
                                             <span className={classes.stat}><b>Deadline: </b>{goal.deadline}</span>
