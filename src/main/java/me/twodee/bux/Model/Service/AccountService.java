@@ -72,15 +72,17 @@ public class AccountService
         return session.getAttribute(SESS_USER_ID) != null;
     }
 
-    public boolean canCreateProjects(HttpSession session)
-    {
-        Integer id = (Integer)(session.getAttribute(SESS_USER_ID));
+    public boolean canCreateProjects(HttpSession session) {
+        Integer id = (Integer) (session.getAttribute(SESS_USER_ID));
         User.Role role = repository.getOne(id).getRole();
         return role == User.Role.ADMIN || role == User.Role.LEADER;
     }
 
-    private void persistSession(User user, UserLoginDTO dto, HttpSession session)
-    {
+    public boolean currentUserCanCreateProject(HttpSession session) {
+        return isLoggedIn(session) && canCreateProjects(session);
+    }
+
+    private void persistSession(User user, UserLoginDTO dto, HttpSession session) {
         if (CryptoUtil.verifyPassword(dto.getPassword(), user.getHashedPassword())) {
             session.setAttribute(SESS_USER_ID, user.getId());
             return;

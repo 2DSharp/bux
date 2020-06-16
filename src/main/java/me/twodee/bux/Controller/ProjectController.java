@@ -40,7 +40,7 @@ public class ProjectController extends RestAPI
     @PostMapping("/projects/create")
     public ResponseEntity<Map<String, String>> createNewProject(HttpSession session, @RequestBody ProjectDTO dto)
     {
-        if (!accountService.isLoggedIn(session) || !accountService.canCreateProjects(session)) {
+        if (!accountService.currentUserCanCreateProject(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
