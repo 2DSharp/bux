@@ -18,19 +18,16 @@ import java.util.stream.Collectors;
 import static me.twodee.bux.Util.BaseUtil.throwingFunctionWrapper;
 
 @Service
-public class ProjectManagement
-{
+public class ProjectManagement {
     private final ProjectRepository repository;
     private final SpringHelperDependencyProvider provider;
 
-    public ProjectManagement(ProjectRepository repository, SpringHelperDependencyProvider provider)
-    {
+    public ProjectManagement(ProjectRepository repository, SpringHelperDependencyProvider provider) {
         this.repository = repository;
         this.provider = provider;
     }
 
-    public void createProject(ProjectDTO dto, User user)
-    {
+    public void createProject(ProjectDTO dto, User user) {
         Project project = new Project(dto.getName(), dto.getProjectKey(), user);
         Set<ConstraintViolation<Project>> violations = provider.getValidator().validate(project);
         if (!violations.isEmpty()) {
@@ -45,8 +42,7 @@ public class ProjectManagement
                 NotificationFactory.createAmbiguousErrorNotification(provider.getMessageByLocaleService())));
     }
 
-    private void checkForRedundancy(ProjectDTO dto)
-    {
+    private void checkForRedundancy(ProjectDTO dto) {
         if (repository.existsProjectByName(dto.getName())) {
             dto.appendNotification(NotificationFactory.createErrorNotification("name",
                                                                                provider.getMessageByLocaleService().getMessage(
@@ -59,11 +55,18 @@ public class ProjectManagement
         }
     }
 
-    public List<ProjectDTO> getProjects()
-    {
+    public List<ProjectDTO> getProjects() {
         return repository.findAll()
                 .stream()
                 .map(throwingFunctionWrapper(ProjectDTOFactory::buildProjectDTO))
                 .collect(Collectors.toList());
+    }
+
+    public boolean projectExists(String projectKey) {
+        return repository.existsProjectByProjectKey(projectKey);
+    }
+
+    public Project getProjectReferenceFromKey(String projectKey) {
+        return repository.findProjectByProjectKey(projectKey);
     }
 }
