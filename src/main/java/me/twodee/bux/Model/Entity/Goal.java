@@ -1,5 +1,6 @@
 package me.twodee.bux.Model.Entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Goal {
     public enum Priority {
         LOW,
@@ -26,6 +28,7 @@ public class Goal {
 
     private LocalDateTime deadline;
     private String milestone;
+    @Builder.Default
     private Priority priority = Priority.MEDIUM;
 
     @ManyToOne
@@ -33,4 +36,5 @@ public class Goal {
 
     @ManyToOne
     private User createdBy;
+
 }
