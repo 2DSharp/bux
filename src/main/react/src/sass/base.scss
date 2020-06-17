@@ -37,6 +37,12 @@ input.secondary-textfield {
   color: #1d72aa;
 }
 
+.centered-absolutely {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 div {
   &.is-loading {
     height: 132px;
