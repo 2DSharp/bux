@@ -8,12 +8,12 @@ const useStyles = makeStyles({
         width: 420
     }
 });
-const Dashboard = () => {
+const Dashboard = (props: { project: string }) => {
     const classes = useStyles();
 
     return (
         <div className={classes.goalsPane}>
-            <Goals/>
+            <Goals projectKey={props.project}/>
         </div>
     );
 };

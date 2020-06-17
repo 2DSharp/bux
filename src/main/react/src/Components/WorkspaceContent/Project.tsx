@@ -17,7 +17,7 @@ const Project = () => {
                         <li className="is-active"><a href="#" aria-current="page">Dashboard</a></li>
                     </ul>
                 </nav>
-                <Dashboard/>
+                <Dashboard project={id}/>
             </div>
         </ContentWithMenu>
     );
