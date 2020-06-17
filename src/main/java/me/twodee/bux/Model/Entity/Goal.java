@@ -34,6 +34,8 @@ public class Goal {
 
     private LocalDate deadline;
 
+    private final LocalDate createdAt = LocalDate.now();
+
     private String milestone;
 
     private String description;
