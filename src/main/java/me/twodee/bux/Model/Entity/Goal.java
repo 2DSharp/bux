@@ -27,7 +27,11 @@ public class Goal {
     private String title;
 
     private LocalDate deadline;
+
     private String milestone;
+
+    private String description;
+
     @Builder.Default
     private Priority priority = Priority.MEDIUM;
 
