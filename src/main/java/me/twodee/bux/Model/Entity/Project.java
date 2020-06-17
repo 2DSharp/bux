@@ -12,9 +12,6 @@ import java.time.LocalDateTime;
 @Getter
 public class Project
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
 
     @Pattern(regexp = "^[a-zA-Z].*", message = "{validation.project.name.pattern}")
     @Size(min = 2, max = 50, message = "{validation.project.name.size}")
@@ -22,6 +19,7 @@ public class Project
     @Column(unique = true)
     private String name;
 
+    @Id
     @Pattern(regexp = "^[A-Z][A-Z0-9]+$", message = "{validation.project.key.pattern}")
     @Size(min = 2, max = 8, message = "{validation.project.key.size}")
     @NotBlank(message = "{validation.project.key.empty}")

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,7 +49,7 @@ public class ProjectManagement {
                                                                                provider.getMessageByLocaleService().getMessage(
                                                                                        "validation.project.name.exists")));
         }
-        if (repository.existsProjectByProjectKey(dto.getProjectKey())) {
+        if (repository.existsById(dto.getProjectKey())) {
             dto.appendNotification(NotificationFactory.createErrorNotification("projectKey",
                                                                                provider.getMessageByLocaleService().getMessage(
                                                                                        "validation.project.key.exists")));
@@ -63,10 +64,11 @@ public class ProjectManagement {
     }
 
     public boolean projectExists(String projectKey) {
-        return repository.existsProjectByProjectKey(projectKey);
+        return repository.existsById(projectKey);
     }
 
     public Project getProjectReferenceFromKey(String projectKey) {
-        return repository.findProjectByProjectKey(projectKey);
+        Optional<Project> project = repository.findById(projectKey);
+        return project.orElse(null);
     }
 }
