@@ -7,8 +7,12 @@ import me.twodee.bux.Model.Entity.Project;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.GoalRepository;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
+import me.twodee.bux.Util.DomainToDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.validation.ConstraintViolation;
+import java.util.Set;
 
 @Service
 public class GoalService {
@@ -26,6 +30,12 @@ public class GoalService {
     }
 
     public void createGoal(GoalCreationDTO dto, User user) {
+        Set<ConstraintViolation<GoalCreationDTO>> violations = provider.getValidator().validate(dto);
+        if (!violations.isEmpty()) {
+            dto.setNotification(DomainToDTOConverter.convert(violations));
+            return;
+        }
+
         if (!projectManagement.projectExists(dto.getProjectKey())) {
             dto.appendNotification(NotificationFactory.createErrorNotification("global",
                                                                                provider.getMessageByLocaleService().getMessage(
@@ -37,6 +47,7 @@ public class GoalService {
         Goal goal = Goal.builder()
                 .title(dto.getTitle())
                 .priority(dto.getPriority())
+                .description(dto.getDescription())
                 .deadline(dto.getDeadline())
                 .createdBy(user)
                 .project(project)
