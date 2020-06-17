@@ -1,6 +1,7 @@
 package me.twodee.bux.Controller;
 
 import me.twodee.bux.DTO.Project.GoalCreationDTO;
+import me.twodee.bux.DTO.Project.GoalsList;
 import me.twodee.bux.Model.Entity.Goal;
 import me.twodee.bux.Model.Service.AccountService;
 import me.twodee.bux.Model.Service.GoalService;
@@ -8,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
@@ -49,6 +48,15 @@ public class GoalController extends RestAPI {
             return new ResponseEntity<>(dto.getNotification().getErrors(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/projects/{key}/goals")
+    public ResponseEntity<GoalsList> findGoalsForProject(HttpSession session, @PathVariable String key) {
+        if (!accountService.isLoggedIn(session)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        return ResponseEntity.ok(goalService.getAllGoalsListForProject(key));
     }
 
 }
