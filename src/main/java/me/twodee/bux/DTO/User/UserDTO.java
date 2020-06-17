@@ -1,8 +1,10 @@
 package me.twodee.bux.DTO.User;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import me.twodee.bux.DTO.DataTransferObject;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Getter
 public class UserDTO extends DataTransferObject
 {
@@ -12,8 +14,7 @@ public class UserDTO extends DataTransferObject
     private String password;
 
 
-    public UserDTO(String name, String username, String email, String password)
-    {
+    public UserDTO(String name, String username, String email, String password) {
         this.name = name;
         this.username = username;
         this.email = email;
