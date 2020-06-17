@@ -9,7 +9,7 @@ import Axios, {AxiosResponse} from "axios";
 import TextField from "../Element/Form/TextField";
 import PasswordField from "../Element/Form/PasswordField";
 import InputContainer from "../Element/Form/InputContainer";
-import {getFormErrors, removeFieldFromState} from "../../service/util";
+import {getFormErrors} from "../../service/util";
 
 interface LoginResponse {
     success: boolean
@@ -79,11 +79,9 @@ const Login = () => {
                                     forwardRef={register({
                                         required: {value: true, message: errorMsgs.required},
                                     })}
-                                    onChange={event => {
-                                        removeFieldFromState(setServerErrors, "identifier")
-                                    }}
                                     placeholder="Email or Username" name="identifier"
                                     leftIcon="mdi-face-profile"
+                                    resetServerErrors={setServerErrors}
                                     hasRightErrorIcon={true}
                                 />
                             </InputContainer>
@@ -93,9 +91,7 @@ const Login = () => {
                                     forwardRef={register({
                                         required: {value: true, message: errorMsgs.required},
                                     })}
-                                    onChange={event => {
-                                        removeFieldFromState(setServerErrors, "password")
-                                    }}
+                                    resetServerErrors={setServerErrors}
                                     placeholder="Password" name="password"
                                     leftIcon="mdi-lock"
                                 />

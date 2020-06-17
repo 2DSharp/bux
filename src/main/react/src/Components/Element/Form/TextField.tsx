@@ -1,5 +1,14 @@
-import React, {ChangeEventHandler, MouseEventHandler, useEffect, useState} from 'react';
+import React, {
+    ChangeEvent,
+    ChangeEventHandler,
+    Dispatch,
+    MouseEventHandler,
+    SetStateAction,
+    useEffect,
+    useState
+} from 'react';
 import cx from "classnames";
+import {removeFieldFromState} from "../../../service/util";
 
 export interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
     type?: string;
@@ -13,6 +22,7 @@ export interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLA
     rightIconClickable?: boolean;
     onRightIconClick?: MouseEventHandler<HTMLSpanElement>
     label?: string
+    resetServerErrors?: Dispatch<SetStateAction<any>>
 }
 
 const TextField = (props: TextFieldProps) => {
@@ -41,6 +51,13 @@ const TextField = (props: TextFieldProps) => {
     const rightIconContainerClass = cx("icon", "is-small", "is-right", {
         "clickable": props.rightIconClickable
     });
+    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (props.onChange) {
+            props.onChange(event);
+        }
+        console.log("Here");
+        removeFieldFromState(props.resetServerErrors, props.name as string)
+    }
     return (
         <>
             {props.label &&
@@ -50,7 +67,7 @@ const TextField = (props: TextFieldProps) => {
 
                 <input type={(props.type) ? props.type : "text"} placeholder={props.placeholder} name={props.name}
                        className={inputClass}
-                       onChange={props.onChange}
+                       onChange={onChange}
                        autoComplete={props.autoComplete}
                        ref={props.forwardRef}
                 />

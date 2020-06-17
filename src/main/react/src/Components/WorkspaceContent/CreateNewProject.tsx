@@ -5,7 +5,7 @@ import TextField from "../Element/Form/TextField";
 import InputContainer from "../Element/Form/InputContainer";
 import {useForm} from "react-hook-form";
 import cx from "classnames";
-import {getFormErrors, removeFieldFromState} from "../../Helpers/util";
+import {getFormErrors} from "../../service/util";
 import Axios, {AxiosError, AxiosResponse} from "axios";
 import {Redirect} from "react-router-dom";
 
@@ -55,9 +55,6 @@ const CreateNewProject = () => {
                 <form onSubmit={onSubmit}>
                     <InputContainer>
                         <TextField placeholder={"Example: Bux"} name="name"
-                                   onChange={event => {
-                                       removeFieldFromState(setServerErrors, "name")
-                                   }}
                                    errorMsg={getFormErrors(errors, serverErrors, "name")}
                                    forwardRef={register({
                                        required: {
@@ -65,6 +62,7 @@ const CreateNewProject = () => {
                                            message: errorMsgs.required
                                        }
                                    })}
+                                   resetServerErrors={setServerErrors}
                                    hasRightErrorIcon={true}
                                    label={"Project name"} required={true}
                         />
@@ -74,9 +72,6 @@ const CreateNewProject = () => {
                         <>
                             <TextField placeholder={"A short 2-8 character identifier"}
                                        label={"Project key"} required={true} name="projectKey"
-                                       onChange={event => {
-                                           removeFieldFromState(setServerErrors, "projectKey")
-                                       }}
                                        errorMsg={getFormErrors(errors, serverErrors, "projectKey")}
                                        forwardRef={register({
                                            required: {
@@ -92,6 +87,7 @@ const CreateNewProject = () => {
                                                message: errorMsgs.keySize
                                            }
                                        })}
+                                       resetServerErrors={setServerErrors}
                                        hasRightErrorIcon={true}
                             />
 

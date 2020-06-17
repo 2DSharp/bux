@@ -1,11 +1,12 @@
-import {Dispatch, SetStateAction} from "react";
 import {FieldErrors} from "react-hook-form";
 
-export function removeFieldFromState<T>(setState: Dispatch<SetStateAction<T | undefined>>, field: string)  {
-    setState(
-        (state: T | undefined) : T | undefined => {
-            return {...state, [field]: undefined} as T | undefined;
-        });
+export function removeFieldFromState<T>(setState: React.Dispatch<React.SetStateAction<T | undefined>> | undefined, field: string) {
+    if (setState) {
+        setState(
+            (state: T | undefined): T | undefined => {
+                return {...state, [field]: undefined} as T | undefined;
+            });
+    }
 }
 
 export function getFormErrors(clientErr: FieldErrors<any>, serverErr: any | undefined, field: string) {

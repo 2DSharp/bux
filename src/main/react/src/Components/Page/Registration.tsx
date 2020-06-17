@@ -8,7 +8,7 @@ import "../../sass/card-form.scss"
 import Axios from "axios";
 import TextField from "../Element/Form/TextField";
 import InputContainer from "../Element/Form/InputContainer";
-import {getFormErrors, removeFieldFromState} from "../../service/util";
+import {getFormErrors} from "../../service/util";
 import PasswordField from "../Element/Form/PasswordField";
 
 const Registration = () => {
@@ -75,9 +75,7 @@ const Registration = () => {
                     <form onSubmit={onSubmit}>
                         <InputContainer>
                             <TextField name="name" placeholder="Enter your name"
-                                       onChange={event => {
-                                           removeFieldFromState(setServerErrors, "name")
-                                       }}
+                                       resetServerErrors={setServerErrors}
                                        errorMsg={getFormErrors(errors, serverErrors, "name")}
                                        leftIcon="mdi-account"
                                        hasRightErrorIcon={true}
@@ -91,9 +89,7 @@ const Registration = () => {
                         </InputContainer>
                         <InputContainer>
                             <TextField name="email" type="email" placeholder="Enter your email"
-                                       onChange={event => {
-                                           removeFieldFromState(setServerErrors, "email")
-                                       }}
+                                       resetServerErrors={setServerErrors}
                                        forwardRef={register({
                                            required: {value: true, message: errorMsgs.required},
                                            // Keeping it simple: https://stackoverflow.com/a/48800/6109408
@@ -108,9 +104,7 @@ const Registration = () => {
                         </InputContainer>
                         <InputContainer>
                             <TextField name="username" placeholder="Create a username"
-                                       onChange={event => {
-                                           removeFieldFromState(setServerErrors, "email")
-                                       }}
+                                       resetServerErrors={setServerErrors}
                                        errorMsg={getFormErrors(errors, serverErrors, "username")}
                                        forwardRef={register({
                                            required: {value: true, message: errorMsgs.required},
@@ -131,9 +125,7 @@ const Registration = () => {
                                 forwardRef={register({
                                     required: {value: true, message: errorMsgs.required},
                                 })}
-                                onChange={event => {
-                                    removeFieldFromState(setServerErrors, "password")
-                                }}
+                                resetServerErrors={setServerErrors}
                                 placeholder="Password" name="password"
                                 leftIcon="mdi-lock"
                             />
