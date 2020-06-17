@@ -22,7 +22,7 @@ const TabSwitcher = (props: TabSwitcher) => {
         <p className={`panel-tabs`}>
             {
                 props.tabs.map(tab => (
-                    <a onClick={() => switchTab(tab)} className={activeClass(tab)}>{tab}</a>
+                    <a key={tab} onClick={() => switchTab(tab)} className={activeClass(tab)}>{tab}</a>
                 ))
             }
         </p>

@@ -58,7 +58,7 @@ const ProjectMenu = () => {
     const {url} = useRouteMatch();
     const generateMenu = (item: MenuItem) => {
         return (
-            <li className={styles.item}>
+            <li key={item.text} className={styles.item}>
                 <Link to={`${url}/${item.path}`} className={itemClass(item.active)}>
                     <span className={`icon ${styles.iconContainer}`}>
                         <i className={`mdi ${styles.icon} ${item.icon}`}/>
