@@ -42,6 +42,9 @@ public class Goal {
     private Status status = Status.ACTIVE;
 
     @Builder.Default
+    private int progress = 0;
+
+    @Builder.Default
     private Priority priority = Priority.MEDIUM;
 
     @ManyToOne
