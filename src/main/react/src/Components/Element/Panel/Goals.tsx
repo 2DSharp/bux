@@ -1,9 +1,11 @@
-import React, {ReactElement, useState} from 'react';
+import React, {ReactElement, useEffect, useState} from 'react';
 import MdIcon from "../Icon/MDIcon";
 import {makeStyles} from "@material-ui/styles";
 import classNames from "classnames";
 import TabSwitcher from "./TabSwitcher";
 import {ReactComponent as SharedGoalsPlaceholder} from "../../../images/shared_goals.svg";
+import NewGoal from "../Modal/NewGoal";
+import {getRequest} from "../../../service/request";
 
 const useStyles = makeStyles({
     priority: {
@@ -46,7 +48,7 @@ const useStyles = makeStyles({
 
 
 interface PriorityProps {
-    type: "high" | "low" | "medium"
+    type: "HIGH" | "LOW" | "MEDIUM"
 }
 
 type Goal = {
@@ -55,151 +57,127 @@ type Goal = {
     teamSize: number,
     deadline: string,
     progress: number,
-    pressure: "high" | "low" | "medium",
-    priority: "high" | "low" | "medium",
+    pressure: "HIGH" | "LOW" | "MEDIUM",
+    status: 'ACTIVE' | 'COMPLETED' | 'ABANDONED'
+    priority: "HIGH" | "LOW" | "MEDIUM",
     milestone?: string
 }
 
-const goalTabs = ['All', 'Upcoming', 'Active', 'Completed', 'Abandoned']
+const goalTabs = ['All', 'Active', 'Completed', 'Abandoned']
 
-const activeGoals: Goal[] =
-    [
-        {
-            id: "1",
-            title: "UI Design",
-            teamSize: 4,
-            deadline: "July 2, 2020",
-            progress: 72,
-            priority: "high",
-            pressure: "low",
-            milestone: "launch"
-        },
-        {
-            id: "2",
-            title: "API Gateway",
-            teamSize: 6,
-            deadline: "June 30, 2020",
-            progress: 43,
-            priority: "medium",
-            pressure: "high"
-        },
-        {
-            id: "3",
-            title: "User Service",
-            teamSize: 5,
-            deadline: "July 15, 2020",
-            progress: 20,
-            priority: "low",
-            pressure: "medium"
-        },
-
-    ];
-const upcomingGoals: Goal[] = [];
-const completedGoals: Goal[] = [];
-const abandonedGoals: Goal[] = [];
-const allGoals: Goal[] = [
-    ...activeGoals,
-    ...upcomingGoals,
-    ...completedGoals,
-    ...abandonedGoals
-];
-
-const goals: ({ [key: string]: Goal[] }) = {
-    'All': allGoals,
-    'Active': activeGoals,
-    'Upcoming': upcomingGoals,
-    'Completed': completedGoals,
-    'Abandoned': abandonedGoals
-}
-
-const Goals = () => {
+const Goals = (props: { projectKey: string }) => {
     const classes = useStyles();
     const Priority = (props: PriorityProps): ReactElement => {
         switch (props.type) {
-            case "high":
+            case "HIGH":
                 return <MdIcon value="mdi-arrow-up" className={`${classes.priority} ${classes.high}`}/>;
-            case "low":
+            case "LOW":
                 return <MdIcon value="mdi-arrow-down" className={`${classes.priority} ${classes.low}`}/>;
-            case "medium":
+            case "MEDIUM":
                 return <MdIcon value="mdi-circle-medium" className={`${classes.priority} ${classes.medium}`}/>
         }
     }
-    const progressPressure = (pressure: "high" | "low" | "medium") =>
+    const progressPressure = (pressure: "HIGH" | "LOW" | "MEDIUM") =>
         classNames("progress", classes.progress, {
-            "is-success": pressure === "low",
-            "is-danger": pressure === "high",
-            "is-info": pressure === "medium"
+            "is-success": pressure === "LOW",
+            "is-danger": pressure === "HIGH",
+            "is-info": pressure === "MEDIUM"
         });
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<string>('Active');
     const switchTab = (tab: string) => {
         setActiveTab(tab);
     }
+
+    const [goals, setGoals] = useState<{ [key: string]: Goal[] }>({});
+    useEffect(() => {
+        getRequest('/projects/' + props.projectKey + '/goals', {},
+            (result) => {
+                const allGoals: Goal[] = result.goals;
+                setGoals({
+                    'All': allGoals,
+                    'Active': allGoals.filter(goal => (goal.status) === 'ACTIVE'),
+                    'Completed': allGoals.filter(goal => (goal.status) === 'COMPLETED'),
+                    'Abandoned': allGoals.filter(goal => (goal.status) === 'ABANDONED'),
+                });
+            },
+            (result => {
+
+            })
+        )
+    }, []);
+
     return (
-        <div className={classes.root}>
-            <nav className="panel">
-                <p className="panel-heading">
-                    Goals
-                </p>
-                <div className="panel-block">
-                    <p className="control has-icons-left">
-                        <MdIcon value="mdi-magnify mdi-24px"/>
-                        <input className="input" type="text" placeholder="Search"/>
+        <>
+            <div className={classes.root}>
+                <nav className="panel">
+                    <p className="panel-heading">
+                        Goals
                     </p>
-                </div>
-                <TabSwitcher tabs={goalTabs} default="Active" onSwitch={switchTab}/>
-                <div className={classes.panelContainer}>
-                    {
-                        goals[activeTab].length == 0
-                            ? <div style={{margin: 10, fontSize: 14, color: "gray", textAlign: "center"}}>
-                                <div style={{width: 250, margin: "0 auto"}}>
-                                    <SharedGoalsPlaceholder style={{width: 250, height: 200}}/>
-                                </div>
-                                This area seems empty. Create a new goal to get started!
-                            </div>
-                            : goals[activeTab].map(goal => (
-                                <a className="panel-block">
+                    <div className="panel-block">
+                        <p className="control has-icons-left">
+                            <MdIcon value="mdi-magnify mdi-24px"/>
+                            <input className="input" type="text" placeholder="Search"/>
+                        </p>
+                    </div>
+                    <TabSwitcher tabs={goalTabs} default="Active" onSwitch={switchTab}/>
+                    <div className={classes.panelContainer}>
+                        {
+                            goals[activeTab] ? (
+                                goals[activeTab].length == 0
+                                    ? <div style={{margin: 10, fontSize: 14, color: "gray", textAlign: "center"}}>
+                                        <div style={{width: 250, margin: "0 auto"}}>
+                                            <SharedGoalsPlaceholder style={{width: 250, height: 200}}/>
+                                        </div>
+                                        This area seems empty. Create a new goal to get started!
+                                    </div>
+                                    : goals[activeTab].map(goal => (
+                                        <a className="panel-block">
                                 <span className="panel-icon">
                                     <Priority type={goal.priority}/>
                                 </span>
-                                    <div className={classes.panelItem}>
-                                        <div>
-                                            {goal.title}
-                                            {goal.milestone &&
-                                            <span style={{
-                                                fontSize: 13,
-                                                color: "darkgray",
-                                                maxWidth: 100,
-                                                display: "inline-block",
-                                                float: "right",
-                                                marginRight: 10
-                                            }}>
+                                            <div className={classes.panelItem}>
+                                                <div>
+                                                    {goal.title}
+                                                    {goal.milestone &&
+                                                    <span style={{
+                                                        fontSize: 13,
+                                                        color: "darkgray",
+                                                        maxWidth: 100,
+                                                        display: "inline-block",
+                                                        float: "right",
+                                                        marginRight: 10
+                                                    }}>
                                                 <MdIcon value="mdi-flag-checkered"/>{goal.milestone}</span>
-                                            }
-                                        </div>
-                                        <div className={classes.statsContainer}>
-                                            <span className={classes.stat}><b>Team size: </b>{goal.teamSize}</span>
-                                            <span className={classes.stat}><b>Deadline: </b>{goal.deadline}</span>
-                                            <span className={classes.stat} style={{float: "right"}}>
+                                                    }
+                                                </div>
+                                                <div className={classes.statsContainer}>
+                                                    <span className={classes.stat}><b>Deadline: </b>{goal.deadline}</span>
+                                                    <span className={classes.stat} style={{float: "right"}}>
                                             <progress
                                                 className={progressPressure(goal.pressure)}
                                                 value={goal.progress}
                                                 max="100">{goal.progress}%</progress>
                                              <> {goal.progress}%</>
                                         </span>
-                                        </div>
-                                    </div>
-                                </a>
-                            ))
-                    }
+                                                </div>
+                                            </div>
+                                        </a>
+                                    ))
+                            ) : <div className="is-loading"/>
+                        }
 
-                </div>
-                <div className="panel-block">
-                    <button className="button is-link is-primary is-fullwidth">
-                        Create a new goal
-                    </button>
-                </div>
-            </nav>
-        </div>
+                    </div>
+                    <div className="panel-block">
+                        <button onClick={() => setModalVisible(true)}
+                                className="button is-link is-primary is-fullwidth">
+                            Create a new goal
+                        </button>
+                    </div>
+                </nav>
+            </div>
+            <NewGoal visible={modalVisible} setModalVisible={setModalVisible}/>
+        </>
     );
 };
 
