@@ -20,6 +20,12 @@ public class Goal {
         HIGH
     }
 
+    public enum Status {
+        ACTIVE,
+        COMPLETED,
+        ABANDONED
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -31,6 +37,9 @@ public class Goal {
     private String milestone;
 
     private String description;
+
+    @Builder.Default
+    private Status status = Status.ACTIVE;
 
     @Builder.Default
     private Priority priority = Priority.MEDIUM;
