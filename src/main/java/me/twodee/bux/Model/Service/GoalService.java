@@ -92,8 +92,9 @@ public class GoalService {
     private GoalDTO.Pressure calculatePressure(Goal goal) {
         long elapsed = DAYS.between(goal.getCreatedAt(), LocalDate.now());
         long totalDays = DAYS.between(goal.getCreatedAt(), goal.getDeadline());
+        double ratio = (double) elapsed / totalDays;
 
-        long expectedProgress = (elapsed / totalDays) * 100 - slackPeriodPercentage(goal.getPriority());
+        double expectedProgress = ratio * 100 - slackPeriodPercentage(goal.getPriority());
         int currentProgress = goal.getProgress();
 
         if (currentProgress < expectedProgress) {
