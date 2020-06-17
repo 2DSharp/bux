@@ -8,9 +8,13 @@ export function removeFieldFromState<T>(setState: Dispatch<SetStateAction<T | un
         });
 }
 
-export function getFormErrors(clientErr : FieldErrors<any>, serverErr : any | undefined, field : string) {
+export function getFormErrors(clientErr: FieldErrors<any>, serverErr: any | undefined, field: string) {
     if (clientErr[field])
         return clientErr[field].message;
     if (serverErr != undefined)
         return serverErr[field];
+}
+
+export function capitalizeFirstLetter(string: string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
