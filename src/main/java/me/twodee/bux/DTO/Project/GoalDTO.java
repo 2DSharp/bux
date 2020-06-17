@@ -10,6 +10,11 @@ import java.time.LocalDate;
 @Builder
 @Getter
 public class GoalDTO {
+    public enum Pressure {
+        HIGH,
+        MEDIUM,
+        LOW
+    }
 
     private int id;
 
@@ -28,4 +33,6 @@ public class GoalDTO {
     private Goal.Status status;
 
     private PublicUserDTO createdBy;
+
+    private Pressure pressure;
 }

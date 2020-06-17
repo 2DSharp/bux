@@ -15,9 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class GoalService {
@@ -82,6 +85,34 @@ public class GoalService {
                 .deadline(goal.getDeadline())
                 .progress(goal.getProgress())
                 .status(goal.getStatus())
+                .pressure(calculatePressure(goal))
                 .build();
+    }
+
+    private GoalDTO.Pressure calculatePressure(Goal goal) {
+        long elapsed = DAYS.between(goal.getCreatedAt(), LocalDate.now());
+        long totalDays = DAYS.between(goal.getCreatedAt(), goal.getDeadline());
+
+        long expectedProgress = (elapsed / totalDays) * 100 - slackPeriodPercentage(goal.getPriority());
+        int currentProgress = goal.getProgress();
+
+        if (currentProgress < expectedProgress) {
+            return GoalDTO.Pressure.HIGH;
+        }
+        if (currentProgress - expectedProgress <= slackPeriodPercentage(goal.getPriority())) {
+            return GoalDTO.Pressure.MEDIUM;
+        }
+        return GoalDTO.Pressure.LOW;
+    }
+
+    private int slackPeriodPercentage(Goal.Priority priority) {
+        switch (priority) {
+            case LOW:
+                return 15;
+            case MEDIUM:
+                return 10;
+            default:
+                return 5;
+        }
     }
 }
