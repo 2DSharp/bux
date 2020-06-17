@@ -3,9 +3,10 @@ import MdIcon from "../Icon/MDIcon";
 import {makeStyles} from "@material-ui/styles";
 import classNames from "classnames";
 import TabSwitcher from "./TabSwitcher";
-import {ReactComponent as SharedGoalsPlaceholder} from "../../../images/shared_goals.svg";
 import NewGoal from "../Modal/NewGoal";
 import {getRequest} from "../../../service/request";
+import {ReactComponent as SharedGoalsPlaceholder} from "../../../images/shared_goals.svg";
+import {Spin} from "antd";
 
 const useStyles = makeStyles({
     priority: {
@@ -164,7 +165,10 @@ const Goals = (props: { projectKey: string }) => {
                                             </div>
                                         </a>
                                     ))
-                            ) : <div className="is-loading"/>
+                                ) :
+                                <div style={{height: 150}} className="centered-absolutely">
+                                    <Spin/>
+                                </div>
                         }
 
                     </div>
