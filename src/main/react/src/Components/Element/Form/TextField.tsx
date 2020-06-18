@@ -9,6 +9,7 @@ import React, {
 } from 'react';
 import cx from "classnames";
 import {removeFieldFromState} from "../../../service/util";
+import Label from "./Label";
 
 export interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
     type?: string;
@@ -61,7 +62,7 @@ const TextField = (props: TextFieldProps) => {
     return (
         <>
             {props.label &&
-            <label className="label">{props.label} {props.required && <span style={{color: "red"}}>*</span>}</label>
+            <Label required={props.required}>{props.label}</Label>
             }
             <div className={controlClass}>
 
