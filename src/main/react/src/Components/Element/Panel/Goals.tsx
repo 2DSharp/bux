@@ -1,4 +1,4 @@
-import React, {ReactElement, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import MdIcon from "../Icon/MDIcon";
 import {makeStyles} from "@material-ui/styles";
 import classNames from "classnames";
@@ -7,20 +7,9 @@ import NewGoal from "../Modal/NewGoal";
 import {getRequest} from "../../../service/request";
 import {ReactComponent as SharedGoalsPlaceholder} from "../../../images/shared_goals.svg";
 import {Spin} from "antd";
+import Priority from "../Icon/Priority";
 
 const useStyles = makeStyles({
-    priority: {
-        height: "inherit",
-    },
-    high: {
-        color: "red"
-    },
-    low: {
-        color: "gray"
-    },
-    medium: {
-        color: "lightgreen"
-    },
     root: {
         width: "100%"
     },
@@ -47,11 +36,6 @@ const useStyles = makeStyles({
     }
 });
 
-
-interface PriorityProps {
-    type: "HIGH" | "LOW" | "MEDIUM"
-}
-
 type Goal = {
     id: string,
     title: string,
@@ -68,16 +52,7 @@ const goalTabs = ['All', 'Active', 'Completed', 'Abandoned']
 
 const Goals = (props: { projectKey: string }) => {
     const classes = useStyles();
-    const Priority = (props: PriorityProps): ReactElement => {
-        switch (props.type) {
-            case "HIGH":
-                return <MdIcon value="mdi-arrow-up" className={`${classes.priority} ${classes.high}`}/>;
-            case "LOW":
-                return <MdIcon value="mdi-arrow-down" className={`${classes.priority} ${classes.low}`}/>;
-            case "MEDIUM":
-                return <MdIcon value="mdi-circle-medium" className={`${classes.priority} ${classes.medium}`}/>
-        }
-    }
+
     const progressPressure = (pressure: "HIGH" | "LOW" | "MEDIUM") =>
         classNames("progress", classes.progress, {
             "is-success": pressure === "LOW",
