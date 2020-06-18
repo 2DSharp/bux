@@ -21,7 +21,6 @@ const useStyles = makeStyles({
         marginRight: "7px"
     },
     panelContainer: {
-        minHeight: 150,
         maxHeight: 320,
         overflowY: "auto"
     },
