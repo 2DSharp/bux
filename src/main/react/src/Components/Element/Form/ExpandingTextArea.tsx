@@ -14,7 +14,8 @@ const useStyles = makeStyles({
 const ExpandingTextArea = (props: ExpandingTextAreaInterface) => {
     const classes = useStyles();
     return (
-        <TextareaAutosize placeholder={props.placeholder} className={`textarea has-fixed-size ${classes.root}`}>
+        <TextareaAutosize maxRows={props.maxLength} placeholder={props.placeholder}
+                          className={`textarea has-fixed-size ${classes.root}`}>
             {props.children}
         </TextareaAutosize>
     );
