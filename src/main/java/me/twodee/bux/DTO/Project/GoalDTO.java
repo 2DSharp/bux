@@ -1,5 +1,7 @@
 package me.twodee.bux.DTO.Project;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import me.twodee.bux.DTO.User.PublicUserDTO;
@@ -9,7 +11,15 @@ import java.time.LocalDate;
 
 @Builder
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GoalDTO {
+    @Getter
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @AllArgsConstructor
+    public static class Milestone {
+        String milestone;
+    }
+
     public enum Pressure {
         HIGH,
         MEDIUM,

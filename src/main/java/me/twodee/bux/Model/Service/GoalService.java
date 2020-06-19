@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.ConstraintViolation;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -72,6 +73,14 @@ public class GoalService {
                 .collect(Collectors.toList());
 
         return new GoalsList(projectKey, dtoList);
+    }
+
+    public List<GoalDTO.Milestone> getAllMilestonesForProject(String projectKey) {
+        return repository.findAllMilestones(projectKey)
+                .stream()
+                .filter(Objects::nonNull)
+                .map(GoalDTO.Milestone::new)
+                .collect(Collectors.toList());
     }
 
     private GoalDTO buildGoalDto(Goal goal) {
