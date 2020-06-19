@@ -1,17 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import {DatePicker, Modal, Select} from "antd";
+import {Modal} from "antd";
 import TextField from "../Form/TextField";
 import {getFormErrors} from "../../../service/util";
 import {useForm} from "react-hook-form";
 import moment from 'moment';
 import InputContainer from "../Form/InputContainer";
 import Label from "../Form/Label";
-import Priority from "../Icon/Priority";
 import ExpandingTextArea from "../Form/ExpandingTextArea";
 import ComboBox from "../Form/ComboBox";
 import {getRequest} from "../../../service/request";
+import FormData from "../Form/FormData";
+import PrioritySelector from "../Form/PrioritySelector";
+import DatePickerField from "../Form/DatePickerField";
 
-const {Option} = Select;
 
 interface NewGoal {
     visible: boolean,
@@ -30,22 +31,24 @@ const errorMsgs = {
 };
 
 const NewGoal = (props: NewGoal) => {
-    type FormData = {
-        title: string
+    type FormStruct = {
+        title: string,
+
     };
-    const {register, handleSubmit, errors, setError} = useForm<FormData>();
+    const {register, handleSubmit, errors, setError} = useForm<FormStruct>();
     const [serverErrors, setServerErrors] = useState<ServerErrors>();
     const [milestones, setMilestones] = useState<string[]>([]);
-    const onSubmit = handleSubmit(({title}) => {
-        setServerErrors({title: "Some server error"});
+    const [values, setValues] = useState({
+        title: null,
+        priority: 'LOW',
+        deadline: moment().format('MM/DD/YYYY'),
+        milestone: null,
+        description: null
     });
-    const [priority, setPriority] = useState("LOW");
+    const onSubmit = handleSubmit(({title}) => {
+        console.log(values);
+    });
 
-    function disabledDate(current: moment.Moment | null): boolean {
-        if (current)
-            return moment().add(-1, 'days') >= current;
-        else return false;
-    }
 
     useEffect(() => {
         getRequest('/projects/' + props.project + '/milestones', {},
@@ -65,10 +68,9 @@ const NewGoal = (props: NewGoal) => {
             okText="Submit"
             onOk={onSubmit}
             onCancel={() => props.setModalVisible(false)}
-            confirmLoading={true}
         >
             <div>
-                <form onSubmit={onSubmit}>
+                <FormData onChange={(name: string, value: string) => setValues({...values, [name]: value})}>
                     <div>
                         <InputContainer small>
                             <TextField
@@ -85,34 +87,33 @@ const NewGoal = (props: NewGoal) => {
                         </InputContainer>
                         <InputContainer small inline>
                             <Label required>Deadline:</Label>
-                            <DatePicker placeholder="MM/DD/YYYY" defaultValue={moment()} showToday
-                                        disabledDate={disabledDate}
-                                        format={'MM/DD/YYYY'}
-                                        style={{width: 140}}
-                            />
+                            <DatePickerField format="MM/DD/YYYY"
+                                             default={moment()}
+                                             disablePast placeholder="MM/DD/YYYY"
+                                             style={{width: 140}} name="deadline"/>
                         </InputContainer>
 
                         <InputContainer small inline>
                             <Label required>Priority:</Label>
-                            <Select defaultValue="LOW" style={{width: 120}}
-                                    onChange={(value: string) => setPriority(value)}>
-                                <Option value="LOW"><Priority type="LOW"/> Low</Option>
-                                <Option value="MEDIUM"><Priority type="MEDIUM"/> Medium</Option>
-                                <Option value="HIGH"><Priority type="HIGH"/> High</Option>
-                            </Select>
+                            <PrioritySelector default="LOW" name="priority" style={{width: 120}}/>
                         </InputContainer>
                         <InputContainer small inline>
                             <Label>Milestone:</Label>
-                            <ComboBox values={milestones} placeholder="Set a milestone"
-                                      style={{width: 150}}/>
+                            <ComboBox values={milestones}
+                                      placeholder="Set a milestone"
+                                      style={{width: 150}}
+                                      name="milestone"
+                            />
                         </InputContainer>
                         <InputContainer small>
                             <Label>Description:</Label>
-                            <ExpandingTextArea style={{fontSize: 14}} maxLength={5}
-                                               placeholder="What is this goal about?"/>
+                            <ExpandingTextArea style={{fontSize: 14}} maxRows={5}
+                                               placeholder="What is this goal about?"
+                                               name="description"
+                            />
                         </InputContainer>
                     </div>
-                </form>
+                </FormData>
             </div>
         </Modal>
     );
