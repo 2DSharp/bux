@@ -33,22 +33,23 @@ const ComboBox = (props: ComboBoxProps) => {
                 setSearchValue('');
                 console.log(value)
             }}
+            notFoundContent={<span>Start typing to add a new milestone</span>}
             allowClear
         >
-            {props.values.map((title) => (
+            {props.values && props.values.map((title) => (
                 <Select.Option key={title} value={title}>{title}</Select.Option>
             ))}
             {
                 searchValue &&
                 <Select.Option key={-1} value={searchValue}>
-                    <div style={{cursor: "pointer", width: "100%"}} className="primary-colored"
-                         onClick={() => setValue(searchValue)}>
+                    <span className="primary-colored"
+                          onClick={() => setValue(searchValue)}>
                         {
                             value !== searchValue
                                 ? `Add '${searchValue}'`
                                 : value
                         }
-                    </div>
+                    </span>
                 </Select.Option>
             }
 
