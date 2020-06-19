@@ -107,7 +107,7 @@ const Goals = (props: { projectKey: string }) => {
                                             This area seems empty. Create a new goal to get started!
                                         </div>
                                         : goals[activeTab].map(goal => (
-                                            <a className="panel-block">
+                                            <a key={goal.id} className="panel-block">
                                 <span className="panel-icon">
                                     <Priority type={goal.priority}/>
                                 </span>
