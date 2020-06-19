@@ -9,6 +9,7 @@ interface DatePickerFieldProps {
     format?: string
     style: CSSProperties
     onChange?: any
+    default?: any
 }
 
 function disablePastDate(current: moment.Moment | null): boolean {
@@ -19,7 +20,7 @@ function disablePastDate(current: moment.Moment | null): boolean {
 
 const DatePickerField = (props: DatePickerFieldProps) => {
     return (
-        <DatePicker placeholder={props.placeholder} defaultValue={moment()} showToday
+        <DatePicker placeholder={props.placeholder} defaultValue={props.default} showToday
                     disabledDate={current => props.disablePast ? disablePastDate(current) : false}
                     format={props.format}
                     onChange={value => value && props.onChange(value.format(props.format))}
