@@ -1,15 +1,8 @@
-import React, {
-    ChangeEvent,
-    ChangeEventHandler,
-    Dispatch,
-    MouseEventHandler,
-    SetStateAction,
-    useEffect,
-    useState
-} from 'react';
+import React, {ChangeEvent, Dispatch, MouseEventHandler, SetStateAction, useEffect, useState} from 'react';
 import cx from "classnames";
 import {removeFieldFromState} from "../../../service/util";
 import Label from "./Label";
+import {withFormData} from "./FormData";
 
 export interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
     type?: string;
@@ -18,7 +11,7 @@ export interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLA
     leftIcon?: string
     hasRightErrorIcon?: boolean
     rightIcon?: string
-    onChange?: ChangeEventHandler<HTMLInputElement>
+    onChange?: any
     forwardRef?: React.Ref<HTMLInputElement>
     rightIconClickable?: boolean;
     onRightIconClick?: MouseEventHandler<HTMLSpanElement>
@@ -54,9 +47,8 @@ const TextField = (props: TextFieldProps) => {
     });
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (props.onChange) {
-            props.onChange(event);
+            props.onChange(event.target.value);
         }
-        console.log("Here");
         removeFieldFromState(props.resetServerErrors, props.name as string)
     }
     return (
@@ -91,4 +83,4 @@ const TextField = (props: TextFieldProps) => {
     );
 };
 
-export default (TextField);
+export default withFormData(TextField);

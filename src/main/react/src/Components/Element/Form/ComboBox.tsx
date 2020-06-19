@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import {Select} from "antd";
 import {SelectProps} from "antd/lib/select";
+import {withFormData} from "./FormData";
 
 interface ComboBoxProps extends SelectProps<string> {
-    values: string[]
+    values: string[],
+    onChange?: any
 }
 
 const ComboBox = (props: ComboBoxProps) => {
@@ -22,8 +24,7 @@ const ComboBox = (props: ComboBoxProps) => {
     }
     return (
         <Select
-            style={props.style}
-            placeholder={props.placeholder}
+            {...props}
             showSearch
             showArrow={false}
             filterOption={filter}
@@ -31,7 +32,7 @@ const ComboBox = (props: ComboBoxProps) => {
             onChange={value => {
                 setValue(value as string);
                 setSearchValue('');
-                console.log(value)
+                props.onChange(value)
             }}
             notFoundContent={<span>Start typing to add a new milestone</span>}
             allowClear
@@ -52,10 +53,8 @@ const ComboBox = (props: ComboBoxProps) => {
                     </span>
                 </Select.Option>
             }
-
-
         </Select>
     );
 };
 
-export default ComboBox;
+export default withFormData(ComboBox);
