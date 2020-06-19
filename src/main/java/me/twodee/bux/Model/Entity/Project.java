@@ -32,14 +32,16 @@ public class Project
     @GeneratedValue
     private final LocalDateTime creationTime = LocalDateTime.now();
 
-    public Project(String name, String key, User leader)
-    {
+    public Project(String name, String key, User leader) {
         this.name = name;
         this.projectKey = key.toUpperCase();
         this.leader = leader;
     }
 
-    public Project()
-    {
+    public Project(String key) {
+        this.projectKey = key.toUpperCase();
+    }
+
+    public Project() {
     }
 }
