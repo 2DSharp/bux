@@ -2,34 +2,57 @@ import React, {useState} from 'react';
 import {Select} from "antd";
 import {SelectProps} from "antd/lib/select";
 
-interface ComboBoxProps extends SelectProps {
+interface ComboBoxProps extends SelectProps<string> {
     values: string[]
 }
 
 const ComboBox = (props: ComboBoxProps) => {
-    const [value, setValue] = useState<string>();
-    const [notFoundTip, setNotFoundTip] = useState(true);
+    const [value, setValue] = useState<string>('');
+    const [searchValue, setSearchValue] = useState<string>('');
     const handleSearch = (val: string) => {
-        setValue(val);
-        setNotFoundTip(true)
+        setSearchValue(val);
     };
+    const filter = (input: string, option: any): boolean => {
+        if (option) {
+            if (option.key == -1)
+                return true;
+            return (option.children as string).toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+        }
+        return false;
+    }
     return (
         <Select
             style={props.style}
             placeholder={props.placeholder}
             showSearch
             showArrow={false}
-            filterOption={true}
+            filterOption={filter}
             onSearch={handleSearch}
-            notFoundContent={notFoundTip
-                ? <div style={{cursor: "pointer", width: "100%"}} className="primary-colored"
-                       onClick={() => setNotFoundTip(false)}>Add '{value}'</div>
-                : null
-            }
+            onChange={value => {
+                setValue(value as string);
+                setSearchValue('');
+                console.log(value)
+            }}
+            allowClear
         >
             {props.values.map((title) => (
-                <Select.Option key={title}>{title}</Select.Option>
+                <Select.Option key={title} value={title}>{title}</Select.Option>
             ))}
+            {
+                searchValue &&
+                <Select.Option key={-1} value={searchValue}>
+                    <div style={{cursor: "pointer", width: "100%"}} className="primary-colored"
+                         onClick={() => setValue(searchValue)}>
+                        {
+                            value !== searchValue
+                                ? `Add '${searchValue}'`
+                                : value
+                        }
+                    </div>
+                </Select.Option>
+            }
+
+
         </Select>
     );
 };
