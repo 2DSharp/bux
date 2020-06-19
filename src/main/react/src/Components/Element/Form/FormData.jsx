@@ -11,7 +11,7 @@ export function withFormData(Component) {
                     return (
                         <Component
                             {...props}
-                            onChange={value => onChange(value, props.name)}
+                            onChange={value => onChange(props.name, value)}
                         />
                     );
                 }}
