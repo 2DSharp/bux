@@ -1,7 +1,6 @@
 package me.twodee.bux.Controller;
 
 import me.twodee.bux.DTO.Project.GoalCreationDTO;
-import me.twodee.bux.DTO.Project.GoalDTO;
 import me.twodee.bux.DTO.Project.GoalsList;
 import me.twodee.bux.Model.Entity.Goal;
 import me.twodee.bux.Model.Service.AccountService;
@@ -62,7 +61,7 @@ public class GoalController extends RestAPI {
     }
 
     @GetMapping("/projects/{key}/milestones")
-    public ResponseEntity<List<GoalDTO.Milestone>> findMilestonesForProject(HttpSession session, @PathVariable String key) {
+    public ResponseEntity<List<String>> findMilestonesForProject(HttpSession session, @PathVariable String key) {
         if (!accountService.isLoggedIn(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }

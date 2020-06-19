@@ -75,11 +75,10 @@ public class GoalService {
         return new GoalsList(projectKey, dtoList);
     }
 
-    public List<GoalDTO.Milestone> getAllMilestonesForProject(String projectKey) {
+    public List<String> getAllMilestonesForProject(String projectKey) {
         return repository.findAllMilestones(projectKey)
                 .stream()
                 .filter(Objects::nonNull)
-                .map(GoalDTO.Milestone::new)
                 .collect(Collectors.toList());
     }
 
