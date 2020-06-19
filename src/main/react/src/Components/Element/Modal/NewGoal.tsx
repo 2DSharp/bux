@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {DatePicker, Modal, Select} from "antd";
 import TextField from "../Form/TextField";
 import {getFormErrors} from "../../../service/util";
@@ -9,6 +9,7 @@ import Label from "../Form/Label";
 import Priority from "../Icon/Priority";
 import ExpandingTextArea from "../Form/ExpandingTextArea";
 import ComboBox from "../Form/ComboBox";
+import {getRequest} from "../../../service/request";
 
 const {Option} = Select;
 
@@ -16,6 +17,8 @@ interface NewGoal {
     visible: boolean,
 
     setModalVisible(isVisible: boolean): void;
+
+    project: string
 }
 
 interface ServerErrors {
@@ -32,6 +35,7 @@ const NewGoal = (props: NewGoal) => {
     };
     const {register, handleSubmit, errors, setError} = useForm<FormData>();
     const [serverErrors, setServerErrors] = useState<ServerErrors>();
+    const [milestones, setMilestones] = useState<string[]>([]);
     const onSubmit = handleSubmit(({title}) => {
         setServerErrors({title: "Some server error"});
     });
@@ -42,6 +46,16 @@ const NewGoal = (props: NewGoal) => {
             return moment().add(-1, 'days') >= current;
         else return false;
     }
+
+    useEffect(() => {
+        getRequest('/projects/' + props.project + '/milestones', {},
+            (result => {
+                setMilestones(result);
+            }),
+            () => {
+
+            })
+    }, [])
 
     return (
         <Modal
@@ -89,11 +103,13 @@ const NewGoal = (props: NewGoal) => {
                         </InputContainer>
                         <InputContainer small inline>
                             <Label>Milestone:</Label>
-                            <ComboBox style={{width: 130}} placeholder="Set a milestone" values={[]}/>
+                            <ComboBox values={milestones} placeholder="Set a milestone"
+                                      style={{width: 150}}/>
                         </InputContainer>
                         <InputContainer small>
                             <Label>Description:</Label>
-                            <ExpandingTextArea maxLength={5} placeholder="What is this goal about?"/>
+                            <ExpandingTextArea style={{fontSize: 14}} maxLength={5}
+                                               placeholder="What is this goal about?"/>
                         </InputContainer>
                     </div>
                 </form>
