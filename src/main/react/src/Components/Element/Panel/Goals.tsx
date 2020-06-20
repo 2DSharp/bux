@@ -66,20 +66,26 @@ const Goals = (props: { projectKey: string }) => {
 
     const [goals, setGoals] = useState<{ [key: string]: Goal[] }>({});
     useEffect(() => {
-        getRequest('/projects/' + props.projectKey + '/goals', {},
-            (result) => {
-                const allGoals: Goal[] = result.goals;
-                setGoals({
-                    'All': allGoals,
-                    'Active': allGoals.filter(goal => (goal.status) === 'ACTIVE'),
-                    'Completed': allGoals.filter(goal => (goal.status) === 'COMPLETED'),
-                    'Abandoned': allGoals.filter(goal => (goal.status) === 'ABANDONED'),
-                });
-            },
-            (result => {
+        let mounted = true;
+        if (mounted) {
+            getRequest('/projects/' + props.projectKey + '/goals', {},
+                (result) => {
+                    const allGoals: Goal[] = result.goals;
+                    setGoals({
+                        'All': allGoals,
+                        'Active': allGoals.filter(goal => (goal.status) === 'ACTIVE'),
+                        'Completed': allGoals.filter(goal => (goal.status) === 'COMPLETED'),
+                        'Abandoned': allGoals.filter(goal => (goal.status) === 'ABANDONED'),
+                    });
+                },
+                (result => {
 
-            })
-        )
+                })
+            )
+        }
+        return () => {
+            mounted = false;
+        }
     }, []);
 
     return (
@@ -112,7 +118,7 @@ const Goals = (props: { projectKey: string }) => {
                                     <Priority type={goal.priority}/>
                                 </span>
                                                 <div className={classes.panelItem}>
-                                                    <div>
+                                                    <div style={{height: 24}}>
                                                         <span style={{
                                                             maxWidth: 280,
                                                             whiteSpace: "nowrap",
