@@ -1,5 +1,6 @@
 package me.twodee.bux.DTO.HelperValueObject;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.HashMap;
@@ -9,7 +10,6 @@ import java.util.Map;
 public class Notification
 {
     Map<String, String> errors = new HashMap<>();
-
     public void addError(Error error)
     {
         errors.put(error.getKey(), error.getMessage());
@@ -25,8 +25,8 @@ public class Notification
         this.errors = errors;
     }
 
-    public boolean hasErrors()
-    {
+    @JsonGetter("hasErrors")
+    public boolean hasErrors() {
         return !errors.isEmpty();
     }
 }

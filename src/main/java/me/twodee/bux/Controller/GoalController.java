@@ -1,5 +1,6 @@
 package me.twodee.bux.Controller;
 
+import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.GoalCreationDTO;
 import me.twodee.bux.DTO.Project.GoalsList;
 import me.twodee.bux.Model.Entity.Goal;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class GoalController extends RestAPI {
@@ -38,7 +38,7 @@ public class GoalController extends RestAPI {
     }
 
     @PostMapping("/projects/goals/create")
-    public ResponseEntity<Map<String, String>> createNewGoal(HttpSession session, @RequestBody GoalCreationDTO dto) {
+    public ResponseEntity<Notification> createNewGoal(HttpSession session, @RequestBody GoalCreationDTO dto) {
         if (!accountService.currentUserCanCreateProject(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -46,7 +46,7 @@ public class GoalController extends RestAPI {
         goalService.createGoal(dto, accountService.getUser(session));
 
         if (dto.getNotification().hasErrors()) {
-            return new ResponseEntity<>(dto.getNotification().getErrors(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(dto.getNotification(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
