@@ -7,8 +7,8 @@ export function withFormData(Component) {
         return (
             <FormDataContext.Consumer>
                 {entityProps => {
-                    const onChange = props.onChange;
-                    if (onChange) {
+                    if (entityProps) {
+                        const onChange = props.onChange || entityProps.onChange;
                         return (
                             <Component
                                 {...props}
@@ -19,6 +19,7 @@ export function withFormData(Component) {
                     return <Component
                         {...props}
                     />
+
                 }}
             </FormDataContext.Consumer>
         );
