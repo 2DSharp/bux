@@ -11,6 +11,7 @@ import FormData from "../Form/FormData";
 import PrioritySelector from "../Form/PrioritySelector";
 import DatePickerField from "../Form/DatePickerField";
 import validate from "../../../service/validator";
+import Error from "../Form/Error";
 
 
 interface NewGoal {
@@ -61,34 +62,32 @@ const NewGoal = (props: NewGoal) => {
         milestone: null,
         description: null
     });
-    const [errs, setErrs] = useState<any>({});
+    const [errors, setErrors] = useState<any>({});
     const onSubmit = () => {
         setLoading(true);
         const result = (validate(values, rules));
 
         if (result.success) {
             postRequest('/projects/goals/create', {
-                    projectKey: "props.project",
+                    projectKey: props.project,
                     ...values,
                     deadline: convertDateToLocalDate(values["deadline"])
                 },
                 (result => {
                     setLoading(false);
                     if (result.hasErrors) {
-                        setErrs(result.errors);
+                        setErrors(result.errors);
                     }
                 }),
                 (failure => {
-                    setErrs({global: "Something went wrong"})
+                    setErrors({global: "Something went wrong"})
                     setLoading(false);
                 }))
         } else {
-            setErrs(result.error);
+            setErrors(result.error);
             setLoading(false);
         }
-
     };
-
 
     useEffect(() => {
         let mounted = true;
@@ -106,7 +105,7 @@ const NewGoal = (props: NewGoal) => {
         };
     }, [])
     const onChange = (name: string, value: string) => {
-        setErrs({...errs, [name]: null});
+        setErrors({...errors, [name]: null});
         setValues({...values, [name]: value})
     }
 
@@ -125,7 +124,7 @@ const NewGoal = (props: NewGoal) => {
                     <div>
                         <InputContainer small>
                             <TextField
-                                errorMsg={errs.title}
+                                errorMsg={errors.title}
                                 label="Title"
                                 required
                                 placeholder="A short name for the goal" name="title"
@@ -138,11 +137,17 @@ const NewGoal = (props: NewGoal) => {
                                              default={moment()}
                                              disablePast placeholder="MM/DD/YYYY"
                                              style={{width: 140}} name="deadline"/>
+                            {
+                                errors.deadline && <Error>{errors.deadline}</Error>
+                            }
                         </InputContainer>
 
                         <InputContainer small inline>
                             <Label required>Priority:</Label>
                             <PrioritySelector default="LOW" name="priority" style={{width: 120}}/>
+                            {
+                                errors.priority && <Error>{errors.priority}</Error>
+                            }
                         </InputContainer>
                         <InputContainer small inline>
                             <Label>Milestone:</Label>
@@ -151,6 +156,9 @@ const NewGoal = (props: NewGoal) => {
                                       style={{width: 150}}
                                       name="milestone"
                             />
+                            {
+                                errors.milestone && <Error>{errors.milestone}</Error>
+                            }
                         </InputContainer>
                         <InputContainer small>
                             <Label>Description:</Label>
@@ -159,9 +167,9 @@ const NewGoal = (props: NewGoal) => {
                                                name="description"
                             />
                         </InputContainer>
-                        {errs.global &&
+                        {errors.global &&
                         <InputContainer>
-                            <p className="help is-danger">{errs.global}</p>
+                            <Error>{errors.global}</Error>
                         </InputContainer>
                         }
                     </div>
