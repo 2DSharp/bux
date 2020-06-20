@@ -32,12 +32,12 @@ const Projects = () => {
         return (
             <tbody key={project.projectKey}>
             <tr className={styles.tableRow} style={{border: "none !important"}}>
-                <Link to={`${url}/${project.projectKey}`}>
-                    <td className="padded-card">
+                <td className="padded-card">
+                    <Link to={`${url}/${project.projectKey}`}>
                         <MdIcon value="mdi-rocket"/>
                         {project.name}
-                    </td>
-                </Link>
+                    </Link>
+                </td>
                 <td className="padded-card">{project.projectKey}</td>
                 <td className="padded-card">{(new Date(project.creationTime)).toLocaleDateString()}</td>
                 <td className="padded-card">Active</td>
