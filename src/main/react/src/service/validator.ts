@@ -10,17 +10,15 @@ const isValid: any = {
 }
 
 function validateField(rules: any, value: any) {
-    let fails: any = {};
 
     for (let [rule, param] of Object.entries(rules)) {
         if (rule === "message") {
             continue;
         }
         if (!isValid[rule](value, param)) {
-            fails[rule] = rules["message"][rule] ? rules["message"][rule] : true;
+            return rules["message"][rule] ? rules["message"][rule] : true;
         }
     }
-    return fails;
 }
 
 function isEmpty(obj: object) {
@@ -32,7 +30,10 @@ export default function validate(values: object, rules: any) {
 
     for (let [key, value] of Object.entries(values)) {
         if (rules[key]) {
-            messages[key] = validateField(rules[key], value)
+            const message = validateField(rules[key], value)
+            if (message) {
+                messages[key] = message;
+            }
         }
     }
     if (isEmpty(messages)) {
