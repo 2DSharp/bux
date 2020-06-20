@@ -32,7 +32,9 @@ export default class FormData extends React.PureComponent {
             <FormDataContext.Provider value={{
                 onChange: this.props.onChange
             }}>
-                {this.props.children}
+                <form onSubmit={this.props.onSubmit && this.props.onSubmit}>
+                    {this.props.children}
+                </form>
             </FormDataContext.Provider>
         );
     }
