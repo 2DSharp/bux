@@ -113,7 +113,14 @@ const Goals = (props: { projectKey: string }) => {
                                 </span>
                                                 <div className={classes.panelItem}>
                                                     <div>
-                                                        {goal.title}
+                                                        <span style={{
+                                                            maxWidth: 280,
+                                                            whiteSpace: "nowrap",
+                                                            overflow: "hidden",
+                                                            display: "inline-block",
+                                                            textOverflow: "ellipsis"
+                                                        }}>{goal.title}</span>
+
                                                         {goal.milestone &&
                                                         <span style={{
                                                             fontSize: 13,
