@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/pro-layout": "^5.0.17",
+    "@craco/craco": "^5.6.4",
     "@mdi/font": "^5.0.45",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
@@ -17,6 +18,7 @@
     "antd": "4.3.4",
     "axios": "^0.19.2",
     "classnames": "latest",
+    "craco-less": "^1.17.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-hook-form": "latest",
@@ -25,9 +27,9 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
