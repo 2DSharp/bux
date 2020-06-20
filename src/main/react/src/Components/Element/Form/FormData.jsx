@@ -7,13 +7,18 @@ export function withFormData(Component) {
         return (
             <FormDataContext.Consumer>
                 {entityProps => {
-                    const onChange = props.onChange || entityProps.onChange;
-                    return (
-                        <Component
-                            {...props}
-                            onChange={value => onChange(props.name, value)}
-                        />
-                    );
+                    const onChange = props.onChange;
+                    if (onChange) {
+                        return (
+                            <Component
+                                {...props}
+                                onChange={value => onChange(props.name, value)}
+                            />
+                        );
+                    }
+                    return <Component
+                        {...props}
+                    />
                 }}
             </FormDataContext.Consumer>
         );
