@@ -10,6 +10,9 @@ $navbar-bottom-box-shadow-size: 0 5px 0 0;
 $navbar-box-shadow-color: black;
 $navbar-box-shadow-size: 0 5px 0 0;
 $menu-item-color: rgb(209, 214, 237);
-
+// Imported from antd
+$family-sans-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+'Noto Color Emoji';
 // Import the rest of Bulma
 @import "../../node_modules/bulma/bulma";
