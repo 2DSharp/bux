@@ -8,7 +8,7 @@ import InputContainer from "../Form/InputContainer";
 import Label from "../Form/Label";
 import ExpandingTextArea from "../Form/ExpandingTextArea";
 import ComboBox from "../Form/ComboBox";
-import {getRequest} from "../../../service/request";
+import {getRequest, postRequest} from "../../../service/request";
 import FormData from "../Form/FormData";
 import PrioritySelector from "../Form/PrioritySelector";
 import DatePickerField from "../Form/DatePickerField";
@@ -38,6 +38,7 @@ const NewGoal = (props: NewGoal) => {
     const {register, handleSubmit, errors, setError} = useForm<FormStruct>();
     const [serverErrors, setServerErrors] = useState<ServerErrors>();
     const [milestones, setMilestones] = useState<string[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
     const [values, setValues] = useState({
         title: null,
         priority: 'LOW',
@@ -46,19 +47,42 @@ const NewGoal = (props: NewGoal) => {
         description: null
     });
     const onSubmit = handleSubmit(({title}) => {
-        console.log(values);
+        setLoading(true);
+        postRequest('/projects/goals/create', {
+                projectKey: props.project,
+                ...values
+            },
+            (result => {
+                setLoading(false);
+            }),
+            (failure => {
+                console.log(failure);
+            }))
     });
 
 
     useEffect(() => {
-        getRequest('/projects/' + props.project + '/milestones', {},
-            (result => {
-                setMilestones(result);
-            }),
-            () => {
+        let mounted = true;
+        if (mounted) {
+            getRequest('/projects/' + props.project + '/milestones', {},
+                (result => {
+                    setMilestones(result);
+                }),
+                () => {
 
-            })
+                })
+        }
+        return () => {
+            mounted = false
+        };
     }, [])
+    const onChange = (name: string, value: string) => {
+        if (name === 'deadline') {
+            setValues({...values, [name]: moment(value).format("YYYY-MM-DD")})
+        } else {
+            setValues({...values, [name]: value})
+        }
+    }
 
     return (
         <Modal
@@ -68,9 +92,10 @@ const NewGoal = (props: NewGoal) => {
             okText="Submit"
             onOk={onSubmit}
             onCancel={() => props.setModalVisible(false)}
+            confirmLoading={loading}
         >
             <div>
-                <FormData onChange={(name: string, value: string) => setValues({...values, [name]: value})}>
+                <FormData onChange={onChange}>
                     <div>
                         <InputContainer small>
                             <TextField
