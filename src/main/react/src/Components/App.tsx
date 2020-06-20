@@ -1,6 +1,7 @@
 import React, {ChangeEvent, FormEvent, Suspense, useState} from 'react';
 import 'bulma/css/bulma.css'
 import '../sass/base.scss'
+import '../less/app.less'
 import Axios from "axios";
 
 import Login from "./Page/Login";
