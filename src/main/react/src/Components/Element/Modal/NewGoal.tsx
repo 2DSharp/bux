@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Modal} from "antd";
 import TextField from "../Form/TextField";
-import {getFormErrors} from "../../../service/util";
-import {useForm} from "react-hook-form";
 import moment from 'moment';
 import InputContainer from "../Form/InputContainer";
 import Label from "../Form/Label";
@@ -12,6 +10,7 @@ import {getRequest, postRequest} from "../../../service/request";
 import FormData from "../Form/FormData";
 import PrioritySelector from "../Form/PrioritySelector";
 import DatePickerField from "../Form/DatePickerField";
+import validate from "../../../service/validator";
 
 
 interface NewGoal {
@@ -22,21 +21,37 @@ interface NewGoal {
     project: string
 }
 
-interface ServerErrors {
-    title?: string
-}
-
 const errorMsgs = {
     required: "This field is required",
 };
 
-const NewGoal = (props: NewGoal) => {
-    type FormStruct = {
-        title: string,
+function convertDateToLocalDate(value: string) {
+    return moment(value).format("YYYY-MM-DD")
+}
 
-    };
-    const {register, handleSubmit, errors, setError} = useForm<FormStruct>();
-    const [serverErrors, setServerErrors] = useState<ServerErrors>();
+const rules = {
+    title: {
+        required: true,
+        message: {
+            required: errorMsgs.required
+        }
+    },
+    deadline: {
+        required: true,
+        message: {
+            required: errorMsgs.required,
+        }
+    },
+    priority: {
+        required: true,
+        message: {
+            required: errorMsgs.required,
+        }
+    }
+}
+
+const NewGoal = (props: NewGoal) => {
+
     const [milestones, setMilestones] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [values, setValues] = useState({
@@ -46,19 +61,33 @@ const NewGoal = (props: NewGoal) => {
         milestone: null,
         description: null
     });
-    const onSubmit = handleSubmit(({title}) => {
+    const [errs, setErrs] = useState<any>({});
+    const onSubmit = () => {
         setLoading(true);
-        postRequest('/projects/goals/create', {
-                projectKey: props.project,
-                ...values
-            },
-            (result => {
-                setLoading(false);
-            }),
-            (failure => {
-                console.log(failure);
-            }))
-    });
+        const result = (validate(values, rules));
+
+        if (result.success) {
+            postRequest('/projects/goals/create', {
+                    projectKey: "props.project",
+                    ...values,
+                    deadline: convertDateToLocalDate(values["deadline"])
+                },
+                (result => {
+                    setLoading(false);
+                    if (result.hasErrors) {
+                        setErrs(result.errors);
+                    }
+                }),
+                (failure => {
+                    setErrs({global: "Something went wrong"})
+                    setLoading(false);
+                }))
+        } else {
+            setErrs(result.error);
+            setLoading(false);
+        }
+
+    };
 
 
     useEffect(() => {
@@ -77,11 +106,8 @@ const NewGoal = (props: NewGoal) => {
         };
     }, [])
     const onChange = (name: string, value: string) => {
-        if (name === 'deadline') {
-            setValues({...values, [name]: moment(value).format("YYYY-MM-DD")})
-        } else {
-            setValues({...values, [name]: value})
-        }
+        setErrs({...errs, [name]: null});
+        setValues({...values, [name]: value})
     }
 
     return (
@@ -95,17 +121,13 @@ const NewGoal = (props: NewGoal) => {
             confirmLoading={loading}
         >
             <div>
-                <FormData onChange={onChange}>
+                <FormData onChange={onChange} onSubmit={onSubmit}>
                     <div>
                         <InputContainer small>
                             <TextField
-                                errorMsg={getFormErrors(errors, serverErrors, "title")}
-                                forwardRef={register({
-                                    required: {value: true, message: errorMsgs.required},
-                                })}
+                                errorMsg={errs.title}
                                 label="Title"
                                 required
-                                resetServerErrors={setServerErrors}
                                 placeholder="A short name for the goal" name="title"
                                 hasRightErrorIcon={true}
                             />
@@ -137,6 +159,11 @@ const NewGoal = (props: NewGoal) => {
                                                name="description"
                             />
                         </InputContainer>
+                        {errs.global &&
+                        <InputContainer>
+                            <p className="help is-danger">{errs.global}</p>
+                        </InputContainer>
+                        }
                     </div>
                 </FormData>
             </div>
