@@ -14,12 +14,12 @@ const data = {
         "col1": {
             id: "col1",
             title: 'TODO',
-            tasks: ['task-1', "task-2", "task-3"]
+            taskIds: ['task-1', "task-2", "task-3"]
         },
         "col2": {
             id: "col2",
             title: "In Progress",
-            tasks: ['task-4', 'task-5']
+            taskIds: ['task-4', 'task-5']
         }
     },
     columnOrder: ['col1', 'col2']
@@ -37,18 +37,41 @@ const Board = () => {
             destination.index === source.index) {
             return;
         }
-        const column = columns[source.droppableId];
-        const newTaskIds = Array.from(column.tasks);
-        newTaskIds.splice(source.index, 1);
-        newTaskIds.splice(destination.index, 0, draggableId);
+        const start = columns[source.droppableId];
+        const finish = columns[destination.droppableId];
 
-        const newColumn = {
-            ...column,
-            tasks: newTaskIds
+        if (start === finish) {
+            const column = columns[source.droppableId];
+            const newTaskIds = Array.from(column.taskIds);
+            newTaskIds.splice(source.index, 1);
+            newTaskIds.splice(destination.index, 0, draggableId);
+
+            const newColumn = {
+                ...column,
+                taskIds: newTaskIds
+            }
+            setColumns({
+                ...columns,
+                [newColumn.id]: newColumn
+            })
+            return;
+        }
+        const startTaskIds = Array.from(start.taskIds);
+        startTaskIds.splice(source.index, 1);
+        const newStart = {
+            ...start,
+            taskIds: startTaskIds
+        }
+        const finishTaskIds = Array.from(finish.taskIds);
+        finishTaskIds.splice(destination.index, 0, draggableId);
+        const newFinish = {
+            ...finish,
+            taskIds: finishTaskIds
         }
         setColumns({
             ...columns,
-            [newColumn.id]: newColumn
+            [newStart.id]: newStart,
+            [newFinish.id]: newFinish
         })
     }
     return (
@@ -58,7 +81,7 @@ const Board = () => {
                     columnOrder.map(columnId => {
                         const column = columns[columnId];
                         return <Column key={column.id} data={column}
-                                       tasks={column.tasks.map(task => data.tasks[task])}/>
+                                       tasks={column.taskIds.map(task => data.tasks[task])}/>
 
                     })
                 }
