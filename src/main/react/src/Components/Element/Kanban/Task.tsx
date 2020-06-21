@@ -17,7 +17,6 @@ const useStyles = makeStyles({
         marginTop: 5,
         marginBottom: 5,
         boxShadow: "0 2px 2px 0 rgba(0,0,0,0.2)",
-        transition: "0.2s",
         width: "100%",
         padding: 10,
         borderRadius: 4,
