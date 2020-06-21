@@ -4,6 +4,7 @@ import Task, {TaskData} from "./Task";
 import {Droppable} from "react-beautiful-dnd";
 
 interface ColumnData {
+    id: string,
     title: string
 }
 
@@ -17,7 +18,6 @@ const useStyles = makeStyles({
         margin: 10,
         borderRadius: 4,
         width: 300,
-        display: "inline-block",
         verticalAlign: "top",
         border: "1px solid #f0f0f0"
     },
@@ -35,7 +35,7 @@ const Column = (props: ColumnProps) => {
     return (
         <div className={classes.root}>
             <div className={classes.header}>{props.data.title}</div>
-            <Droppable droppableId={props.data.title}>
+            <Droppable droppableId={props.data.id}>
                 {provided =>
                     <div {...provided.droppableProps} ref={provided.innerRef} className={classes.body}>
                         {props.tasks.map((task, index) => <Task index={index} key={task.id} data={task}/>)}

@@ -37,7 +37,7 @@ const Task = (props: TaskProps) => {
             {provided =>
                 <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}
                      className={classes.root}>
-                    <p>{props.data.title}</p>
+                    <p>{props.data.id} {props.data.title}</p>
                 </div>
             }
         </Draggable>
