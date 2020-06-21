@@ -12,6 +12,7 @@ import PrioritySelector from "../Form/PrioritySelector";
 import DatePickerField from "../Form/DatePickerField";
 import validate from "../../../service/validator";
 import Error from "../Form/Error";
+import {Redirect} from 'react-router-dom';
 
 
 interface NewGoal {
@@ -55,6 +56,7 @@ const NewGoal = (props: NewGoal) => {
 
     const [milestones, setMilestones] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [createdGoalId, setCreatedGoalId] = useState<number>();
     const [values, setValues] = useState({
         title: null,
         priority: 'LOW',
@@ -78,6 +80,7 @@ const NewGoal = (props: NewGoal) => {
                     if (result.hasErrors) {
                         setErrors(result.errors);
                     }
+                    setCreatedGoalId(result.result);
                 }),
                 (failure => {
                     setErrors({global: "Something went wrong"})
@@ -109,6 +112,9 @@ const NewGoal = (props: NewGoal) => {
         setValues({...values, [name]: value})
     }
 
+    if (createdGoalId) {
+        return <Redirect to={`/projects/${props.project}/goals/${createdGoalId}`}/>;
+    }
     return (
         <Modal
             centered

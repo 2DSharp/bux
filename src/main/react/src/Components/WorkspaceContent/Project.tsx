@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import ContentWithMenu from "../Layout/ContentWithMenu";
 import ProjectMenu from "../Layout/ProjectMenu";
-import {Link, useParams} from "react-router-dom";
+import {Link, Route, Switch, useParams, useRouteMatch} from "react-router-dom";
 import Dashboard from "./Dashboard";
+import Loading from "../Page/Loading";
+import Goal from "./Goal";
 
 const Project = () => {
     const {id} = useParams();
+    let {url} = useRouteMatch();
 
     return (
         <ContentWithMenu menu={<ProjectMenu/>}>
@@ -17,7 +20,17 @@ const Project = () => {
                         <li className="is-active"><a href="#" aria-current="page">Dashboard</a></li>
                     </ul>
                 </nav>
-                <Dashboard project={id}/>
+                <Switch>
+
+                    <Route path={`${url}/goals/:id`}>
+                        <Suspense fallback={<Loading/>}>
+                            <Goal/>
+                        </Suspense>
+                    </Route>
+                    <Route path={`${url}`}>
+                        <Dashboard project={id}/>
+                    </Route>
+                </Switch>
             </div>
         </ContentWithMenu>
     );

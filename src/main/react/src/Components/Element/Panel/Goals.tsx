@@ -8,6 +8,7 @@ import {getRequest} from "../../../service/request";
 import {ReactComponent as SharedGoalsPlaceholder} from "../../../images/shared_goals.svg";
 import {Spin} from "antd";
 import Priority from "../Icon/Priority";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles({
     root: {
@@ -113,10 +114,11 @@ const Goals = (props: { projectKey: string }) => {
                                             This area seems empty. Create a new goal to get started!
                                         </div>
                                         : goals[activeTab].map(goal => (
-                                            <a key={goal.id} className="panel-block">
-                                <span className="panel-icon">
-                                    <Priority type={goal.priority}/>
-                                </span>
+                                            <Link to={`/projects/${props.projectKey}/goals/${goal.id}`} key={goal.id}
+                                                  className="panel-block">
+                                                <span className="panel-icon">
+                                                    <Priority type={goal.priority}/>
+                                                </span>
                                                 <div className={classes.panelItem}>
                                                     <div style={{height: 24}}>
                                                         <span style={{
@@ -150,7 +152,7 @@ const Goals = (props: { projectKey: string }) => {
                                         </span>
                                                     </div>
                                                 </div>
-                                            </a>
+                                            </Link>
                                         ))
                                 ) :
                                 <div style={{height: 150}} className="centered-absolutely">
