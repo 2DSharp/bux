@@ -20,7 +20,7 @@ const useStyles = makeStyles({
         width: 300,
         display: "flex",
         flexDirection: "column",
-        border: "1px solid #f0f0f0"
+        border: "1px solid #f0f0f0",
     },
     header: {
         padding: 10
@@ -29,7 +29,10 @@ const useStyles = makeStyles({
         backgroundColor: "#f0f0f0",
         minHeight: 100,
         padding: 5,
-        flexGrow: 1
+        flexGrow: 1,
+        maxHeight: 500,
+        overflowY: "auto",
+        overflowX: "hidden"
     }
 })
 const Column = (props: ColumnProps) => {
