@@ -18,7 +18,8 @@ const useStyles = makeStyles({
         margin: 10,
         borderRadius: 4,
         width: 300,
-        verticalAlign: "top",
+        display: "flex",
+        flexDirection: "column",
         border: "1px solid #f0f0f0"
     },
     header: {
@@ -27,7 +28,8 @@ const useStyles = makeStyles({
     body: {
         backgroundColor: "#f0f0f0",
         minHeight: 100,
-        padding: 5
+        padding: 5,
+        flexGrow: 1
     }
 })
 const Column = (props: ColumnProps) => {
