@@ -13,7 +13,7 @@ const Project = () => {
     return (
         <ContentWithMenu menu={<ProjectMenu/>}>
             <div className="project-container">
-                <nav className="breadcrumb" aria-label="breadcrumbs">
+                <nav className="breadcrumb" style={{marginBottom: '1em'}} aria-label="breadcrumbs">
                     <ul>
                         <li><Link to="/projects">Projects</Link></li>
                         <li><Link to={`/projects/${id}`}>{id}</Link></li>
