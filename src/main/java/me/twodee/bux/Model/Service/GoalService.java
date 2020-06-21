@@ -1,5 +1,6 @@
 package me.twodee.bux.Model.Service;
 
+import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.GoalCreationDTO;
 import me.twodee.bux.DTO.Project.GoalDTO;
 import me.twodee.bux.DTO.Project.GoalsList;
@@ -63,8 +64,11 @@ public class GoalService {
                 .milestone(dto.getMilestone())
                 .build();
 
-        ServiceHelper.safeSaveToRepository(repository, goal, () -> dto.setNotification(
+        Goal result = (Goal) ServiceHelper.safeSaveToRepository(repository, goal, () -> dto.setNotification(
                 NotificationFactory.createAmbiguousErrorNotification(provider.getMessageByLocaleService())));
+        if (!dto.getNotification().hasErrors() && result != null) {
+            dto.setNotification(new Notification(goal.getId()));
+        }
     }
 
     public GoalsList getAllGoalsListForProject(String projectKey) {

@@ -44,11 +44,7 @@ public class GoalController extends RestAPI {
         }
 
         goalService.createGoal(dto, accountService.getUser(session));
-
-        if (dto.getNotification().hasErrors()) {
-            return new ResponseEntity<>(dto.getNotification(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(dto.getNotification(), HttpStatus.OK);
     }
 
     @GetMapping("/projects/{key}/goals")
