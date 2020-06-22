@@ -17,7 +17,7 @@ const TaskList = (props) => {
         <div>
             <DragDropContext onDragEnd={result => DragHandler.dragEnd(result, columns, setColumns)}>
                 <div className={classes.taskBlock}>
-                    <div><h2>Tasks</h2></div>
+                    <div><h3>Tasks</h3></div>
                     <div className="is-divider"/>
                     <nav className={`panel`}>
                         <DnDTable data={columns['tasks']}
@@ -25,7 +25,7 @@ const TaskList = (props) => {
                     </nav>
                 </div>
                 <div className={classes.taskBlock}>
-                    <div><h2>Backlog</h2></div>
+                    <div><h3>Backlog</h3></div>
                     <nav className={`panel`}>
                         <DnDTable data={columns['backlog']}
                                   tasks={columns['backlog'].taskIds.map(task => props.data.tasks[task])}/>

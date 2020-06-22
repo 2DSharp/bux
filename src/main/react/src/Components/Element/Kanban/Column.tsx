@@ -1,7 +1,8 @@
 import React from 'react';
 import {makeStyles} from "@material-ui/styles";
-import Task, {TaskData} from "./Task";
+import Task from "./Task";
 import {Droppable} from "react-beautiful-dnd";
+import {TaskData} from "../../../types";
 
 interface ColumnData {
     id: string,
