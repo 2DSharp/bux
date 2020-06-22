@@ -1,6 +1,6 @@
 import React, {MouseEventHandler} from 'react';
 
-export interface IconProps {
+export interface IconProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
     value: string
     size?: string
     onClick?: MouseEventHandler
@@ -9,7 +9,7 @@ export interface IconProps {
 
 const Icon = (props: IconProps) => {
     return (
-        <span onClick={props.onClick} className={`icon ${props.className ? props.className : ""} `}>
+        <span {...props} onClick={props.onClick} className={`icon ${props.className ? props.className : ""} `}>
             <i className={props.value}/>
         </span>
     );
