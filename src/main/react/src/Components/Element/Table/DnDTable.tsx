@@ -2,6 +2,8 @@ import React from 'react';
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import {makeStyles} from "@material-ui/styles";
 import {TaskData} from "../../../types";
+import Priority from "../Icon/Priority";
+import variables from "../../../sass/colors.module.scss";
 
 interface DnDTableData {
     id: string
@@ -32,7 +34,7 @@ const useStyles = makeStyles({
         }
     },
     table: {
-        border: "1px solid #f0f0f0",
+        border: `1px solid ${variables.borderColor}`,
     }
 });
 const TaskRow = (props: { data: TaskData, index: number }) => {
@@ -43,7 +45,7 @@ const TaskRow = (props: { data: TaskData, index: number }) => {
                 className={classes.row}>
                 <td className={classes.id}>{props.data.id}</td>
                 <td className={classes.title}>{props.data.title}</td>
-                <td className={classes.priority}>LOW</td>
+                <td className={classes.priority}><Priority type={props.data.priority}/></td>
                 <td className={classes.deadline}>25-07-2020</td>
             </tr>
         }
