@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {DragDropContext} from 'react-beautiful-dnd';
 import Column from "./Column";
+import {DragHandler} from "../../../service/dragHandler";
 
 const data = {
     tasks: {
@@ -28,55 +29,10 @@ const data = {
 const Board = () => {
     const [columns, setColumns] = useState(data.columns);
     const [columnOrder, setColumnOrder] = useState(data.columnOrder);
-    const onDragEnd = (result, provided) => {
-        const {destination, source, draggableId} = result;
-        if (!destination) {
-            return;
-        }
-        if (destination.droppableId === source.droppableId &&
-            destination.index === source.index) {
-            return;
-        }
-        const start = columns[source.droppableId];
-        const finish = columns[destination.droppableId];
 
-        if (start === finish) {
-            const column = columns[source.droppableId];
-            const newTaskIds = Array.from(column.taskIds);
-            newTaskIds.splice(source.index, 1);
-            newTaskIds.splice(destination.index, 0, draggableId);
-
-            const newColumn = {
-                ...column,
-                taskIds: newTaskIds
-            }
-            setColumns({
-                ...columns,
-                [newColumn.id]: newColumn
-            })
-            return;
-        }
-        const startTaskIds = Array.from(start.taskIds);
-        startTaskIds.splice(source.index, 1);
-        const newStart = {
-            ...start,
-            taskIds: startTaskIds
-        }
-        const finishTaskIds = Array.from(finish.taskIds);
-        finishTaskIds.splice(destination.index, 0, draggableId);
-        const newFinish = {
-            ...finish,
-            taskIds: finishTaskIds
-        }
-        setColumns({
-            ...columns,
-            [newStart.id]: newStart,
-            [newFinish.id]: newFinish
-        })
-    }
     return (
         <div style={{display: "flex"}}>
-            <DragDropContext onDragEnd={onDragEnd}>
+            <DragDropContext onDragEnd={result => DragHandler.dragEnd(result, columns, setColumns)}>
                 {
                     columnOrder.map(columnId => {
                         const column = columns[columnId];
