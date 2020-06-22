@@ -4,6 +4,7 @@ import {makeStyles} from "@material-ui/styles";
 import Priority from "../Element/Icon/Priority";
 import MdIcon from "../Element/Icon/MDIcon";
 import TaskList from "../Element/Table/TaskList";
+import {Priority as PriorityType} from "../../types";
 
 const data = {
     id: 42,
@@ -108,7 +109,7 @@ const GoalOverview = () => {
                 <div className={`${classes.stats} columns`}>
                     <div className="column">
                         <Priority
-                            type={data.priority as "HIGH" | "LOW" | "MEDIUM"}/><b>Priority: </b>{data.priority.toLowerCase()}
+                            type={data.priority as PriorityType}/><b>Priority: </b>{data.priority.toLowerCase()}
                     </div>
                     <div className="column">
                         <b>Timeline: </b> 22-07-2020 - 29-07-2020

@@ -1,9 +1,10 @@
 import React from 'react';
 import MdIcon from "./MDIcon";
 import {makeStyles} from "@material-ui/styles";
+import {Priority as PriorityType} from "../../../types";
 
 interface PriorityProps {
-    type: "HIGH" | "LOW" | "MEDIUM"
+    type: PriorityType
 }
 
 const useStyles = makeStyles({

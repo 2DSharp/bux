@@ -8,6 +8,7 @@ import {getRequest} from "../../../service/request";
 import {ReactComponent as SharedGoalsPlaceholder} from "../../../images/shared_goals.svg";
 import {Spin} from "antd";
 import Priority from "../Icon/Priority";
+import {Priority as PriorityType} from "../../../types";
 import {Link} from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -44,7 +45,7 @@ type Goal = {
     progress: number,
     pressure: "HIGH" | "LOW" | "MEDIUM",
     status: 'ACTIVE' | 'COMPLETED' | 'ABANDONED'
-    priority: "HIGH" | "LOW" | "MEDIUM",
+    priority: PriorityType,
     milestone?: string
 }
 

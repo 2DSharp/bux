@@ -3,7 +3,6 @@ import {makeStyles} from "@material-ui/styles";
 import {Draggable} from "react-beautiful-dnd";
 import {TaskData} from "../../../types";
 
-
 interface TaskProps {
     data: TaskData,
     index: number
