@@ -12,6 +12,12 @@ h3 {
   font-size: 18px;
 }
 
+.overriden {
+  .ant-select-selector {
+    height: 30px !important;
+  }
+}
+
 .spc-10 {
   margin: 10px;
 
