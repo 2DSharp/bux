@@ -3,6 +3,7 @@ import {Link, useParams, useRouteMatch} from "react-router-dom";
 import {makeStyles} from "@material-ui/styles";
 import Priority from "../Element/Icon/Priority";
 import MdIcon from "../Element/Icon/MDIcon";
+import TaskList from "../Element/Table/TaskList";
 
 const data = {
     id: 42,
@@ -18,6 +19,29 @@ const data = {
         name: "John Doe",
         username: "jdoe"
     }
+}
+const taskData = {
+    tasks: {
+        'task-1': {id: 'task-1', title: 'Add new header'},
+        'task-2': {id: 'task-2', title: 'Update background'},
+        'task-3': {id: 'task-3', title: 'Delete previous font'},
+        'task-4': {id: 'task-4', title: 'Optimize CSS'},
+        'task-5': {id: 'task-5', title: 'Pre-cache JS'}
+    },
+    columns: {
+        "tasks": {
+            id: "tasks",
+            title: 'TODO',
+            taskIds: ['task-1', "task-2", "task-3"]
+        },
+        "backlog": {
+            id: "backlog",
+            title: "In Progress",
+            taskIds: ['task-4', 'task-5']
+        }
+    },
+    columnOrder: ['col1', 'col2']
+
 }
 const useStyles = makeStyles({
     root: {
@@ -54,7 +78,7 @@ const useStyles = makeStyles({
         marginBottom: 30
     }
 });
-const Backlog = () => {
+const GoalOverview = () => {
     const {id} = useParams();
     const {url} = useRouteMatch();
     const classes = useStyles();
@@ -67,6 +91,13 @@ const Backlog = () => {
                         <button className="button is-primary">Start</button>
                     </span>
                     <span className={classes.projectAction}>
+                        <Link to={`${url}/board`}>
+                            <button className="button is-light">
+                                <MdIcon value={"mdi-grid-large"}/><span>Board</span>
+                            </button>
+                        </Link>
+                    </span>
+                    <span className={classes.projectAction}>
                         <button className="button is-light"><MdIcon
                             value={"mdi-cog-outline"}/><span>Settings</span></button>
                     </span>
@@ -74,7 +105,6 @@ const Backlog = () => {
             </div>
             <div className={classes.meta}>
                 <div className={classes.description}>This is the description for the project</div>
-                <Link to={`${url}/board`}>Board</Link>
                 <div className={`${classes.stats} columns`}>
                     <div className="column">
                         <Priority
@@ -90,35 +120,21 @@ const Backlog = () => {
                         <b>Milestones:</b> None
                     </div>
                 </div>
-                <div className={classes.taskBlock}>
-                    <div><h2>Tasks</h2></div>
-                    <nav className={`panel ${classes.panel}`}>
-                        <table className="table container  is-fluid">
-                            <thead>
-                            <tr>
-                                <th style={{width: 80}}>ID</th>
-                                <th style={{width: 500}}>Task</th>
-                                <th>Assignee</th>
-                                <th style={{width: 40}}>Priority</th>
-                                <th>Deadline</th>
-                            </tr>
-                            </thead>
-
-                        </table>
-                    </nav>
-                </div>
-                <div className={classes.taskBlock}>
-                    <div><h2>Backlog</h2></div>
-                    <nav className={`panel ${classes.panel}`}>
-                        <table className="table container  is-fluid">
-
-                        </table>
-                    </nav>
-                </div>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th style={{width: 80}}>ID</th>
+                        <th style={{width: "100%"}}>Task</th>
+                        <th style={{width: 60}}>Priority</th>
+                        <th style={{width: 60}}>Deadline</th>
+                    </tr>
+                    </thead>
+                </table>
+                <TaskList data={taskData}/>
             </div>
 
         </div>
     );
 };
 
-export default Backlog;
+export default GoalOverview;

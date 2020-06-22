@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, Switch, useParams, useRouteMatch} from "react-router-dom";
 import Board from "../Element/Kanban/Board";
-import Backlog from "./Backlog";
+import GoalOverview from "./GoalOverview";
 
 const Goal = () => {
     const {id} = useParams();
@@ -12,7 +12,7 @@ const Goal = () => {
                 <Board/>
             </Route>
             <Route path={`${url}`}>
-                <Backlog/>
+                <GoalOverview/>
             </Route>
         </Switch>
     );
