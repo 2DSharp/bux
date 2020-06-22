@@ -23,11 +23,11 @@ const data = {
 }
 const taskData = {
     tasks: {
-        'task-1': {id: 'task-1', title: 'Add new header'},
-        'task-2': {id: 'task-2', title: 'Update background'},
-        'task-3': {id: 'task-3', title: 'Delete previous font'},
-        'task-4': {id: 'task-4', title: 'Optimize CSS'},
-        'task-5': {id: 'task-5', title: 'Pre-cache JS'}
+        'task-1': {id: 'task-1', title: 'Add new header', priority: "LOW"},
+        'task-2': {id: 'task-2', title: 'Update background', priority: "HIGH"},
+        'task-3': {id: 'task-3', title: 'Delete previous font', priority: "MEDIUM"},
+        'task-4': {id: 'task-4', title: 'Optimize CSS', priority: "MEDIUM"},
+        'task-5': {id: 'task-5', title: 'Pre-cache JS', priority: "HIGH"}
     },
     columns: {
         "tasks": {
@@ -121,16 +121,6 @@ const GoalOverview = () => {
                         <b>Milestones:</b> None
                     </div>
                 </div>
-                <table className="table">
-                    <thead>
-                    <tr>
-                        <th style={{width: 80}}>ID</th>
-                        <th style={{width: "100%"}}>Task</th>
-                        <th style={{width: 60}}>Priority</th>
-                        <th style={{width: 60}}>Deadline</th>
-                    </tr>
-                    </thead>
-                </table>
                 <TaskList data={taskData}/>
             </div>
 
