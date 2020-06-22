@@ -1,4 +1,12 @@
-import React, {ChangeEvent, Dispatch, MouseEventHandler, SetStateAction, useEffect, useState} from 'react';
+import React, {
+    ChangeEvent,
+    CSSProperties,
+    Dispatch,
+    MouseEventHandler,
+    SetStateAction,
+    useEffect,
+    useState
+} from 'react';
 import cx from "classnames";
 import {removeFieldFromState} from "../../../service/util";
 import Label from "./Label";
@@ -17,6 +25,7 @@ export interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLA
     onRightIconClick?: MouseEventHandler<HTMLSpanElement>
     label?: string
     resetServerErrors?: Dispatch<SetStateAction<any>>
+    style?: CSSProperties
 }
 
 const TextField = (props: TextFieldProps) => {
@@ -58,7 +67,8 @@ const TextField = (props: TextFieldProps) => {
             }
             <div className={controlClass}>
 
-                <input type={(props.type) ? props.type : "text"} placeholder={props.placeholder} name={props.name}
+                <input style={props.style} type={(props.type) ? props.type : "text"} placeholder={props.placeholder}
+                       name={props.name}
                        className={inputClass}
                        onChange={onChange}
                        autoComplete={props.autoComplete}
