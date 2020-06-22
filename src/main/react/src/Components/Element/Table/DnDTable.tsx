@@ -1,7 +1,7 @@
 import React from 'react';
 import {Draggable, Droppable} from "react-beautiful-dnd";
-import {TaskData} from "../Kanban/Task";
 import {makeStyles} from "@material-ui/styles";
+import {TaskData} from "../../../types";
 
 interface DnDTableData {
     id: string
@@ -30,6 +30,9 @@ const useStyles = makeStyles({
         "&:hover": {
             backgroundColor: "rgb(0, 0, 255, 0.1)"
         }
+    },
+    table: {
+        border: "1px solid #f0f0f0",
     }
 });
 const TaskRow = (props: { data: TaskData, index: number }) => {
@@ -48,9 +51,9 @@ const TaskRow = (props: { data: TaskData, index: number }) => {
 }
 
 const DnDTable = (props: DnDTableProps) => {
+    const classes = useStyles();
     return (
-
-        <table className="table container is-fluid is-hoverable">
+        <table className={`table container is-fluid is-narrow is-hoverable ${classes.table}`}>
 
             <Droppable droppableId={props.data.id}>
                 {provided =>

@@ -1,11 +1,8 @@
 import React from 'react';
 import {makeStyles} from "@material-ui/styles";
 import {Draggable} from "react-beautiful-dnd";
+import {TaskData} from "../../../types";
 
-export interface TaskData {
-    id: string,
-    title: string
-}
 
 interface TaskProps {
     data: TaskData,
@@ -13,6 +10,8 @@ interface TaskProps {
 }
 
 const useStyles = makeStyles({
+    // IMPORTANT: DO NOT ADD ANY TRANSITION PROPERTIES,
+    // The task cards will jump around otherwise
     root: {
         marginTop: 5,
         marginBottom: 5,
@@ -24,8 +23,8 @@ const useStyles = makeStyles({
         minHeight: 80,
         cursor: "move",
         fontSize: 14,
-        "&:hover": {
-            boxShadow: "0 4px 6px 0 rgba(0,0,0,0.2)"
+        "&:hover, &:focus": {
+            boxShadow: "0 4px 6px 0 rgba(0,0,0,0.2)",
         }
     }
 });
