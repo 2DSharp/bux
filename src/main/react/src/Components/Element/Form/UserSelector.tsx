@@ -2,13 +2,16 @@ import React, {CSSProperties} from 'react';
 import {Select} from "antd";
 import {User} from "../../../types";
 import AvatarIcon from "../Icon/AvatarIcon";
+import {withFormData} from "./FormData";
 
 interface UserSelectorProps {
     onSearch?: (value: string) => void
     className?: string,
     style?: CSSProperties,
     placeholder?: string,
-    users: User[]
+    users: User[],
+    name: string,
+    onChange: any
 }
 
 const {Option} = Select;
@@ -17,6 +20,7 @@ const UserSelector = (props: UserSelectorProps) => {
     return (
         <Select
             showSearch
+            onChange={props.onChange}
             style={props.style}
             placeholder={props.placeholder}
             optionFilterProp="children"
@@ -35,4 +39,4 @@ const UserSelector = (props: UserSelectorProps) => {
     );
 };
 
-export default UserSelector;
+export default withFormData(UserSelector);
