@@ -140,9 +140,9 @@ const Goals = (props: { projectKey: string }) => {
                                                     <div className={classes.statsContainer}>
                                                         <span className={classes.stat}><b>Deadline: </b>{goal.deadline}</span>
                                                         <span className={classes.stat} style={{float: "right"}}>
-                                                        <Progress progress={goal.progress} pressure={goal.pressure}
-                                                                  className={classes.progress}/>
-                                        </span>
+                                                            <Progress progress={goal.progress} pressure={goal.pressure}
+                                                                      className={classes.progress}/>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </Link>

@@ -1,15 +1,17 @@
 import React, {CSSProperties} from 'react';
 import classNames from "classnames";
 
+export type Pressure = "HIGH" | "LOW" | "MEDIUM"
+
 interface ProgressProps {
     progress: number,
-    pressure?: "HIGH" | "LOW" | "MEDIUM",
+    pressure?: Pressure,
     className?: string
     style?: CSSProperties
 }
 
 const Progress = (props: ProgressProps) => {
-    const progressPressure = (pressure: "HIGH" | "LOW" | "MEDIUM" | undefined) =>
+    const progressPressure = (pressure: Pressure | undefined) =>
         classNames("progress", props.className, {
             "is-success": pressure === "LOW",
             "is-danger": pressure === "HIGH",
