@@ -24,9 +24,19 @@ const data = {
 const taskData = {
     tasks: {
         'task-1': {id: 'task-1', title: 'Add new header', priority: "LOW"},
-        'task-2': {id: 'task-2', title: 'Update background', priority: "HIGH"},
+        'task-2': {
+            id: 'task-2',
+            title: 'Update background',
+            priority: "HIGH",
+            assignee: {name: "Dedipyaman D", username: "twodee"}
+        },
         'task-3': {id: 'task-3', title: 'Delete previous font', priority: "MEDIUM"},
-        'task-4': {id: 'task-4', title: 'Optimize CSS', priority: "MEDIUM"},
+        'task-4': {
+            id: 'task-4',
+            title: 'Optimize CSS',
+            priority: "MEDIUM",
+            assignee: {name: "John Doe", username: "jdoe"}
+        },
         'task-5': {id: 'task-5', title: 'Pre-cache JS', priority: "HIGH"}
     },
     columns: {

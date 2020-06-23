@@ -1,8 +1,13 @@
 export type Priority = "LOW" | "MEDIUM" | "HIGH"
 
-export interface TaskData {
+export type User = {
+    username: string,
+    name: string,
+    profilePicture?: string
+}
+export type TaskData = {
     id: string,
     title: string,
     priority: Priority
-    assignee?: string
+    assignee?: User
 }
