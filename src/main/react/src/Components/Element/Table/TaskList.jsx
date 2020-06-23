@@ -13,7 +13,7 @@ const useStyles = makeStyles({
     addIcon: {
         cursor: "pointer",
         "&:hover": {
-            color: variables['primary']
+            color: variables['blue']
         }
     }
 });

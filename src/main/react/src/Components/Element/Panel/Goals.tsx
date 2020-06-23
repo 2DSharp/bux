@@ -164,7 +164,7 @@ const Goals = (props: { projectKey: string }) => {
                     </div>
                     <div className="panel-block">
                         <button onClick={() => setModalVisible(true)}
-                                className="button is-link is-primary is-fullwidth">
+                                className="button is-primary is-fullwidth">
                             Create a new goal
                         </button>
                     </div>
