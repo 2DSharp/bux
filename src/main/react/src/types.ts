@@ -9,5 +9,6 @@ export type TaskData = {
     id: string,
     title: string,
     priority: Priority
-    assignee?: User
+    assignee?: User,
+    deadline: string
 }
