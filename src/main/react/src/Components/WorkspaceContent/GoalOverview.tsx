@@ -108,11 +108,11 @@ const StatusUpdater = (props: { status: GoalStatus }) => {
     const nextAction = (status: GoalStatus): ReactNode => {
         switch (status) {
             case "PLANNING":
-                return "Start";
+                return <><span>Start</span></>;
             case "ACTIVE":
-                return "Complete";
+                return <><MdIcon value={"mdi-check"}/><span>Complete</span></>;
             case "COMPLETED":
-                return "Completed";
+                return <><MdIcon value={"mdi-check-all"}/><span>Completed</span></>;
         }
     }
     return <button className={style}>{nextAction(props.status)}</button>;
