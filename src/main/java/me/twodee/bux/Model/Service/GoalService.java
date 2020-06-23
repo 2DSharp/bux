@@ -79,6 +79,11 @@ public class GoalService {
         return new GoalsList(projectKey, dtoList);
     }
 
+    public GoalDTO fetchGoal(String projectKey, int goalId) {
+        Goal goal = repository.findByProjectAndId(new Project(projectKey), goalId);
+        return buildGoalDto(goal);
+    }
+
     public List<String> getAllMilestonesForProject(String projectKey) {
         return repository.findAllMilestones(projectKey)
                 .stream()

@@ -2,6 +2,7 @@ package me.twodee.bux.Controller;
 
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.GoalCreationDTO;
+import me.twodee.bux.DTO.Project.GoalDTO;
 import me.twodee.bux.DTO.Project.GoalsList;
 import me.twodee.bux.Model.Entity.Goal;
 import me.twodee.bux.Model.Service.AccountService;
@@ -54,6 +55,15 @@ public class GoalController extends RestAPI {
         }
 
         return ResponseEntity.ok(goalService.getAllGoalsListForProject(key));
+    }
+
+    @GetMapping("/projects/{projectKey}/goals/{goal}")
+    public ResponseEntity<GoalDTO> fetchGoalForProject(HttpSession session, @PathVariable String projectKey, @PathVariable int goal) {
+        if (!accountService.isLoggedIn(session)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        return ResponseEntity.ok(goalService.fetchGoal(projectKey, goal));
     }
 
     @GetMapping("/projects/{key}/milestones")
