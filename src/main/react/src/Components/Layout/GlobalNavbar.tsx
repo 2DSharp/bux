@@ -1,11 +1,14 @@
-import React, {Suspense} from 'react';
+import React from 'react';
 import 'bulma/css/bulma.css'
 import '@mdi/font/css/materialdesignicons.min.css'
 import style from '../../sass/nav.module.scss'
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
+interface GlobalNavbarProps {
+    active: string;
+}
 
-const GlobalNavbar = () => {
+const GlobalNavbar = (props: GlobalNavbarProps) => {
     return (
         <nav className={`navbar is-fixed-top ${style.customNav}`} role="navigation" aria-label="main navigation">
             <div className={`navbar-brand ${style.branding} `}>
