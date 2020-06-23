@@ -21,6 +21,7 @@ public class Goal {
     }
 
     public enum Status {
+        PLANNING,
         ACTIVE,
         COMPLETED,
         ABANDONED
@@ -41,7 +42,7 @@ public class Goal {
     private String description;
 
     @Builder.Default
-    private Status status = Status.ACTIVE;
+    private Status status = Status.PLANNING;
 
     @Builder.Default
     private int progress = 0;

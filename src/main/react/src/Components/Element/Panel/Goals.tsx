@@ -9,7 +9,8 @@ import {Spin} from "antd";
 import Priority from "../Icon/Priority";
 import {Priority as PriorityType} from "../../../types";
 import {Link} from "react-router-dom";
-import Progress from "../Progress";
+import Progress, {Pressure} from "../Progress";
+import {GoalStatus} from "../../WorkspaceContent/Goal";
 
 const useStyles = makeStyles({
     root: {
@@ -43,13 +44,13 @@ type Goal = {
     teamSize: number,
     deadline: string,
     progress: number,
-    pressure: "HIGH" | "LOW" | "MEDIUM",
-    status: 'ACTIVE' | 'COMPLETED' | 'ABANDONED'
+    pressure: Pressure,
+    status: GoalStatus,
     priority: PriorityType,
     milestone?: string
 }
 
-const goalTabs = ['All', 'Active', 'Completed', 'Abandoned']
+const goalTabs = ['All', 'Planning', 'Active', 'Completed', 'Abandoned']
 
 const Goals = (props: { projectKey: string }) => {
     const classes = useStyles();
@@ -70,6 +71,7 @@ const Goals = (props: { projectKey: string }) => {
                     const allGoals: Goal[] = result.goals;
                     setGoals({
                         'All': allGoals,
+                        'Planning': allGoals.filter(goal => (goal.status) === 'PLANNING'),
                         'Active': allGoals.filter(goal => (goal.status) === 'ACTIVE'),
                         'Completed': allGoals.filter(goal => (goal.status) === 'COMPLETED'),
                         'Abandoned': allGoals.filter(goal => (goal.status) === 'ABANDONED'),

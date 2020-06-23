@@ -3,6 +3,7 @@ import {Route, Switch, useParams, useRouteMatch} from "react-router-dom";
 import Board from "../Element/Kanban/Board";
 import GoalOverview from "./GoalOverview";
 
+export type GoalStatus = 'PLANNING' | 'ACTIVE' | 'COMPLETED' | 'ABANDONED';
 const Goal = (props: { project: string }) => {
     const {id} = useParams();
     const {url} = useRouteMatch();
