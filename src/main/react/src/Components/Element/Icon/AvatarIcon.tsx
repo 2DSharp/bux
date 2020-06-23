@@ -3,11 +3,10 @@ import {Avatar, Tooltip} from "antd";
 import {User} from "../../../types";
 
 interface AvatarIconProps {
-    children: User
-    src?: string
+    user: User
     size?: number | "small" | "large" | "default",
     style?: CSSProperties
-    className?: string
+    className?: string,
 }
 
 function generateColor(name: string) {
@@ -32,14 +31,15 @@ function generateColor(name: string) {
 
 const AvatarIcon = (props: AvatarIconProps) => {
     return (
-        <Tooltip title={props.children.name}>
+        <Tooltip title={props.user.name}>
             <Avatar size={props.size} style={{
-                ...generateColor(props.children.username),
-                ...props.style
+                ...generateColor(props.user.username),
+                ...props.style,
+                verticalAlign: 'middle'
             }}
                     className={props.className}
-                    src={props.src}
-            >{props.children.name.charAt(0).toUpperCase()}</Avatar>
+                    src={props.user.profilePicture}
+            >{props.user.name.charAt(0).toUpperCase()}</Avatar>
         </Tooltip>
     );
 };
