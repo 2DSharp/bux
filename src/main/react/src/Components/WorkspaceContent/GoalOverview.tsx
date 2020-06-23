@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {ReactNode, useEffect, useState} from 'react';
 import {Link, useRouteMatch} from "react-router-dom";
 import {makeStyles} from "@material-ui/styles";
 import MdIcon from "../Element/Icon/MDIcon";
@@ -7,6 +7,9 @@ import Progress, {Pressure} from "../Element/Progress";
 import {getRequest} from "../../service/request";
 import TaskList from "../Element/Table/TaskList";
 import Priority from "../Element/Icon/Priority";
+import moment from 'moment';
+import {GoalStatus} from "./Goal";
+import classNames from "classnames";
 
 export type Goal = {
     id: number,
@@ -15,7 +18,7 @@ export type Goal = {
     description?: string,
     progress: number,
     pressure: Pressure,
-    status: string,
+    status: GoalStatus,
     milestone?: string,
     priority: PriorityType
     createdBy: User
@@ -78,7 +81,8 @@ const useStyles = makeStyles({
     },
     description: {
         marginTop: 5,
-        marginBottom: 5
+        marginBottom: 5,
+        maxWidth: 600
     },
     panel: {},
     projectActions: {
@@ -95,6 +99,24 @@ const useStyles = makeStyles({
         marginBottom: 30
     }
 });
+const StatusUpdater = (props: { status: GoalStatus }) => {
+    const style = classNames("button", {
+        "is-primary": props.status === "PLANNING",
+        "is-success": props.status === "ACTIVE",
+        "is-light": props.status === "COMPLETED"
+    });
+    const nextAction = (status: GoalStatus): ReactNode => {
+        switch (status) {
+            case "PLANNING":
+                return "Start";
+            case "ACTIVE":
+                return "Complete";
+            case "COMPLETED":
+                return "Completed";
+        }
+    }
+    return <button className={style}>{nextAction(props.status)}</button>;
+};
 const GoalOverview = (props: { project: string, id: number }) => {
     const {url} = useRouteMatch();
     const classes = useStyles();
@@ -108,7 +130,7 @@ const GoalOverview = (props: { project: string, id: number }) => {
             (error => {
 
             }))
-    },);
+    }, [lastUpdate]);
     return (
 
         <div className={classes.root}>
@@ -119,7 +141,7 @@ const GoalOverview = (props: { project: string, id: number }) => {
 
                     <div className={classes.projectActions}>
                     <span className={classes.projectAction}>
-                        <button className="button is-primary">Start</button>
+                        <StatusUpdater status={data.status}/>
                     </span>
                         <span className={classes.projectAction}>
                         <Link to={`${url}/board`}>
@@ -142,7 +164,7 @@ const GoalOverview = (props: { project: string, id: number }) => {
                                 type={data.priority as PriorityType}/><b>Priority: </b>{data.priority}
                         </div>
                         <div className="column">
-                            <b>Deadline: </b> {data.deadline}
+                            <b>Deadline: </b> {moment(data.deadline).format("MMM DD, YYYY")}
                         </div>
                         <div className="column">
                             <b>Progress:</b> <Progress className={classes.progress} progress={data.progress}
