@@ -67,7 +67,8 @@ const TextField = (props: TextFieldProps) => {
             }
             <div className={controlClass}>
 
-                <input style={props.style} type={(props.type) ? props.type : "text"} placeholder={props.placeholder}
+                <input {...props} style={props.style} type={(props.type) ? props.type : "text"}
+                       placeholder={props.placeholder}
                        name={props.name}
                        className={inputClass}
                        onChange={onChange}
