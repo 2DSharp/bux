@@ -1,26 +1,26 @@
-import React from 'react';
-import {Link, useParams, useRouteMatch} from "react-router-dom";
+import React, {useEffect, useState} from 'react';
+import {Link, useRouteMatch} from "react-router-dom";
 import {makeStyles} from "@material-ui/styles";
-import Priority from "../Element/Icon/Priority";
 import MdIcon from "../Element/Icon/MDIcon";
+import {Priority as PriorityType, User} from "../../types";
+import Progress, {Pressure} from "../Element/Progress";
+import {getRequest} from "../../service/request";
 import TaskList from "../Element/Table/TaskList";
-import {Priority as PriorityType} from "../../types";
+import Priority from "../Element/Icon/Priority";
 
-const data = {
-    id: 42,
-    title: "Update with new UI designs",
-    deadline: "2020-06-25",
-    description: "The UI designs need to be updated according to Material Design guidelines",
-    progress: 20,
-    pressure: "MEDIUM",
-    status: "COMPLETED",
-    milestone: "v1 launch",
-    priority: "MEDIUM",
-    createdBy: {
-        name: "John Doe",
-        username: "jdoe"
-    }
+export type Goal = {
+    id: number,
+    title: string,
+    deadline: string,
+    description?: string,
+    progress: number,
+    pressure: Pressure,
+    status: string,
+    milestone?: string,
+    priority: PriorityType
+    createdBy: User
 }
+
 const taskData = {
     tasks: {
         'task-1': {id: 'task-1', title: 'Add new header', priority: "LOW"},
@@ -63,6 +63,12 @@ const useStyles = makeStyles({
         fontSize: 20,
         display: "inline-block"
     },
+    progress: {
+        height: 10,
+        width: 60,
+        margin: '0px 3px 0 3px',
+        display: "inline-block"
+    },
     meta: {
         marginTop: 10,
         fontSize: 14,
@@ -89,51 +95,72 @@ const useStyles = makeStyles({
         marginBottom: 30
     }
 });
-const GoalOverview = () => {
-    const {id} = useParams();
+const GoalOverview = (props: { project: string, id: number }) => {
     const {url} = useRouteMatch();
     const classes = useStyles();
+    const [lastUpdate, setLastUpdate] = useState();
+    const [data, setData] = useState<Goal>();
+    useEffect(() => {
+        getRequest(`/projects/${props.project}/goals/${props.id}`, {},
+            (result => {
+                setData(result);
+            }),
+            (error => {
+
+            }))
+    },);
     return (
+
         <div className={classes.root}>
-            <div className={classes.head}>
-                <span className={classes.heading}><span><h1>{data.title}</h1></span></span>
-                <div className={classes.projectActions}>
+            {data &&
+            <>
+                <div className={classes.head}>
+                    <span className={classes.heading}><span><h1>{data.title}</h1></span></span>
+
+                    <div className={classes.projectActions}>
                     <span className={classes.projectAction}>
                         <button className="button is-primary">Start</button>
                     </span>
-                    <span className={classes.projectAction}>
+                        <span className={classes.projectAction}>
                         <Link to={`${url}/board`}>
                             <button className="button is-light">
                                 <MdIcon value={"mdi-grid-large"}/><span>Board</span>
                             </button>
                         </Link>
                     </span>
-                    <span className={classes.projectAction}>
+                        <span className={classes.projectAction}>
                         <button className="button is-light"><MdIcon
                             value={"mdi-cog-outline"}/><span>Settings</span></button>
                     </span>
-                </div>
-            </div>
-            <div className={classes.meta}>
-                <div className={classes.description}>This is the description for the project</div>
-                <div className={`${classes.stats} columns`}>
-                    <div className="column">
-                        <Priority
-                            type={data.priority as PriorityType}/><b>Priority: </b>{data.priority.toLowerCase()}
-                    </div>
-                    <div className="column">
-                        <b>Timeline: </b> 22-07-2020 - 29-07-2020
-                    </div>
-                    <div className="column">
-                        <b>Status:</b> Active
-                    </div>
-                    <div className="column">
-                        <b>Milestones:</b> None
                     </div>
                 </div>
-                <TaskList data={taskData}/>
-            </div>
+                <div className={classes.meta}>
+                    <div className={classes.description}>{data.description}</div>
+                    <div className={`${classes.stats} columns`}>
+                        <div className="column">
+                            <Priority
+                                type={data.priority as PriorityType}/><b>Priority: </b>{data.priority}
+                        </div>
+                        <div className="column">
+                            <b>Deadline: </b> {data.deadline}
+                        </div>
+                        <div className="column">
+                            <b>Progress:</b> <Progress className={classes.progress} progress={data.progress}
+                                                       pressure={data.pressure as Pressure}/>
+                        </div>
+                        <div className="column">
+                            <b>Status:</b> {data.status}
+                        </div>
+                        <div className="column">
+                            <b>Milestones:</b> {data.milestone ? data.milestone : "None"}
+                        </div>
+                    </div>
 
+                    <TaskList onUpdate={setLastUpdate} data={taskData}/>
+                </div>
+            </>
+
+            }
         </div>
     );
 };
