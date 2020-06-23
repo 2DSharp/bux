@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import MdIcon from "../Icon/MDIcon";
 import {makeStyles} from "@material-ui/styles";
-import classNames from "classnames";
 import TabSwitcher from "./TabSwitcher";
 import NewGoal from "../Modal/NewGoal";
 import {getRequest} from "../../../service/request";
@@ -10,6 +9,7 @@ import {Spin} from "antd";
 import Priority from "../Icon/Priority";
 import {Priority as PriorityType} from "../../../types";
 import {Link} from "react-router-dom";
+import Progress from "../Progress";
 
 const useStyles = makeStyles({
     root: {
@@ -54,12 +54,7 @@ const goalTabs = ['All', 'Active', 'Completed', 'Abandoned']
 const Goals = (props: { projectKey: string }) => {
     const classes = useStyles();
 
-    const progressPressure = (pressure: "HIGH" | "LOW" | "MEDIUM") =>
-        classNames("progress", classes.progress, {
-            "is-success": pressure === "LOW",
-            "is-danger": pressure === "HIGH",
-            "is-info": pressure === "MEDIUM"
-        });
+
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<string>('Active');
     const switchTab = (tab: string) => {
@@ -145,11 +140,8 @@ const Goals = (props: { projectKey: string }) => {
                                                     <div className={classes.statsContainer}>
                                                         <span className={classes.stat}><b>Deadline: </b>{goal.deadline}</span>
                                                         <span className={classes.stat} style={{float: "right"}}>
-                                            <progress
-                                                className={progressPressure(goal.pressure)}
-                                                value={goal.progress}
-                                                max="100">{goal.progress}%</progress>
-                                             <> {goal.progress}%</>
+                                                        <Progress progress={goal.progress} pressure={goal.pressure}
+                                                                  className={classes.progress}/>
                                         </span>
                                                     </div>
                                                 </div>
