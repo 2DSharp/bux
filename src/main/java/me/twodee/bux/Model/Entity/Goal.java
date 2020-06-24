@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -44,10 +45,11 @@ public class Goal {
     private String description;
 
     @Builder.Default
-    private Status status = Status.PLANNING;
+    @ElementCollection
+    private List<String> statuses = new ArrayList<>(Arrays.asList("To Do", "In Progress", "Completed"));
 
     @Builder.Default
-    private int progress = 0;
+    private Status status = Status.PLANNING;
 
     @Builder.Default
     private Priority priority = Priority.MEDIUM;

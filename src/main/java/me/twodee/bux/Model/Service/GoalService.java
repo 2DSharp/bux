@@ -103,7 +103,7 @@ public class GoalService {
     }
 
     private GoalDTO buildGoalDto(Goal goal) {
-
+        int progress = calculateProgress(goal);
         return GoalDTO.builder()
                 .id(goal.getId())
                 .title(goal.getTitle())
@@ -112,20 +112,29 @@ public class GoalService {
                 .priority(goal.getPriority())
                 .createdBy(UserDTOFactory.buildPublicUser(goal.getCreatedBy()))
                 .deadline(goal.getDeadline())
-                .progress(goal.getProgress())
+                .progress(progress)
                 .status(goal.getStatus())
-                .pressure(calculatePressure(goal))
+                .pressure(calculatePressure(goal, progress))
                 .build();
     }
 
+    private int calculateProgress(Goal goal) {
+        List<String> statuses = goal.getStatuses();
+        long completedTasks = goal.getTasks()
+                .stream()
+                .filter(task -> task.getStatus().equals(statuses.get(statuses.size() - 1)))
+                .count();
+        int totalTasks = goal.getTasks().size();
 
-    private GoalDTO.Pressure calculatePressure(Goal goal) {
+        return (int) Math.round(completedTasks * 100.0 / totalTasks);
+    }
+
+    private GoalDTO.Pressure calculatePressure(Goal goal, int currentProgress) {
         long elapsed = DAYS.between(goal.getCreatedAt(), LocalDate.now());
         long totalDays = DAYS.between(goal.getCreatedAt(), goal.getDeadline());
         double ratio = (double) elapsed / totalDays;
 
         double expectedProgress = ratio * 100 - slackPeriodPercentage(goal.getPriority());
-        int currentProgress = goal.getProgress();
 
         if (currentProgress < expectedProgress) {
             return GoalDTO.Pressure.HIGH;
