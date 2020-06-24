@@ -32,7 +32,8 @@ public class TaskController extends RestAPI {
         if (!accountService.currentUserCanCreateProject(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        TaskDTO result = taskService.createTask(dto, accountService.getUser(session));
+        TaskDTO result = taskService.createTask(dto, accountService.getUser(session),
+                                                goalService.getTaskStatusesForGoal(dto.getGoalId()));
         goalService.addTaskToGoal(result, dto.getGoalId());
         return ResponseEntity.ok(result);
     }

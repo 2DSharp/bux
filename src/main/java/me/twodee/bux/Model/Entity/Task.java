@@ -56,6 +56,5 @@ public class Task {
     private User createdBy;
 
     @NotNull
-    @Builder.Default
-    private String status = "To Do";
+    private String status;
 }

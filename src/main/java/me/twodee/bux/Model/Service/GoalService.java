@@ -96,6 +96,12 @@ public class GoalService {
                 .collect(Collectors.toList());
     }
 
+    public List<String> getTaskStatusesForGoal(int goalId) {
+
+        Optional<Goal> goal = repository.findById(goalId);
+        return goal.map(Goal::getStatuses).orElse(null);
+    }
+
     public void addTaskToGoal(TaskDTO taskDTO, int goalId) {
         Optional<Goal> goal = repository.findById(goalId);
         goal.ifPresent(entity -> entity.getTasks().add(new Task(taskDTO.getTaskId())));

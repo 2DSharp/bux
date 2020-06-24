@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -31,7 +32,7 @@ public class TaskService {
         this.projectManagement = projectManagement;
     }
 
-    public TaskDTO createTask(TaskCreationDTO dto, User user) {
+    public TaskDTO createTask(TaskCreationDTO dto, User user, List<String> statuses) {
         Set<ConstraintViolation<TaskCreationDTO>> violations = provider.getValidator().validate(dto);
         if (!violations.isEmpty()) {
             dto.setNotification(DomainToDTOConverter.convert(violations));
@@ -55,6 +56,7 @@ public class TaskService {
                 .status(dto.getStatus())
                 .description(dto.getDescription())
                 .assignee(new User(dto.getAssignee()))
+                .status(statuses.get(0))
                 .build();
 
         task = repository.save(task);
