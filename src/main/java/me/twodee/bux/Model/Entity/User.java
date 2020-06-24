@@ -1,20 +1,20 @@
 package me.twodee.bux.Model.Entity;
 
 
+import lombok.ToString;
 import me.twodee.bux.Util.CryptoUtil;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Entity
-public class User
-{
+@ToString
+public class User {
     public enum Role {
         ADMIN, LEADER, STANDARD
-    };
+    }
+
+    ;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -22,12 +22,13 @@ public class User
     @Size(min = 3, max = 16, message = "{validation.username.size}")
     @Pattern(regexp = "^(?=.*[a-zA-Z])([a-zA-Z0-9]+)$", message = "{validation.username.pattern}")
     @NotBlank(message = "{validation.username.empty}")
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @Pattern(regexp = "^[\\p{L}\\p{M}\\p{Pd} .'-]+$", message = "{validation.name.pattern}")
     @Size(min = 2, max = 255, message = "{validation.name.size}")
     @NotBlank(message = "{validation.name.empty}")
+    @NotNull
     private String name;
 
     @Column(columnDefinition = "ENUM('ADMIN', 'LEADER', 'STANDARD')")
@@ -36,63 +37,59 @@ public class User
 
     @Email(message = "{validation.email.pattern}")
     @NotBlank(message = "{validation.email.empty}")
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Transient
     @NotBlank(message = "{validation.password.empty}")
     @Size(min = 8, message = "{validation.password.weak}")
     @Pattern(regexp = "^(?=.*[a-zA-Z]).{8,}$", message = "{validation.password.weak}")
-    private  String password;
+    private String password;
 
     private String hashedPassword;
 
-    public User()
-    {
+    public User(int id) {
+        this.id = id;
     }
 
-    public User(String name, String username, String email, String password)
-    {
+    public User() {
+    }
+
+    public User(String name, String username, String email, String password) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
-        if (password != null)
+        if (password != null) {
             this.hashedPassword = CryptoUtil.hashPassword(password);
+        }
     }
 
-    public void setRole(Role role)
-    {
+    public void setRole(Role role) {
         this.role = role;
     }
 
-    public String getUsername()
-    {
+    public String getUsername() {
         return username;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public Role getRole()
-    {
+    public Role getRole() {
         return role;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public String getHashedPassword()
-    {
+    public String getHashedPassword() {
         return hashedPassword;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 }
