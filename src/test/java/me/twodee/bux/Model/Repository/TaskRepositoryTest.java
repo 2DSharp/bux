@@ -9,6 +9,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.annotation.Resource;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
 @DataJpaTest
 public class TaskRepositoryTest {
     @Resource
@@ -33,13 +36,18 @@ public class TaskRepositoryTest {
         projectRepository.save(project);
         Task task = Task.builder().title("Do something").project(project).build();
         Task savedTask = repository.save(task);
-        System.out.println(savedTask);
+        assertThat(savedTask.getId(), equalTo("PROJ-1"));
 
         project = new Project("Name2", "TEST", usr);
         projectRepository.save(project);
         task = Task.builder().title("Do something").project(project).build();
         savedTask = repository.save(task);
 
-        System.out.println(savedTask);
+        assertThat(savedTask.getId(), equalTo("TEST-1"));
+
+        task = Task.builder().title("Do something 2").project(project).build();
+        savedTask = repository.save(task);
+
+        assertThat(savedTask.getId(), equalTo("TEST-2"));
     }
 }
