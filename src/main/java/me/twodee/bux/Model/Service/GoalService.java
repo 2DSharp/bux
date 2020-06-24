@@ -4,8 +4,8 @@ import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.GoalCreationDTO;
 import me.twodee.bux.DTO.Project.GoalDTO;
 import me.twodee.bux.DTO.Project.GoalsList;
-import me.twodee.bux.DTO.User.PublicUserDTO;
 import me.twodee.bux.Factory.NotificationFactory;
+import me.twodee.bux.Factory.UserDTOFactory;
 import me.twodee.bux.Model.Entity.Goal;
 import me.twodee.bux.Model.Entity.Project;
 import me.twodee.bux.Model.Entity.User;
@@ -98,7 +98,7 @@ public class GoalService {
                 .description(goal.getDescription())
                 .milestone(goal.getMilestone())
                 .priority(goal.getPriority())
-                .createdBy(new PublicUserDTO(goal.getCreatedBy().getName(), goal.getCreatedBy().getUsername()))
+                .createdBy(UserDTOFactory.buildPublicUser(goal.getCreatedBy()))
                 .deadline(goal.getDeadline())
                 .progress(goal.getProgress())
                 .status(goal.getStatus())

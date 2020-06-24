@@ -7,6 +7,6 @@ public class UserDTOFactory
 {
     public static PublicUserDTO buildPublicUser(User user)
     {
-        return new PublicUserDTO(user.getName(), user.getUsername());
+        return new PublicUserDTO(user.getId(), user.getName(), user.getUsername());
     }
 }
