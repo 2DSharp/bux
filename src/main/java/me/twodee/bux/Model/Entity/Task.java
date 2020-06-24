@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @ToString
@@ -27,6 +28,7 @@ public class Task {
             strategy = "me.twodee.bux.Util.TaskIdGenerator")
     private String id;
 
+    @NotNull
     private String title;
 
     private LocalDate deadline;
@@ -44,4 +46,11 @@ public class Task {
 
     @ManyToOne
     private User assignee;
+
+    @NotNull
+    @ManyToOne
+    private User createdBy;
+
+    @NotNull
+    private String status;
 }

@@ -43,6 +43,7 @@ public class TaskIdGenerator extends SequenceStyleGenerator {
             return resultSet.getLong(1);
 
         } catch (SQLException e) {
+            // The Sequence doesn't exist, create and retry
             Statement statement = connection.createStatement();
             connection.setAutoCommit(false);
             for (String command : dialect.getCreateSequenceStrings("project_" + projectKey, 1, 1)) {
