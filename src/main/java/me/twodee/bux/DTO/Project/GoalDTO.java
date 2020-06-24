@@ -4,13 +4,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import me.twodee.bux.DTO.Task.TaskDTO;
 import me.twodee.bux.DTO.User.PublicUserDTO;
 import me.twodee.bux.Model.Entity.Goal;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Builder
 @Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GoalDTO {
     @Getter
@@ -45,4 +49,6 @@ public class GoalDTO {
     private PublicUserDTO createdBy;
 
     private Pressure pressure;
+
+    private List<TaskDTO> tasks;
 }

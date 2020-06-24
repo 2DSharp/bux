@@ -84,7 +84,9 @@ public class GoalService {
 
     public GoalDTO fetchGoal(String projectKey, int goalId) {
         Goal goal = repository.findByProjectAndId(new Project(projectKey), goalId);
-        return buildGoalDto(goal);
+        GoalDTO dto = buildGoalDto(goal);
+        dto.setTasks(goal.getTasks().stream().map(TaskDTO::build).collect(Collectors.toList()));
+        return dto;
     }
 
     public List<String> getAllMilestonesForProject(String projectKey) {
@@ -101,6 +103,7 @@ public class GoalService {
     }
 
     private GoalDTO buildGoalDto(Goal goal) {
+
         return GoalDTO.builder()
                 .id(goal.getId())
                 .title(goal.getTitle())
@@ -114,6 +117,7 @@ public class GoalService {
                 .pressure(calculatePressure(goal))
                 .build();
     }
+
 
     private GoalDTO.Pressure calculatePressure(Goal goal) {
         long elapsed = DAYS.between(goal.getCreatedAt(), LocalDate.now());
