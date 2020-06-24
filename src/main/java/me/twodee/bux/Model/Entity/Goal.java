@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -55,5 +56,8 @@ public class Goal {
 
     @ManyToOne
     private User createdBy;
+
+    @OneToMany
+    private List<Task> tasks;
 
 }
