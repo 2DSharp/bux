@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -58,6 +59,6 @@ public class Goal {
     private User createdBy;
 
     @OneToMany
-    private List<Task> tasks;
+    private List<Task> tasks = new ArrayList<>();
 
 }

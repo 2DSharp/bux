@@ -28,13 +28,17 @@ public class Task {
             strategy = "me.twodee.bux.Util.TaskIdGenerator")
     private String id;
 
+    public Task(String id) {
+        this.id = id;
+    }
+
     @NotNull
     private String title;
 
     private LocalDate deadline;
 
     @Builder.Default
-    private final LocalDate createdAt = LocalDate.now();
+    private LocalDate createdAt = LocalDate.now();
 
     private String description;
 

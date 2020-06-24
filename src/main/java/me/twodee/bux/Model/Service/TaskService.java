@@ -31,7 +31,7 @@ public class TaskService {
         this.projectManagement = projectManagement;
     }
 
-    private TaskDTO createTask(TaskCreationDTO dto, User user) {
+    public TaskDTO createTask(TaskCreationDTO dto, User user) {
         Set<ConstraintViolation<TaskCreationDTO>> violations = provider.getValidator().validate(dto);
         if (!violations.isEmpty()) {
             dto.setNotification(DomainToDTOConverter.convert(violations));

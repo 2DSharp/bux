@@ -4,10 +4,12 @@ import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.GoalCreationDTO;
 import me.twodee.bux.DTO.Project.GoalDTO;
 import me.twodee.bux.DTO.Project.GoalsList;
+import me.twodee.bux.DTO.Task.TaskDTO;
 import me.twodee.bux.Factory.NotificationFactory;
 import me.twodee.bux.Factory.UserDTOFactory;
 import me.twodee.bux.Model.Entity.Goal;
 import me.twodee.bux.Model.Entity.Project;
+import me.twodee.bux.Model.Entity.Task;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.GoalRepository;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
@@ -19,6 +21,7 @@ import javax.validation.ConstraintViolation;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -89,6 +92,12 @@ public class GoalService {
                 .stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    public void addTaskToGoal(TaskDTO taskDTO, int goalId) {
+        Optional<Goal> goal = repository.findById(goalId);
+        goal.ifPresent(entity -> entity.getTasks().add(new Task(taskDTO.getTaskId())));
+        // else add to backlog
     }
 
     private GoalDTO buildGoalDto(Goal goal) {
