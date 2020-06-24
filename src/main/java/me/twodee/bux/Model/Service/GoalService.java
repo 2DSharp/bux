@@ -120,6 +120,7 @@ public class GoalService {
                 .deadline(goal.getDeadline())
                 .progress(progress)
                 .status(goal.getStatus())
+                .statusList(goal.getStatuses())
                 .pressure(calculatePressure(goal, progress))
                 .build();
     }

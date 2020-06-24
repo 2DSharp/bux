@@ -51,4 +51,6 @@ public class GoalDTO {
     private Pressure pressure;
 
     private List<TaskDTO> tasks;
+
+    private List<String> statusList;
 }
