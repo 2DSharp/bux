@@ -68,6 +68,8 @@ public class TaskIdGenerator extends SequenceStyleGenerator {
 
             PreparedStatement insert = connection.prepareStatement("INSERT INTO Sequence(SeqKey) VALUES (?)");
             insert.setString(1, KEYSPACE + projectKey);
+            insert.executeUpdate();
+
             return generateIdWithSeparateTable(connection, projectKey);
         }
     }
