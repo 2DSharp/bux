@@ -75,7 +75,7 @@ const useStyles = makeStyles({
         }
     },
     check: {
-        color: variables.blue,
+        color: variables.primary,
         cursor: "pointer"
     }
 });
@@ -122,12 +122,13 @@ const DnDTable = (props: DnDTableProps) => {
                     setShowLoader(false)
                 })
         } else {
+            setShowLoader(false)
             setErrors(result.error);
         }
     }
     const actionValue = classNames("mdi-24px", {
-        "mdi-check-circle-outline": !actionIconHover,
-        "mdi-check-circle": actionIconHover
+        "mdi-checkbox-marked-circle-outline": !actionIconHover,
+        "mdi-checkbox-marked-circle": actionIconHover
     });
     return (
         <FormData onChange={onFormChange} onSubmit={onSubmit}>
@@ -177,6 +178,7 @@ const DnDTable = (props: DnDTableProps) => {
                             </td>
                             <td>
                                 <DatePickerField name="deadline" style={{width: 120}} disablePast
+                                                 placeholder="Deadline"
                                                  format="MMM DD YYYY"
                                                  className={classes.editable}/>
                             </td>
