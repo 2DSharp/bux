@@ -1,4 +1,5 @@
 import {FieldErrors} from "react-hook-form";
+import moment from "moment";
 
 export function removeFieldFromState<T>(setState: React.Dispatch<React.SetStateAction<T | undefined>> | undefined, field: string) {
     if (setState) {
@@ -18,4 +19,8 @@ export function getFormErrors(clientErr: FieldErrors<any>, serverErr: any | unde
 
 export function capitalizeFirstLetter(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export function convertDateToLocalDate(value: string) {
+    return moment(value).format("YYYY-MM-DD")
 }

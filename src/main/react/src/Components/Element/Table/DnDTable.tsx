@@ -14,6 +14,7 @@ import validate, {isEmpty} from "../../../service/validator";
 import {Tooltip} from "antd";
 import {postRequest} from "../../../service/request";
 import TaskRow from "./TaskRow";
+import {convertDateToLocalDate} from "../../../service/util";
 
 interface DnDTableData {
     id: string,
@@ -93,6 +94,7 @@ const DnDTable = (props: DnDTableProps) => {
     const [newTaskData, setNewTaskData] = useState({
         title: "",
         priority: 'MEDIUM' as PriorityType,
+        deadline: ""
     });
     const onFormChange = (name: string, value: string) => {
         setErrors({...errors, [name]: null});
@@ -105,6 +107,7 @@ const DnDTable = (props: DnDTableProps) => {
         if (result.success) {
             postRequest('/tasks/create', {
                     ...newTaskData,
+                    deadline: newTaskData["deadline"] ? convertDateToLocalDate(newTaskData["deadline"]) : null,
                     projectKey: props.project,
                     goalId: props.goal
                 },

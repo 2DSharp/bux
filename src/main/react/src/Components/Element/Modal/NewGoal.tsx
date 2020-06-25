@@ -13,6 +13,7 @@ import DatePickerField from "../Form/DatePickerField";
 import validate from "../../../service/validator";
 import Error from "../Form/Error";
 import {Redirect} from 'react-router-dom';
+import {convertDateToLocalDate} from "../../../service/util";
 
 
 interface NewGoal {
@@ -27,9 +28,6 @@ const errorMsgs = {
     required: "This field is required",
 };
 
-function convertDateToLocalDate(value: string) {
-    return moment(value).format("YYYY-MM-DD")
-}
 
 const rules = {
     title: {
