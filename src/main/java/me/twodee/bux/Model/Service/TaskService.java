@@ -55,11 +55,18 @@ public class TaskService {
                 .createdBy(user)
                 .status(dto.getStatus())
                 .description(dto.getDescription())
-                .assignee(new User(dto.getAssignee()))
+                .assignee(getAssignee(dto.getAssignee()))
                 .status(statuses.get(0))
                 .build();
 
         task = repository.save(task);
         return TaskDTO.build(task);
+    }
+
+    private User getAssignee(Integer id) {
+        if (id != null) {
+            return new User(id);
+        }
+        return null;
     }
 }

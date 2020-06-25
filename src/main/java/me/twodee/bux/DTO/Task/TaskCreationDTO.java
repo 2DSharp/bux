@@ -3,6 +3,7 @@ package me.twodee.bux.DTO.Task;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
+import lombok.ToString;
 import me.twodee.bux.DTO.DataTransferObject;
 import me.twodee.bux.Model.Entity.Task;
 
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ToString
 public class TaskCreationDTO extends DataTransferObject {
 
     @NotBlank(message = "{validation.task.title.empty}")
@@ -26,7 +28,7 @@ public class TaskCreationDTO extends DataTransferObject {
     @FutureOrPresent(message = "{validation.task.deadline.past}")
     private LocalDate deadline;
 
-    private int assignee;
+    private Integer assignee = null;
 
     private Task.Priority priority;
 
