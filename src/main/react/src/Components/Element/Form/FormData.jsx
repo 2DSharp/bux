@@ -4,6 +4,7 @@ const FormDataContext = React.createContext();
 
 export function withFormData(Component) {
     return function FormDataComponent(props) {
+
         return (
             <FormDataContext.Consumer>
                 {entityProps => {
@@ -32,7 +33,9 @@ export default class FormData extends React.PureComponent {
             <FormDataContext.Provider value={{
                 onChange: this.props.onChange
             }}>
+                <form onSubmit={this.props.onSubmit}>
                     {this.props.children}
+                </form>
             </FormDataContext.Provider>
         );
     }
