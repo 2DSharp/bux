@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Builder
 public class TaskDTO extends DataTransferObject {
 
-    String taskId;
+    String id;
     String projectKey;
     String title;
     String description;
@@ -28,7 +28,7 @@ public class TaskDTO extends DataTransferObject {
 
     public static TaskDTO build(Task task) {
         return TaskDTO.builder()
-                .taskId(task.getId())
+                .id(task.getId())
                 .projectKey(task.getProject().getProjectKey())
                 .title(task.getTitle())
                 .description(task.getDescription())
