@@ -10,5 +10,8 @@ export type TaskData = {
     title: string,
     priority: Priority
     assignee?: User,
-    deadline: string
+    createdBy: User,
+    deadline: string,
+    status: string,
+    description?: string
 }

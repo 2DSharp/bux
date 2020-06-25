@@ -2,7 +2,7 @@ import React, {ReactNode, useEffect, useState} from 'react';
 import {Link, useRouteMatch} from "react-router-dom";
 import {makeStyles} from "@material-ui/styles";
 import MdIcon from "../Element/Icon/MDIcon";
-import {Priority as PriorityType, User} from "../../types";
+import {Priority as PriorityType, TaskData, User} from "../../types";
 import Progress, {Pressure} from "../Element/Progress";
 import {getRequest} from "../../service/request";
 import TaskList from "../Element/Table/TaskList";
@@ -21,7 +21,8 @@ export type Goal = {
     status: GoalStatus,
     milestone?: string,
     priority: PriorityType
-    createdBy: User
+    createdBy: User,
+    tasks?: TaskData[]
 }
 
 const taskData = {
@@ -117,15 +118,30 @@ const StatusUpdater = (props: { status: GoalStatus }) => {
     }
     return <button className={style}>{nextAction(props.status)}</button>;
 };
+
+interface GoalTaskData {
+    tasks: any,
+    columns: any
+}
 const GoalOverview = (props: { project: string, id: number }) => {
     const {url} = useRouteMatch();
     const classes = useStyles();
     const [lastUpdate, setLastUpdate] = useState();
+    const [taskData, setTaskData] = useState<GoalTaskData>();
     const [data, setData] = useState<Goal>();
     useEffect(() => {
         getRequest(`/projects/${props.project}/goals/${props.id}`, {},
             (result => {
                 setData(result);
+                setTaskData({
+                    tasks: result.tasks,
+                    columns: {
+                        "tasks": {
+                            id: "tasks",
+                            taskIds: result.taskIds
+                        },
+                    }
+                })
             }),
             (error => {
 
@@ -177,8 +193,11 @@ const GoalOverview = (props: { project: string, id: number }) => {
                             <b>Milestones:</b> {data.milestone ? data.milestone : "None"}
                         </div>
                     </div>
+                    {
+                        taskData &&
+                        <TaskList onUpdate={setLastUpdate} data={taskData}/>
 
-                    <TaskList onUpdate={setLastUpdate} data={taskData}/>
+                    }
                 </div>
             </>
 

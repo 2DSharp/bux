@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import {makeStyles} from "@material-ui/styles";
-import {TaskData, User} from "../../../types";
+import {Priority as PriorityType, TaskData, User} from "../../../types";
 import Priority from "../Icon/Priority";
 import variables from "../../../sass/colors.module.scss";
 import TextField from "../Form/TextField";
@@ -44,7 +44,8 @@ const useStyles = makeStyles({
         width: 80
     },
     deadline: {
-        width: 60
+        width: 90,
+        display: "inline-block"
     },
     title: {
         width: "100%"
@@ -86,9 +87,13 @@ const TaskRow = (props: { data: TaskData, index: number }) => {
                     </Link>
                     }
                 </td>
-                <td className={classes.priority} style={{textAlign: "center"}}><Priority type={props.data.priority}/>
+                <td className={classes.priority} style={{textAlign: "center"}}>
+                    <Priority type={props.data.priority}/>
                 </td>
-                <td className={classes.deadline} style={{textAlign: "center"}}>25-07-2020</td>
+                <td style={{textAlign: "center"}}>
+                    {props.data.deadline &&
+                    <span className={classes.deadline}> {moment(props.data.deadline).format("MMM DD YYYY")}</span>}
+                </td>
             </tr>
         }
     </Draggable>
@@ -97,51 +102,70 @@ const TaskRow = (props: { data: TaskData, index: number }) => {
 const DnDTable = (props: DnDTableProps) => {
     const classes = useStyles();
     const [saveIconHover, setSaveIconHover] = useState(false);
+    const [newTasks, setNewTasks] = useState<TaskData[]>([]);
+    const [values, setValues] = useState({
+        title: "",
+        priority: 'MEDIUM' as PriorityType,
+        deadline: moment().format('MM/DD/YYYY'),
+        assignee: undefined
+    });
+    const onFormChange = (name: string, value: string) => {
+        //setErrors({...errors, [name]: null});
+        setValues({...values, [name]: value})
+    }
+    let n = 10;
+    const onSubmit = () => {
+        //setNewTasks([{id: "TASK-" + ++n, ...values}, ...newTasks]);
+    }
     return (
-        <table className={`table container is-fluid is-hoverable ${classes.table}`}>
+        <FormData onChange={onFormChange}>
+            <table className={`table container is-fluid is-hoverable ${classes.table}`}>
 
-            <Droppable droppableId={props.data.id}>
-                {provided =>
-                    <tbody {...provided.droppableProps} ref={provided.innerRef}>
-                    {props.displayAdded &&
-                    <FormData onChange={() => {
-                    }}>
+                <Droppable droppableId={props.data.id}>
+                    {provided =>
+                        <tbody {...provided.droppableProps} ref={provided.innerRef}>
+                        {props.displayAdded &&
+
                         <tr className={classes.row} style={{backgroundColor: "rgba(135, 206, 235, 0.2)"}}>
 
                             <td style={{textAlign: "center"}} className={classes.id}>
                                 <MdIcon onMouseOver={() => setSaveIconHover(true)}
                                         onMouseOut={() => setSaveIconHover(false)}
+                                        onClick={onSubmit}
                                         className={`${classes.check} ${classes.editable}`}
                                         value={`${saveIconHover ? "mdi-check-circle" : "mdi-check-circle-outline"} mdi-24px`}/>
                             </td>
                             <td className={classes.title}>
-                                <TextField autoFocus placeholder="What's the task?" className={classes.editable}/>
+                                <TextField name="title" autoFocus placeholder="What's the task?"
+                                           className={classes.editable}/>
                             </td>
                             <td>
-                                <UserSelector users={users} style={{width: 140}} placeholder="Assign to..."/>
+                                <UserSelector name="assignee" users={users} style={{width: 140}}
+                                              placeholder="Assign to..."/>
                             </td>
                             <td className={classes.priority}>
-                                <PrioritySelector style={{width: 60}} iconsOnly default="MEDIUM"
+                                <PrioritySelector name="priority" style={{width: 60}} iconsOnly default="MEDIUM"
                                                   className={"overriden"}/>
                             </td>
                             <td className={classes.deadline}>
-                                <DatePickerField style={{width: 120}} disablePast
+                                <DatePickerField name="deadline" style={{width: 120}} disablePast
                                                  format="MMM DD YYYY"
                                                  default={moment()}
                                                  className={classes.editable}/>
                             </td>
                         </tr>
-                    </FormData>
-                    }
+                        }
 
-                    {props.tasks.map((task, index) =>
-                        <TaskRow key={task.id} data={task} index={index}/>
-                    )}
-                    {provided.placeholder}
-                    </tbody>
-                }
-            </Droppable>
-        </table>
+                        {[...newTasks, ...props.tasks].map((task, index) =>
+                            <TaskRow key={task.id} data={task} index={index}/>
+                        )}
+                        {provided.placeholder}
+                        </tbody>
+                    }
+                </Droppable>
+            </table>
+        </FormData>
+
     );
 };
 
