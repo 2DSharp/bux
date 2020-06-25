@@ -10,6 +10,7 @@ import Priority from "../Element/Icon/Priority";
 import moment from 'moment';
 import {GoalStatus} from "./Goal";
 import classNames from "classnames";
+import Loading from "../Page/Loading";
 
 export type Goal = {
     id: number,
@@ -150,16 +151,16 @@ const GoalOverview = (props: { project: string, id: number }) => {
     return (
 
         <div className={classes.root}>
-            {data &&
-            <>
-                <div className={classes.head}>
-                    <span className={classes.heading}><span><h1>{data.title}</h1></span></span>
+            {data ?
+                <>
+                    <div className={classes.head}>
+                        <span className={classes.heading}><span><h1>{data.title}</h1></span></span>
 
-                    <div className={classes.projectActions}>
+                        <div className={classes.projectActions}>
                     <span className={classes.projectAction}>
                         <StatusUpdater status={data.status}/>
                     </span>
-                        <span className={classes.projectAction}>
+                            <span className={classes.projectAction}>
                         <Link to={`${url}/board`}>
                             <button className="button is-light">
                                 <MdIcon value={"mdi-grid-large"}/><span>Board</span>
@@ -198,8 +199,8 @@ const GoalOverview = (props: { project: string, id: number }) => {
                         <TaskList goalId={data.id} project={props.project} onUpdate={setLastUpdate} data={taskData}/>
                     }
                 </div>
-            </>
-
+                </>
+                : <Loading/>
             }
         </div>
     );

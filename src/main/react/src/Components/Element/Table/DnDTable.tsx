@@ -15,6 +15,7 @@ import {Tooltip} from "antd";
 import {postRequest} from "../../../service/request";
 import TaskRow from "./TaskRow";
 import {convertDateToLocalDate} from "../../../service/util";
+import GeneralSpin from "../Loader/GeneralSpin";
 
 interface DnDTableData {
     id: string,
@@ -91,6 +92,7 @@ const DnDTable = (props: DnDTableProps) => {
     const classes = useStyles();
     const [actionIconHover, setActionIconHover] = useState(false);
     const [errors, setErrors] = useState<any>({});
+    const [showLoader, setShowLoader] = useState(false);
     const [newTaskData, setNewTaskData] = useState({
         title: "",
         priority: 'MEDIUM' as PriorityType,
@@ -102,7 +104,7 @@ const DnDTable = (props: DnDTableProps) => {
     }
 
     const onSubmit = () => {
-        // show loader
+        setShowLoader(true);
         const result = (validate(newTaskData, rules));
         if (result.success) {
             postRequest('/tasks/create', {
@@ -112,10 +114,12 @@ const DnDTable = (props: DnDTableProps) => {
                     goalId: props.goal
                 },
                 (result: TaskData) => {
+                    setShowLoader(false);
                     props.onAdd(result);
                     setNewTaskData({...newTaskData, title: ""});
                 }, (failure) => {
                     console.log(failure);
+                    setShowLoader(false)
                 })
         } else {
             setErrors(result.error);
@@ -141,12 +145,17 @@ const DnDTable = (props: DnDTableProps) => {
                         <tr className={classes.row} style={{backgroundColor: "rgba(135, 206, 235, 0.2)"}}>
 
                             <td style={{textAlign: "center"}} className={classes.id}>
-                                {!isEmpty(newTaskData['title']) &&
+                                {
+                                    showLoader && <GeneralSpin size={24}/>
+                                }
+
+                                {(!showLoader && !isEmpty(newTaskData['title'])) &&
                                 <MdIcon onMouseOver={() => setActionIconHover(true)}
                                         onMouseOut={() => setActionIconHover(false)}
                                         onClick={onSubmit}
                                         className={`${classes.check} ${classes.editable}`}
                                         value={actionValue}/>
+
                                 }
                             </td>
                             <td className={classes.title}>
