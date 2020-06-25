@@ -5,6 +5,7 @@ import me.twodee.bux.DTO.Project.GoalCreationDTO;
 import me.twodee.bux.DTO.Project.GoalDTO;
 import me.twodee.bux.DTO.Project.GoalsList;
 import me.twodee.bux.DTO.Task.TaskDTO;
+import me.twodee.bux.DTO.Task.TaskOrderingDTO;
 import me.twodee.bux.Factory.NotificationFactory;
 import me.twodee.bux.Factory.UserDTOFactory;
 import me.twodee.bux.Model.Entity.Goal;
@@ -19,13 +20,11 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
+import static me.twodee.bux.Util.BaseUtil.dragAndDrop;
 
 @Service
 public class GoalService {
@@ -100,7 +99,6 @@ public class GoalService {
     }
 
     public List<String> getTaskStatusesForGoal(int goalId) {
-
         Optional<Goal> goal = repository.findById(goalId);
         return goal.map(Goal::getStatuses).orElse(null);
     }
@@ -109,6 +107,19 @@ public class GoalService {
         Optional<Goal> goal = repository.findById(goalId);
         goal.ifPresent(entity -> entity.getTasks().add(new Task(taskDTO.getId())));
         // else add to backlog
+    }
+
+    public List<String> reorderTasks(TaskOrderingDTO dto) {
+        Optional<Goal> goal = repository.findById(dto.getGoalId());
+        return goal.map(g -> reorderAndPersistTasks(g, dto.getSource(), dto.getDestination()))
+                .orElse(Collections.emptyList());
+    }
+
+    private List<String> reorderAndPersistTasks(Goal goal, int source, int destination) {
+        List<Task> tasks = dragAndDrop(goal.getTasks(), source, destination);
+        goal.setTasks(tasks);
+        Goal result = repository.save(goal);
+        return result.getTasks().stream().map(Task::getId).collect(Collectors.toList());
     }
 
     private GoalDTO buildGoalDto(Goal goal) {

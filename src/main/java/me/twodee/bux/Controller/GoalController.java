@@ -4,6 +4,7 @@ import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.GoalCreationDTO;
 import me.twodee.bux.DTO.Project.GoalDTO;
 import me.twodee.bux.DTO.Project.GoalsList;
+import me.twodee.bux.DTO.Task.TaskOrderingDTO;
 import me.twodee.bux.Model.Entity.Goal;
 import me.twodee.bux.Model.Service.AccountService;
 import me.twodee.bux.Model.Service.GoalService;
@@ -64,6 +65,14 @@ public class GoalController extends RestAPI {
         }
 
         return ResponseEntity.ok(goalService.fetchGoal(projectKey, goal));
+    }
+
+    @PostMapping("/updateTaskList")
+    public ResponseEntity<List<String>> reorderTaskList(HttpSession session, @RequestBody TaskOrderingDTO dto) {
+        if (!accountService.isLoggedIn(session)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return ResponseEntity.ok(goalService.reorderTasks(dto));
     }
 
     @GetMapping("/projects/{key}/milestones")
