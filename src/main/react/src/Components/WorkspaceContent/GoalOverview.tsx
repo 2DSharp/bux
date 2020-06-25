@@ -10,7 +10,7 @@ import Priority from "../Element/Icon/Priority";
 import moment from 'moment';
 import {GoalStatus} from "./Goal";
 import classNames from "classnames";
-import Loading from "../Page/Loading";
+import SpinLoader from "./SpinLoader";
 
 export type Goal = {
     id: number,
@@ -200,7 +200,7 @@ const GoalOverview = (props: { project: string, id: number }) => {
                     }
                 </div>
                 </>
-                : <Loading/>
+                : <SpinLoader/>
             }
         </div>
     );
