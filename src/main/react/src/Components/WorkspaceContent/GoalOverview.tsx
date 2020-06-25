@@ -195,8 +195,7 @@ const GoalOverview = (props: { project: string, id: number }) => {
                     </div>
                     {
                         taskData &&
-                        <TaskList goalId={data.id} onUpdate={setLastUpdate} data={taskData}/>
-
+                        <TaskList goalId={data.id} project={props.project} onUpdate={setLastUpdate} data={taskData}/>
                     }
                 </div>
             </>
