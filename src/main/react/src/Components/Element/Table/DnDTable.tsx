@@ -1,18 +1,19 @@
 import React, {useState} from 'react';
-import {Draggable, Droppable} from "react-beautiful-dnd";
+import {Droppable} from "react-beautiful-dnd";
 import {makeStyles} from "@material-ui/styles";
 import {Priority as PriorityType, TaskData, User} from "../../../types";
-import Priority from "../Icon/Priority";
 import variables from "../../../sass/colors.module.scss";
 import TextField from "../Form/TextField";
 import PrioritySelector from "../Form/PrioritySelector";
 import DatePickerField from "../Form/DatePickerField";
-import moment from 'moment';
 import MdIcon from "../Icon/MDIcon";
 import UserSelector from "../Form/UserSelector";
-import AvatarIcon from "../Icon/AvatarIcon";
-import {Link} from "react-router-dom";
 import FormData from "../Form/FormData";
+import classNames from "classnames";
+import validate, {isEmpty} from "../../../service/validator";
+import {Tooltip} from "antd";
+import {postRequest} from "../../../service/request";
+import TaskRow from "./TaskRow";
 
 interface DnDTableData {
     id: string,
@@ -21,7 +22,11 @@ interface DnDTableData {
 interface DnDTableProps {
     data: DnDTableData
     tasks: TaskData[],
-    displayAdded?: boolean
+    inputRef?: any,
+    adderId: string,
+    project: string,
+    goal?: number,
+    onAdd: any
 }
 
 const users: User[] = [
@@ -72,72 +77,83 @@ const useStyles = makeStyles({
         cursor: "pointer"
     }
 });
-const TaskRow = (props: { data: TaskData, index: number }) => {
-    const classes = useStyles();
-    return <Draggable draggableId={props.data.id} index={props.index}>
-        {provided =>
-            <tr {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}
-                className={classes.row}>
-                <td className={classes.id}>{props.data.id}</td>
-                <td className={classes.title}>{props.data.title}</td>
-                <td className={classes.assignedTo} style={{textAlign: "center"}}>
-                    {props.data.assignee &&
-                    <Link to={"/user/" + props.data.assignee.username}>
-                        <AvatarIcon size="small" user={props.data.assignee}/>
-                    </Link>
-                    }
-                </td>
-                <td className={classes.priority} style={{textAlign: "center"}}>
-                    <Priority type={props.data.priority}/>
-                </td>
-                <td style={{textAlign: "center"}}>
-                    {props.data.deadline &&
-                    <span className={classes.deadline}> {moment(props.data.deadline).format("MMM DD YYYY")}</span>}
-                </td>
-            </tr>
-        }
-    </Draggable>
-}
 
+const rules = {
+    title: {
+        required: true,
+        message: {
+            required: "Enter a task name for a small task. Example: Fix the launch pad"
+        }
+    }
+}
 const DnDTable = (props: DnDTableProps) => {
     const classes = useStyles();
-    const [saveIconHover, setSaveIconHover] = useState(false);
-    const [newTasks, setNewTasks] = useState<TaskData[]>([]);
-    const [values, setValues] = useState({
+    const [actionIconHover, setActionIconHover] = useState(false);
+    const [errors, setErrors] = useState<any>({});
+    const [newTaskData, setNewTaskData] = useState({
         title: "",
         priority: 'MEDIUM' as PriorityType,
-        deadline: moment().format('MM/DD/YYYY'),
-        assignee: undefined
     });
     const onFormChange = (name: string, value: string) => {
-        //setErrors({...errors, [name]: null});
-        setValues({...values, [name]: value})
+        setErrors({...errors, [name]: null});
+        setNewTaskData({...newTaskData, [name]: value})
     }
-    let n = 10;
+
     const onSubmit = () => {
-        //setNewTasks([{id: "TASK-" + ++n, ...values}, ...newTasks]);
+        // show loader
+        const result = (validate(newTaskData, rules));
+        if (result.success) {
+            postRequest('/tasks/create', {
+                    ...newTaskData,
+                    projectKey: props.project,
+                    goalId: props.goal
+                },
+                (result: TaskData) => {
+                    props.onAdd(result);
+                    setNewTaskData({...newTaskData, title: ""});
+                }, (failure) => {
+                    console.log(failure);
+                })
+        } else {
+            setErrors(result.error);
+        }
     }
+    const actionValue = classNames("mdi-24px", {
+        "mdi-check-circle-outline": !actionIconHover,
+        "mdi-check-circle": actionIconHover
+    });
     return (
-        <FormData onChange={onFormChange}>
+        <FormData onChange={onFormChange} onSubmit={onSubmit}>
             <table className={`table container is-fluid is-hoverable ${classes.table}`}>
 
                 <Droppable droppableId={props.data.id}>
                     {provided =>
                         <tbody {...provided.droppableProps} ref={provided.innerRef}>
-                        {props.displayAdded &&
 
+                        {[...props.tasks].map((task, index) =>
+                            <TaskRow key={task.id} data={task} index={index}/>
+                        )}
+                        {provided.placeholder}
+                        <tr id={props.adderId}/>
                         <tr className={classes.row} style={{backgroundColor: "rgba(135, 206, 235, 0.2)"}}>
 
                             <td style={{textAlign: "center"}} className={classes.id}>
-                                <MdIcon onMouseOver={() => setSaveIconHover(true)}
-                                        onMouseOut={() => setSaveIconHover(false)}
+                                {!isEmpty(newTaskData['title']) &&
+                                <MdIcon onMouseOver={() => setActionIconHover(true)}
+                                        onMouseOut={() => setActionIconHover(false)}
                                         onClick={onSubmit}
                                         className={`${classes.check} ${classes.editable}`}
-                                        value={`${saveIconHover ? "mdi-check-circle" : "mdi-check-circle-outline"} mdi-24px`}/>
+                                        value={actionValue}/>
+                                }
                             </td>
                             <td className={classes.title}>
-                                <TextField name="title" autoFocus placeholder="What's the task?"
-                                           className={classes.editable}/>
+                                <Tooltip color={"volcano"} visible={errors.title} title={errors['title']}>
+                                    <TextField value={newTaskData['title']} name="title"
+                                               forwardRef={props.inputRef}
+                                               placeholder="What's the task?"
+                                               className={classes.editable}/>
+                                </Tooltip>
+
                             </td>
                             <td>
                                 <UserSelector name="assignee" users={users} style={{width: 140}}
@@ -147,19 +163,12 @@ const DnDTable = (props: DnDTableProps) => {
                                 <PrioritySelector name="priority" style={{width: 60}} iconsOnly default="MEDIUM"
                                                   className={"overriden"}/>
                             </td>
-                            <td className={classes.deadline}>
+                            <td>
                                 <DatePickerField name="deadline" style={{width: 120}} disablePast
                                                  format="MMM DD YYYY"
-                                                 default={moment()}
                                                  className={classes.editable}/>
                             </td>
                         </tr>
-                        }
-
-                        {[...newTasks, ...props.tasks].map((task, index) =>
-                            <TaskRow key={task.id} data={task} index={index}/>
-                        )}
-                        {provided.placeholder}
                         </tbody>
                     }
                 </Droppable>

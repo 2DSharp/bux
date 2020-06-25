@@ -21,7 +21,7 @@ function validateField(rules: any, value: any) {
     }
 }
 
-function isEmpty(obj: object) {
+export function isEmpty(obj: any) {
     return Object.keys(obj).length === 0;
 }
 
