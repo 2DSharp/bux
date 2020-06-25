@@ -4,6 +4,8 @@ import me.twodee.bux.Interface.ThrowingFunction;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Function;
 
 public class BaseUtil
@@ -27,5 +29,12 @@ public class BaseUtil
     public static String localDateTimeToStr(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return dateTime.format(formatter);
+    }
+
+    public static <T> List<T> dragAndDrop(List<T> list, int source, int destination) {
+        LinkedList<T> ll = new LinkedList<>(list);
+        T value = ll.remove(source);
+        ll.add(destination, value);
+        return ll;
     }
 }
