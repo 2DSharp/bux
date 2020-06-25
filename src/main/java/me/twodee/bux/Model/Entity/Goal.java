@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -46,7 +45,7 @@ public class Goal {
 
     @Builder.Default
     @ElementCollection
-    private List<String> statuses = new ArrayList<>(Arrays.asList("To Do", "In Progress", "Completed"));
+    private List<String> statuses = List.of("To Do", "In Progress", "Completed");
 
     @Builder.Default
     private Status status = Status.PLANNING;
@@ -61,6 +60,7 @@ public class Goal {
     private User createdBy;
 
     @OneToMany
+    @OrderColumn(name = "tasks_order")
     private List<Task> tasks = new ArrayList<>();
 
 }

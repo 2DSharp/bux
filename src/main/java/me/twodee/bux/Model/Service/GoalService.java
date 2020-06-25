@@ -85,7 +85,10 @@ public class GoalService {
     public GoalDTO fetchGoal(String projectKey, int goalId) {
         Goal goal = repository.findByProjectAndId(new Project(projectKey), goalId);
         GoalDTO dto = buildGoalDto(goal);
-        dto.setTasks(goal.getTasks().stream().map(TaskDTO::build).collect(Collectors.toList()));
+        dto.setTaskIds(goal.getTasks().stream().map(Task::getId).collect(Collectors.toList()));
+        dto.setTasks(goal.getTasks()
+                             .stream()
+                             .collect(Collectors.toMap(Task::getId, TaskDTO::build)));
         return dto;
     }
 
@@ -104,7 +107,7 @@ public class GoalService {
 
     public void addTaskToGoal(TaskDTO taskDTO, int goalId) {
         Optional<Goal> goal = repository.findById(goalId);
-        goal.ifPresent(entity -> entity.getTasks().add(new Task(taskDTO.getTaskId())));
+        goal.ifPresent(entity -> entity.getTasks().add(new Task(taskDTO.getId())));
         // else add to backlog
     }
 

@@ -11,6 +11,7 @@ import me.twodee.bux.Model.Entity.Goal;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Getter
@@ -50,7 +51,9 @@ public class GoalDTO {
 
     private Pressure pressure;
 
-    private List<TaskDTO> tasks;
+    private Map<String, TaskDTO> tasks;
+
+    private List<String> taskIds;
 
     private List<String> statusList;
 }
