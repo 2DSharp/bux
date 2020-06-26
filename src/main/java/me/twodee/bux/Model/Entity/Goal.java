@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Getter
@@ -61,4 +62,9 @@ public class Goal {
     @OrderColumn(name = "tasks_order")
     private List<Task> tasks = new ArrayList<>();
 
+    @Builder.Default
+    @ElementCollection
+    Map<String, StatusTaskList> statusMap = Map.of("To Do", new StatusTaskList(),
+                                                   "In Progress", new StatusTaskList(),
+                                                   "Completed", new StatusTaskList());
 }
