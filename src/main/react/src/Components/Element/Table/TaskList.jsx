@@ -25,6 +25,7 @@ const TaskList = (props) => {
     const [tasks, setTasks] = useState(props.data.tasks);
     const [showBacklogAdder, setShowBacklogAdder] = useState(false);
     const [moveToTaskAdder, setMoveToTaskAdder] = useState(false);
+
     const handleDrag = (result) => {
         DragHandler.dragEnd(result, columns, setColumns);
         const {destination, source, draggableId} = result;
@@ -33,13 +34,13 @@ const TaskList = (props) => {
                 source: source.index,
                 destination: destination.index
             }, (result) => {
-                console.log(result);
+                refreshTasks(result);
             },
             (failure) => {
                 console.log(failure);
             })
     }
-    const onAdd = (refreshedTasks) => {
+    const refreshTasks = (refreshedTasks) => {
         setTasks(refreshedTasks.tasks)
         setColumns({
             ...columns,
@@ -48,7 +49,6 @@ const TaskList = (props) => {
                 taskIds: refreshedTasks.taskIds
             }
         });
-
     }
     const useFocus = () => {
         const htmlElRef = useRef(null)
@@ -71,7 +71,7 @@ const TaskList = (props) => {
                 </h3></div>
                 <div className="is-divider"/>
                 <nav className={`panel`}>
-                    <DnDTable onAdd={onAdd} goal={props.goalId} project={props.project}
+                    <DnDTable onAdd={refreshTasks} goal={props.goalId} project={props.project}
                               adderId={"tasks-adder"} data={columns['tasks']}
                               moveToAdder={moveToTaskAdder}
                               inputRef={inputRef}
