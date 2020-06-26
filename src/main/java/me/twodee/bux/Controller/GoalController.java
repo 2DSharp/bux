@@ -75,11 +75,43 @@ public class GoalController extends RestAPI {
         return ResponseEntity.ok(goalService.reorderTasks(dto));
     }
 
+    @PostMapping("/updateTaskWithinStatus")
+    public ResponseEntity<GoalDTO> reorderStatusList(HttpSession session, @RequestBody TaskOrderingDTO dto) {
+        if (!accountService.isLoggedIn(session)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return ResponseEntity.ok(goalService.reorderTasksWithinStatus(dto));
+    }
+
+    @PostMapping("/updateTaskBetweenStatuses")
+    public ResponseEntity<GoalDTO> reorderBetweenStatuses(HttpSession session, @RequestBody TaskOrderingDTO dto) {
+        if (!accountService.isLoggedIn(session)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return ResponseEntity.ok(goalService.reorderTasksBetweenStatuses(dto));
+    }
+
     @GetMapping("/projects/{key}/milestones")
     public ResponseEntity<List<String>> findMilestonesForProject(HttpSession session, @PathVariable String key) {
         if (!accountService.isLoggedIn(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         return ResponseEntity.ok(goalService.getAllMilestonesForProject(key));
+    }
+
+    @GetMapping("/goals/{id}/tasks/all")
+    public ResponseEntity<GoalDTO> getTasksFromGivenType(HttpSession session, @PathVariable("id") int id) {
+        if (!accountService.currentUserCanCreateProject(session)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return ResponseEntity.ok(goalService.getTasksWithColumnData(id));
+    }
+
+    @GetMapping("/goals/{id}/tasks")
+    public ResponseEntity<GoalDTO> getTasksForGoal(HttpSession session, @PathVariable("id") int id) {
+        if (!accountService.currentUserCanCreateProject(session)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return ResponseEntity.ok(goalService.getTasks(id));
     }
 }
