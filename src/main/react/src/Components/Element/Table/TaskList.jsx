@@ -17,6 +17,14 @@ const useStyles = makeStyles({
         "&:hover": {
             color: variables['blue']
         }
+    },
+    panel: {
+        marginBottom: "10px !important"
+    },
+    bottomAdder: {
+        color: variables['blue'],
+        cursor: "pointer",
+        fontSize: "15px"
     }
 });
 const TaskList = (props) => {
@@ -70,13 +78,15 @@ const TaskList = (props) => {
                     </ScrollIntoView>
                 </h3></div>
                 <div className="is-divider"/>
-                <nav className={`panel`}>
+                <nav className={`panel ${classes.panel}`}>
                     <DnDTable onAdd={refreshTasks} goal={props.goalId} project={props.project}
                               adderId={"tasks-adder"} data={columns['tasks']}
                               moveToAdder={moveToTaskAdder}
                               inputRef={inputRef}
                               tasks={columns['tasks'].taskIds.map(task => tasks[task])}/>
                 </nav>
+                <div onClick={setInputFocus} className={classes.bottomAdder}><MdIcon value={"mdi-plus"}/><span>Create a new task</span>
+                </div>
             </div>
             <div className={classes.taskBlock}>
                 <div><h3>Backlog<MdIcon onClick={() => setShowBacklogAdder(!showBacklogAdder)}
