@@ -10,7 +10,7 @@ const Goal = (props: { project: string }) => {
     return (
         <Switch>
             <Route path={`${url}/board`}>
-                <Board/>
+                <Board id={id}/>
             </Route>
             <Route path={`${url}`}>
                 <GoalOverview id={id} project={props.project}/>

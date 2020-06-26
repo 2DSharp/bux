@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {DragDropContext} from 'react-beautiful-dnd';
 import Column from "./Column";
 import {DragHandler} from "../../../service/dragHandler";
+import {getRequest} from "../../../service/request";
 
 const data = {
     tasks: {
@@ -26,22 +27,39 @@ const data = {
     columnOrder: ['col1', 'col2']
 
 }
-const Board = () => {
-    const [columns, setColumns] = useState(data.columns);
-    const [columnOrder, setColumnOrder] = useState(data.columnOrder);
+const Board = (props) => {
+
+    const [columns, setColumns] = useState({});
+    const [columnOrder, setColumnOrder] = useState([]);
+    const [tasks, setTasks] = useState({});
+
+    useEffect(() => {
+        getRequest(`/goals/${props.id}/tasks/all`, {},
+            result => {
+                setColumnOrder(result.statusList);
+                setColumns(result.columnData);
+                setTasks(result.tasks);
+            }, failure => {
+                console.log(failure);
+            })
+    }, []);
+
 
     return (
         <div style={{display: "flex"}}>
+            {columns &&
             <DragDropContext onDragEnd={result => DragHandler.dragEnd(result, columns, setColumns)}>
                 {
                     columnOrder.map(columnId => {
                         const column = columns[columnId];
-                        return <Column key={column.id} data={column}
-                                       tasks={column.taskIds.map(task => data.tasks[task])}/>
-
+                        if (column) {
+                            return <Column key={columnId} data={columnId}
+                                           tasks={column.tasks.map(taskId => tasks[taskId])}/>
+                        }
                     })
                 }
             </DragDropContext>
+            }
         </div>
     );
 };
