@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {DragDropContext} from 'react-beautiful-dnd';
 import Column from "./Column";
 import {DragHandler} from "../../../service/dragHandler";
-import {getRequest} from "../../../service/request";
+import {getRequest, postRequest} from "../../../service/request";
 
 const data = {
     tasks: {
@@ -32,8 +32,7 @@ const Board = (props) => {
     const [columns, setColumns] = useState({});
     const [columnOrder, setColumnOrder] = useState([]);
     const [tasks, setTasks] = useState({});
-
-    useEffect(() => {
+    const refreshTasks = () => {
         getRequest(`/goals/${props.id}/tasks/all`, {},
             result => {
                 setColumnOrder(result.statusList);
@@ -43,7 +42,7 @@ const Board = (props) => {
                         ...columnData,
                         [status]: {
                             id: status,
-                            tasks: result.columnData[status].tasks
+                            taskIds: result.columnData[status].taskIds
                         }
                     };
                 });
@@ -52,19 +51,56 @@ const Board = (props) => {
             }, failure => {
                 console.log(failure);
             })
+    }
+    useEffect(() => {
+        refreshTasks();
     }, []);
 
+    const onDragEnd = result => {
+        DragHandler.dragEnd(result, columns, setColumns);
+        const {destination, source} = result;
+
+        const start = columns[source.droppableId];
+        const finish = columns[destination.droppableId];
+
+        if (start === finish) {
+            postRequest("/updateTaskWithinStatus", {
+                    goalId: props.goalId,
+                    source: source.index,
+                    destination: destination.index,
+                    status: source.droppableId
+                }, (result) => {
+                    refreshTasks(result);
+                },
+                (failure) => {
+                    console.log(failure);
+                })
+        } else {
+            postRequest("/updateTaskBetweenStatuses", {
+                    goalId: props.goalId,
+                    source: source.index,
+                    destination: destination.index,
+                    sourceStatus: source.droppableId,
+                    destinationStatus: destination.droppableId
+                }, (result) => {
+                    refreshTasks(result);
+                },
+                (failure) => {
+                    console.log(failure);
+                })
+        }
+    }
 
     return (
         <div style={{display: "flex"}}>
             {columns &&
-            <DragDropContext onDragEnd={result => DragHandler.dragEnd(result, columns, setColumns)}>
+            <DragDropContext onDragEnd={onDragEnd}>
                 {
                     columnOrder.map(columnId => {
                         const column = columns[columnId];
                         if (column) {
                             return <Column key={columnId} data={columnId}
-                                           tasks={column.tasks.map(taskId => tasks[taskId])}/>
+                                           tasks={column.taskIds.map(taskId => tasks[taskId])}/>
                         }
                     })
                 }

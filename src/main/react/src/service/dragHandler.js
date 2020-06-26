@@ -27,17 +27,17 @@ export class DragHandler {
             })
             return;
         }
-        const startTaskIds = Array.from(start.tasks);
+        const startTaskIds = Array.from(start.taskIds);
         startTaskIds.splice(source.index, 1);
         const newStart = {
             ...start,
-            tasks: startTaskIds
+            tasksIds: startTaskIds
         }
-        const finishTaskIds = Array.from(finish.tasks);
+        const finishTaskIds = Array.from(finish.taskIds);
         finishTaskIds.splice(destination.index, 0, draggableId);
         const newFinish = {
             ...finish,
-            tasks: finishTaskIds
+            tasksIds: finishTaskIds
         }
         setColumns({
             ...columns,

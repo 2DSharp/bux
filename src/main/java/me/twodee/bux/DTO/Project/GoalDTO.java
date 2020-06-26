@@ -8,7 +8,6 @@ import lombok.Setter;
 import me.twodee.bux.DTO.Task.TaskDTO;
 import me.twodee.bux.DTO.User.PublicUserDTO;
 import me.twodee.bux.Model.Entity.Goal;
-import me.twodee.bux.Model.Entity.StatusTaskList;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -58,5 +57,5 @@ public class GoalDTO {
 
     private List<String> statusList;
 
-    private Map<String, StatusTaskList> columnData;
+    private Map<String, StatusTaskListDTO> columnData;
 }
