@@ -31,13 +31,13 @@ export class DragHandler {
         startTaskIds.splice(source.index, 1);
         const newStart = {
             ...start,
-            tasksIds: startTaskIds
+            taskIds: startTaskIds
         }
         const finishTaskIds = Array.from(finish.taskIds);
         finishTaskIds.splice(destination.index, 0, draggableId);
         const newFinish = {
             ...finish,
-            tasksIds: finishTaskIds
+            taskIds: finishTaskIds
         }
         setColumns({
             ...columns,
