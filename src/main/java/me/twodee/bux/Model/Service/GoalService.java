@@ -4,6 +4,7 @@ import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.GoalCreationDTO;
 import me.twodee.bux.DTO.Project.GoalDTO;
 import me.twodee.bux.DTO.Project.GoalsList;
+import me.twodee.bux.DTO.Project.StatusTaskListDTO;
 import me.twodee.bux.DTO.Task.TaskDTO;
 import me.twodee.bux.DTO.Task.TaskOrderingDTO;
 import me.twodee.bux.Factory.NotificationFactory;
@@ -17,10 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -96,7 +94,9 @@ public class GoalService {
 
     private GoalDTO buildGoalForTaskDataWithColumns(GoalDTO dto, Goal goal) {
         dto.setStatusList(goal.getStatuses());
-        dto.setColumnData(goal.getStatusMap());
+        dto.setColumnData(goal.getStatusMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,
+                                                                                           e -> new StatusTaskListDTO(
+                                                                                                   e.getValue()))));
         return buildGoalForTaskData(dto, goal.getTasks());
     }
 
@@ -171,7 +171,7 @@ public class GoalService {
             // Push the candidate to the destination list
             List<String> endTaskIds = entity.getStatusMap().get(dto.getDestinationStatus()).getTasks();
             endTaskIds.add(dto.getDestination(), taskId);
-            entity.getStatusMap().get(dto.getDestinationStatus()).setTasks(startTaskIds);
+            entity.getStatusMap().get(dto.getDestinationStatus()).setTasks(endTaskIds);
 
             GoalDTO result = GoalDTO.builder().id(entity.getId()).build();
             return buildGoalForTaskDataWithColumns(result, repository.save(entity));
