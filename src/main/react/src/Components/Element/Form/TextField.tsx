@@ -60,6 +60,7 @@ const TextField = (props: TextFieldProps) => {
         }
         removeFieldFromState(props.resetServerErrors, props.name as string)
     }
+    const {forwardRef, ...otherProps} = props;
     return (
         <>
             {props.label &&
@@ -67,7 +68,7 @@ const TextField = (props: TextFieldProps) => {
             }
             <div className={controlClass}>
 
-                <input {...props} style={props.style} type={(props.type) ? props.type : "text"}
+                <input {...otherProps} style={props.style} type={(props.type) ? props.type : "text"}
                        placeholder={props.placeholder}
                        name={props.name}
                        className={inputClass}
