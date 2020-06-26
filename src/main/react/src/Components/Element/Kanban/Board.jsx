@@ -37,7 +37,17 @@ const Board = (props) => {
         getRequest(`/goals/${props.id}/tasks/all`, {},
             result => {
                 setColumnOrder(result.statusList);
-                setColumns(result.columnData);
+                let columnData = {};
+                result.statusList.map(status => {
+                    columnData = {
+                        ...columnData,
+                        [status]: {
+                            id: status,
+                            tasks: result.columnData[status].tasks
+                        }
+                    };
+                });
+                setColumns(columnData);
                 setTasks(result.tasks);
             }, failure => {
                 console.log(failure);
