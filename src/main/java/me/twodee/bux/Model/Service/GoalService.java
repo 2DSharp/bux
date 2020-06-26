@@ -8,10 +8,7 @@ import me.twodee.bux.DTO.Task.TaskDTO;
 import me.twodee.bux.DTO.Task.TaskOrderingDTO;
 import me.twodee.bux.Factory.NotificationFactory;
 import me.twodee.bux.Factory.UserDTOFactory;
-import me.twodee.bux.Model.Entity.Goal;
-import me.twodee.bux.Model.Entity.Project;
-import me.twodee.bux.Model.Entity.Task;
-import me.twodee.bux.Model.Entity.User;
+import me.twodee.bux.Model.Entity.*;
 import me.twodee.bux.Model.Repository.GoalRepository;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
 import me.twodee.bux.Util.DomainToDTOConverter;
@@ -88,15 +85,30 @@ public class GoalService {
         Goal goal = repository.findByProjectAndId(new Project(projectKey), goalId);
         GoalDTO dto = buildGoalDto(goal);
 
-        return buildGoalForTaskData(dto, goal);
+        return buildGoalForTaskDataWithColumns(dto, goal);
     }
 
-    private GoalDTO buildGoalForTaskData(GoalDTO dto, Goal goal) {
-        dto.setTaskIds(goal.getTasks().stream().map(Task::getId).collect(Collectors.toList()));
-        dto.setTasks(goal.getTasks()
-                             .stream()
-                             .collect(Collectors.toMap(Task::getId, TaskDTO::build)));
+    private GoalDTO buildGoalForTaskData(GoalDTO dto, List<Task> tasks) {
+        dto.setTaskIds(tasks.stream().map(Task::getId).collect(Collectors.toList()));
+        dto.setTasks(tasks.stream().collect(Collectors.toMap(Task::getId, TaskDTO::build)));
         return dto;
+    }
+
+    private GoalDTO buildGoalForTaskDataWithColumns(GoalDTO dto, Goal goal) {
+        dto.setStatusList(goal.getStatuses());
+        dto.setColumnData(goal.getStatusMap());
+        return buildGoalForTaskData(dto, goal.getTasks());
+    }
+
+    public GoalDTO getTasksWithColumnData(int id) {
+        GoalDTO dto = GoalDTO.builder().id(id).build();
+        return repository.findById(id)
+                .map(value -> buildGoalForTaskDataWithColumns(dto, value)).orElse(null);
+    }
+
+    public GoalDTO getTasks(int id) {
+        GoalDTO dto = GoalDTO.builder().id(id).build();
+        return repository.findById(id).map(value -> buildGoalForTaskData(dto, value.getTasks())).orElse(null);
     }
 
     public List<String> getAllMilestonesForProject(String projectKey) {
@@ -116,9 +128,9 @@ public class GoalService {
         if (goal.isPresent()) {
             Goal entity = goal.get();
             entity.getTasks().add(new Task(taskDTO.getId()));
-            Goal result = repository.save(entity);
+            entity.getStatusMap().get(entity.getStatuses().get(0)).getTasks().add(taskDTO.getId());
             GoalDTO dto = GoalDTO.builder().id(goalId).build();
-            return buildGoalForTaskData(dto, result);
+            return buildGoalForTaskData(dto, repository.save(entity).getTasks());
         }
         else {
             // else add to backlog
@@ -132,12 +144,46 @@ public class GoalService {
                 .orElse(null);
     }
 
+    public GoalDTO reorderTasksWithinStatus(TaskOrderingDTO dto) {
+        Optional<Goal> goal = repository.findById(dto.getGoalId());
+        if (goal.isPresent()) {
+            Goal entity = goal.get();
+            List<String> taskOrder = dragAndDrop(entity.getStatusMap().get(dto.getStatus()).getTasks(),
+                                                 dto.getSource(),
+                                                 dto.getDestination());
+
+            entity.getStatusMap().put(dto.getStatus(), new StatusTaskList(taskOrder));
+            GoalDTO result = GoalDTO.builder().id(entity.getId()).build();
+            return buildGoalForTaskDataWithColumns(result, repository.save(entity));
+        }
+        return null;
+    }
+
+    public GoalDTO reorderTasksBetweenStatuses(TaskOrderingDTO dto) {
+        Optional<Goal> goal = repository.findById(dto.getGoalId());
+        if (goal.isPresent()) {
+            Goal entity = goal.get();
+            // Pull from source and keep the candidate taskId, persist it
+            List<String> startTaskIds = entity.getStatusMap().get(dto.getSourceStatus()).getTasks();
+            String taskId = startTaskIds.remove(dto.getSource());
+            entity.getStatusMap().get(dto.getSourceStatus()).setTasks(startTaskIds);
+
+            // Push the candidate to the destination list
+            List<String> endTaskIds = entity.getStatusMap().get(dto.getDestinationStatus()).getTasks();
+            endTaskIds.add(dto.getDestination(), taskId);
+            entity.getStatusMap().get(dto.getDestinationStatus()).setTasks(startTaskIds);
+
+            GoalDTO result = GoalDTO.builder().id(entity.getId()).build();
+            return buildGoalForTaskDataWithColumns(result, repository.save(entity));
+        }
+        return null;
+    }
+
     private GoalDTO reorderAndPersistTasks(Goal goal, int source, int destination) {
         List<Task> tasks = dragAndDrop(goal.getTasks(), source, destination);
         goal.setTasks(tasks);
-        Goal result = repository.save(goal);
         GoalDTO dto = GoalDTO.builder().id(goal.getId()).build();
-        return buildGoalForTaskData(dto, result);
+        return buildGoalForTaskData(dto, repository.save(goal).getTasks());
     }
 
     private GoalDTO buildGoalDto(Goal goal) {
