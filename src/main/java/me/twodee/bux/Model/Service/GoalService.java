@@ -91,6 +91,14 @@ public class GoalService {
         return dto;
     }
 
+    private GoalDTO buildGoalForTaskData(GoalDTO dto, Goal goal) {
+        dto.setTaskIds(goal.getTasks().stream().map(Task::getId).collect(Collectors.toList()));
+        dto.setTasks(goal.getTasks()
+                             .stream()
+                             .collect(Collectors.toMap(Task::getId, TaskDTO::build)));
+        return dto;
+    }
+
     public List<String> getAllMilestonesForProject(String projectKey) {
         return repository.findAllMilestones(projectKey)
                 .stream()
@@ -103,10 +111,19 @@ public class GoalService {
         return goal.map(Goal::getStatuses).orElse(null);
     }
 
-    public void addTaskToGoal(TaskDTO taskDTO, int goalId) {
+    public GoalDTO addTaskToGoal(TaskDTO taskDTO, int goalId) {
         Optional<Goal> goal = repository.findById(goalId);
-        goal.ifPresent(entity -> entity.getTasks().add(new Task(taskDTO.getId())));
-        // else add to backlog
+        if (goal.isPresent()) {
+            Goal entity = goal.get();
+            entity.getTasks().add(new Task(taskDTO.getId()));
+            Goal result = repository.save(entity);
+            GoalDTO dto = GoalDTO.builder().id(goalId).build();
+            return buildGoalForTaskData(dto, result);
+        }
+        else {
+            // else add to backlog
+            return null;
+        }
     }
 
     public List<String> reorderTasks(TaskOrderingDTO dto) {

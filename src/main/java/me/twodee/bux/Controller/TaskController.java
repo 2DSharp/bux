@@ -1,5 +1,6 @@
 package me.twodee.bux.Controller;
 
+import me.twodee.bux.DTO.Project.GoalDTO;
 import me.twodee.bux.DTO.Task.TaskCreationDTO;
 import me.twodee.bux.DTO.Task.TaskDTO;
 import me.twodee.bux.Model.Service.AccountService;
@@ -28,13 +29,13 @@ public class TaskController extends RestAPI {
     }
 
     @PostMapping("/tasks/create")
-    public ResponseEntity<TaskDTO> addNewTask(HttpSession session, @RequestBody TaskCreationDTO dto) {
+    public ResponseEntity<GoalDTO> addNewTask(HttpSession session, @RequestBody TaskCreationDTO dto) {
         if (!accountService.currentUserCanCreateProject(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         TaskDTO result = taskService.createTask(dto, accountService.getUser(session),
                                                 goalService.getTaskStatusesForGoal(dto.getGoalId()));
-        goalService.addTaskToGoal(result, dto.getGoalId());
-        return ResponseEntity.ok(result);
+        GoalDTO goalWithTaskData = goalService.addTaskToGoal(result, dto.getGoalId());
+        return ResponseEntity.ok(goalWithTaskData);
     }
 }

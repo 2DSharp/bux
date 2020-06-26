@@ -39,16 +39,13 @@ const TaskList = (props) => {
                 console.log(failure);
             })
     }
-    const onAdd = (task) => {
-        setTasks({
-            ...tasks,
-            [task.id]: task
-        })
+    const onAdd = (refreshedTasks) => {
+        setTasks(refreshedTasks.tasks)
         setColumns({
             ...columns,
             tasks: {
                 ...columns.tasks,
-                taskIds: [...columns.tasks.taskIds, task.id]
+                taskIds: refreshedTasks.taskIds
             }
         });
 
