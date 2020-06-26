@@ -65,7 +65,7 @@ const Board = (props) => {
 
         if (start === finish) {
             postRequest("/updateTaskWithinStatus", {
-                    goalId: props.goalId,
+                    goalId: props.id,
                     source: source.index,
                     destination: destination.index,
                     status: source.droppableId
@@ -77,7 +77,7 @@ const Board = (props) => {
                 })
         } else {
             postRequest("/updateTaskBetweenStatuses", {
-                    goalId: props.goalId,
+                    goalId: props.id,
                     source: source.index,
                     destination: destination.index,
                     sourceStatus: source.droppableId,
