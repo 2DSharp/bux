@@ -4,7 +4,7 @@ import me.twodee.bux.Interface.ThrowingFunction;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -32,9 +32,9 @@ public class BaseUtil
     }
 
     public static <T> List<T> dragAndDrop(List<T> list, int source, int destination) {
-        LinkedList<T> ll = new LinkedList<>(list);
-        T value = ll.remove(source);
-        ll.add(destination, value);
-        return ll;
+        List<T> updated = new ArrayList<>(list);
+        T value = updated.remove(source);
+        updated.add(destination, value);
+        return updated;
     }
 }
