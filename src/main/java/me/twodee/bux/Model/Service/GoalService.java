@@ -20,7 +20,10 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -84,11 +87,8 @@ public class GoalService {
     public GoalDTO fetchGoal(String projectKey, int goalId) {
         Goal goal = repository.findByProjectAndId(new Project(projectKey), goalId);
         GoalDTO dto = buildGoalDto(goal);
-        dto.setTaskIds(goal.getTasks().stream().map(Task::getId).collect(Collectors.toList()));
-        dto.setTasks(goal.getTasks()
-                             .stream()
-                             .collect(Collectors.toMap(Task::getId, TaskDTO::build)));
-        return dto;
+
+        return buildGoalForTaskData(dto, goal);
     }
 
     private GoalDTO buildGoalForTaskData(GoalDTO dto, Goal goal) {
@@ -126,17 +126,18 @@ public class GoalService {
         }
     }
 
-    public List<String> reorderTasks(TaskOrderingDTO dto) {
+    public GoalDTO reorderTasks(TaskOrderingDTO dto) {
         Optional<Goal> goal = repository.findById(dto.getGoalId());
         return goal.map(g -> reorderAndPersistTasks(g, dto.getSource(), dto.getDestination()))
-                .orElse(Collections.emptyList());
+                .orElse(null);
     }
 
-    private List<String> reorderAndPersistTasks(Goal goal, int source, int destination) {
+    private GoalDTO reorderAndPersistTasks(Goal goal, int source, int destination) {
         List<Task> tasks = dragAndDrop(goal.getTasks(), source, destination);
         goal.setTasks(tasks);
         Goal result = repository.save(goal);
-        return result.getTasks().stream().map(Task::getId).collect(Collectors.toList());
+        GoalDTO dto = GoalDTO.builder().id(goal.getId()).build();
+        return buildGoalForTaskData(dto, result);
     }
 
     private GoalDTO buildGoalDto(Goal goal) {

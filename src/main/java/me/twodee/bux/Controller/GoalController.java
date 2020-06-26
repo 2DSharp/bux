@@ -68,7 +68,7 @@ public class GoalController extends RestAPI {
     }
 
     @PostMapping("/updateTaskList")
-    public ResponseEntity<List<String>> reorderTaskList(HttpSession session, @RequestBody TaskOrderingDTO dto) {
+    public ResponseEntity<GoalDTO> reorderTaskList(HttpSession session, @RequestBody TaskOrderingDTO dto) {
         if (!accountService.isLoggedIn(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
