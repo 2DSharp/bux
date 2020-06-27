@@ -70,7 +70,13 @@ const Board = (props) => {
     const onDragEnd = result => {
         DragHandler.dragEnd(result, columns, setColumns);
         const {destination, source, draggableId} = result;
-
+        if (!destination) {
+            return;
+        }
+        if (destination.droppableId === source.droppableId &&
+            destination.index === source.index) {
+            return;
+        }
         const start = columns[source.droppableId];
         const finish = columns[destination.droppableId];
 
