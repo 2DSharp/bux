@@ -3,6 +3,7 @@ import {DragDropContext} from 'react-beautiful-dnd';
 import Column from "./Column";
 import {DragHandler} from "../../../service/dragHandler";
 import {getRequest, postRequest} from "../../../service/request";
+import {notification} from "antd";
 
 const data = {
     tasks: {
@@ -27,6 +28,16 @@ const data = {
     columnOrder: ['col1', 'col2']
 
 }
+const openNotification = (error) => {
+    notification[error.type]({
+        message: error.title,
+        description:
+        error.description,
+        onClick: () => {
+            console.log('Notification Clicked!');
+        },
+    });
+};
 const Board = (props) => {
 
     const [columns, setColumns] = useState({});
@@ -85,6 +96,13 @@ const Board = (props) => {
                     taskId: draggableId
                 }, (result) => {
                     refreshTasks(result);
+                    if (result.notification.hasErrors) {
+                        openNotification({
+                            type: 'error',
+                            'title': "That's not allowed",
+                            description: result.notification.errors['global']
+                        })
+                    }
                 },
                 (failure) => {
                     console.log(failure);
