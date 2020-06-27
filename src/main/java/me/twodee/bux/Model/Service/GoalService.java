@@ -1,10 +1,7 @@
 package me.twodee.bux.Model.Service;
 
 import me.twodee.bux.DTO.HelperValueObject.Notification;
-import me.twodee.bux.DTO.Project.GoalCreationDTO;
-import me.twodee.bux.DTO.Project.GoalDTO;
-import me.twodee.bux.DTO.Project.GoalsList;
-import me.twodee.bux.DTO.Project.StatusTaskListDTO;
+import me.twodee.bux.DTO.Project.*;
 import me.twodee.bux.DTO.Task.TaskDTO;
 import me.twodee.bux.DTO.Task.TaskOrderingDTO;
 import me.twodee.bux.Factory.NotificationFactory;
@@ -18,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -69,6 +67,34 @@ public class GoalService {
         if (!dto.getNotification().hasErrors() && result != null) {
             dto.setNotification(new Notification(goal.getId()));
         }
+    }
+
+    public GoalDTO forwardStatus(GoalUpdaterDTO dto, User user) {
+        Optional<Goal> goal = repository.findById(dto.getGoalId());
+        if (goal.isPresent()) {
+            Goal result = repository.save(updateToNextStatus(goal.get(), user));
+            return GoalDTO.builder().status(result.getStatus()).build();
+        }
+        else {
+            return null;
+        }
+    }
+
+
+    private Goal updateToNextStatus(Goal goal, User user) {
+        switch (goal.getStatus()) {
+            case PLANNING:
+                goal.setStatus(Goal.Status.ACTIVE);
+                goal.setStartedBy(user);
+                goal.setStartedAt(LocalDateTime.now());
+                return goal;
+            case ACTIVE:
+                goal.setStatus(Goal.Status.COMPLETED);
+                goal.setEndedBy(user);
+                goal.setEndedAt(LocalDateTime.now());
+                return goal;
+        }
+        return goal;
     }
 
     public GoalsList getAllGoalsListForProject(String projectKey) {

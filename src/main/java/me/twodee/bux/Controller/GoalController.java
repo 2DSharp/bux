@@ -3,6 +3,7 @@ package me.twodee.bux.Controller;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.GoalCreationDTO;
 import me.twodee.bux.DTO.Project.GoalDTO;
+import me.twodee.bux.DTO.Project.GoalUpdaterDTO;
 import me.twodee.bux.DTO.Project.GoalsList;
 import me.twodee.bux.DTO.Task.TaskOrderingDTO;
 import me.twodee.bux.Model.Entity.Goal;
@@ -93,7 +94,7 @@ public class GoalController extends RestAPI {
 
     @GetMapping("/goals/{id}/tasks/all")
     public ResponseEntity<GoalDTO> getTasksFromGivenType(HttpSession session, @PathVariable("id") int id) {
-        if (!accountService.currentUserCanCreateProject(session)) {
+        if (!accountService.isLoggedIn(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         return ResponseEntity.ok(goalService.getTasksWithColumnData(id));
@@ -101,9 +102,17 @@ public class GoalController extends RestAPI {
 
     @GetMapping("/goals/{id}/tasks")
     public ResponseEntity<GoalDTO> getTasksForGoal(HttpSession session, @PathVariable("id") int id) {
-        if (!accountService.currentUserCanCreateProject(session)) {
+        if (!accountService.isLoggedIn(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         return ResponseEntity.ok(goalService.getTasks(id));
+    }
+
+    @PostMapping("/goals/status/update")
+    public ResponseEntity<GoalDTO> updateStatus(HttpSession session, @RequestBody GoalUpdaterDTO dto) {
+        if (!accountService.currentUserCanCreateProject(session)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return ResponseEntity.ok(goalService.forwardStatus(dto, accountService.getUser(session)));
     }
 }

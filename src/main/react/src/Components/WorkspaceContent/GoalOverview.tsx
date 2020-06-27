@@ -4,7 +4,7 @@ import {makeStyles} from "@material-ui/styles";
 import MdIcon from "../Element/Icon/MDIcon";
 import {Priority as PriorityType, TaskData, User} from "../../types";
 import Progress, {Pressure} from "../Element/Progress";
-import {getRequest} from "../../service/request";
+import {getRequest, postRequest} from "../../service/request";
 import TaskList from "../Element/Table/TaskList";
 import Priority from "../Element/Icon/Priority";
 import moment from 'moment';
@@ -101,35 +101,44 @@ const useStyles = makeStyles({
         marginBottom: 30
     }
 });
-const StatusUpdater = (props: { status: GoalStatus }) => {
-    const style = classNames("button", {
-        "is-primary": props.status === "PLANNING",
-        "is-success": props.status === "ACTIVE",
-        "is-light": props.status === "COMPLETED"
-    });
-    const nextAction = (status: GoalStatus): ReactNode => {
-        switch (status) {
-            case "PLANNING":
-                return <><span>Start</span></>;
-            case "ACTIVE":
-                return <><MdIcon value={"mdi-check"}/><span>Complete</span></>;
-            case "COMPLETED":
-                return <><MdIcon value={"mdi-check-all"}/><span>Completed</span></>;
-        }
-    }
-    return <button className={style}>{nextAction(props.status)}</button>;
-};
 
 interface GoalTaskData {
     tasks: any,
     columns: any
 }
+
 const GoalOverview = (props: { project: string, id: number }) => {
     const {url} = useRouteMatch();
     const classes = useStyles();
     const [lastUpdate, setLastUpdate] = useState();
     const [taskData, setTaskData] = useState<GoalTaskData>();
     const [data, setData] = useState<Goal>();
+    const updateStatus = () => {
+        postRequest("/goals/status/update", {goalId: props.id},
+            (result) => {
+                setLastUpdate(result.status);
+            }, (failure) => {
+
+            })
+    }
+    const StatusUpdater = (props: { status: GoalStatus }) => {
+        const style = classNames("button", {
+            "is-primary": props.status === "PLANNING",
+            "is-success": props.status === "ACTIVE",
+            "is-light": props.status === "COMPLETED"
+        });
+        const nextAction = (status: GoalStatus): ReactNode => {
+            switch (status) {
+                case "PLANNING":
+                    return <><span>Start</span></>;
+                case "ACTIVE":
+                    return <><MdIcon value={"mdi-check"}/><span>Complete</span></>;
+                case "COMPLETED":
+                    return <><MdIcon value={"mdi-check-all"}/><span>Completed</span></>;
+            }
+        }
+        return <button onClick={updateStatus} className={style}>{nextAction(props.status)}</button>;
+    };
     useEffect(() => {
         getRequest(`/projects/${props.project}/goals/${props.id}`, {},
             (result => {
@@ -167,38 +176,39 @@ const GoalOverview = (props: { project: string, id: number }) => {
                             </button>
                         </Link>
                     </span>
-                        <span className={classes.projectAction}>
+                            <span className={classes.projectAction}>
                         <button className="button is-light"><MdIcon
                             value={"mdi-cog-outline"}/><span>Settings</span></button>
                     </span>
-                    </div>
-                </div>
-                <div className={classes.meta}>
-                    <div className={classes.description}>{data.description}</div>
-                    <div className={`${classes.stats} columns`}>
-                        <div className="column">
-                            <Priority
-                                type={data.priority as PriorityType}/><b>Priority: </b>{data.priority}
-                        </div>
-                        <div className="column">
-                            <b>Deadline: </b> {moment(data.deadline).format("MMM DD, YYYY")}
-                        </div>
-                        <div className="column">
-                            <b>Progress:</b> <Progress className={classes.progress} progress={data.progress}
-                                                       pressure={data.pressure as Pressure}/>
-                        </div>
-                        <div className="column">
-                            <b>Status:</b> {data.status}
-                        </div>
-                        <div className="column">
-                            <b>Milestones:</b> {data.milestone ? data.milestone : "None"}
                         </div>
                     </div>
-                    {
-                        taskData &&
-                        <TaskList goalId={data.id} project={props.project} onUpdate={setLastUpdate} data={taskData}/>
-                    }
-                </div>
+                    <div className={classes.meta}>
+                        <div className={classes.description}>{data.description}</div>
+                        <div className={`${classes.stats} columns`}>
+                            <div className="column">
+                                <Priority
+                                    type={data.priority as PriorityType}/><b>Priority: </b>{data.priority}
+                            </div>
+                            <div className="column">
+                                <b>Deadline: </b> {moment(data.deadline).format("MMM DD, YYYY")}
+                            </div>
+                            <div className="column">
+                                <b>Progress:</b> <Progress className={classes.progress} progress={data.progress}
+                                                           pressure={data.pressure as Pressure}/>
+                            </div>
+                            <div className="column">
+                                <b>Status:</b> {data.status}
+                            </div>
+                            <div className="column">
+                                <b>Milestones:</b> {data.milestone ? data.milestone : "None"}
+                            </div>
+                        </div>
+                        {
+                            taskData &&
+                            <TaskList goalId={data.id} project={props.project} onUpdate={setLastUpdate}
+                                      data={taskData}/>
+                        }
+                    </div>
                 </>
                 : <SpinLoader/>
             }
