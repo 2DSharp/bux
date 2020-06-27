@@ -29,7 +29,8 @@ interface DnDTableProps {
     project: string,
     goal?: number,
     onAdd: any,
-    inputRef?: any
+    inputRef?: any,
+    statusList: string[]
 }
 
 const users: User[] = [
@@ -153,7 +154,8 @@ const DnDTable = (props: DnDTableProps) => {
                             <tbody {...provided.droppableProps} ref={provided.innerRef}>
 
                             {[...props.tasks].map((task, index) =>
-                                <TaskRow key={task.id} data={task} index={index}/>
+                                <TaskRow isCompleted={task.status == props.statusList[props.statusList.length - 1]}
+                                         key={task.id} data={task} index={index}/>
                             )}
                             {provided.placeholder}
                             <tr id={props.adderId}/>

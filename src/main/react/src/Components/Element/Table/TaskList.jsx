@@ -81,6 +81,7 @@ const TaskList = (props) => {
                               adderId={"tasks-adder"} data={columns['tasks']}
                               showAdder={moveToTaskAdder}
                               inputRef={inputRef}
+                              statusList={props.statusList}
                               tasks={columns['tasks'].taskIds.map(task => tasks[task])}/>
                 </nav>
                 <div onClick={moveToAdder} className={classes.bottomAdder}><MdIcon value={"mdi-plus"}/><span>Create a new task</span>

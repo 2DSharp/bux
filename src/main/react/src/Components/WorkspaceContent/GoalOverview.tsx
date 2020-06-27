@@ -23,7 +23,8 @@ export type Goal = {
     milestone?: string,
     priority: PriorityType
     createdBy: User,
-    tasks?: TaskData[]
+    tasks?: TaskData[],
+    statusList: string[]
 }
 
 const taskData = {
@@ -205,7 +206,8 @@ const GoalOverview = (props: { project: string, id: number }) => {
                         </div>
                         {
                             taskData &&
-                            <TaskList goalId={data.id} project={props.project} onUpdate={setLastUpdate}
+                            <TaskList statusList={data.statusList} goalId={data.id} project={props.project}
+                                      onUpdate={setLastUpdate}
                                       data={taskData}/>
                         }
                     </div>
