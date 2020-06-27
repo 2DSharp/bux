@@ -7,6 +7,7 @@ import MdIcon from "../Icon/MDIcon";
 import variables from "../../../sass/colors.module.scss"
 import {postRequest} from "../../../service/request";
 import ScrollIntoView from "react-scroll-into-view";
+import {useFocus} from "../../../hooks/useFocus";
 
 const useStyles = makeStyles({
     taskBlock: {
@@ -59,7 +60,9 @@ const TaskList = (props) => {
         });
     }
 
+    const [inputRef, setInputFocus] = useFocus();
     const moveToAdder = () => {
+        setInputFocus();
         setMoveToTaskAdder(true);
     }
     return (
@@ -77,6 +80,7 @@ const TaskList = (props) => {
                     <DnDTable onAdd={refreshTasks} goal={props.goalId} project={props.project}
                               adderId={"tasks-adder"} data={columns['tasks']}
                               showAdder={moveToTaskAdder}
+                              inputRef={inputRef}
                               tasks={columns['tasks'].taskIds.map(task => tasks[task])}/>
                 </nav>
                 <div onClick={moveToAdder} className={classes.bottomAdder}><MdIcon value={"mdi-plus"}/><span>Create a new task</span>

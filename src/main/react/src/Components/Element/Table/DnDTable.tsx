@@ -28,7 +28,8 @@ interface DnDTableProps {
     adderId: string,
     project: string,
     goal?: number,
-    onAdd: any
+    onAdd: any,
+    inputRef?: any
 }
 
 const users: User[] = [
@@ -173,6 +174,7 @@ const DnDTable = (props: DnDTableProps) => {
                                         <TextField value={newTaskData['title']} name="title"
                                                    placeholder="What's the task?"
                                                    autoFocus
+                                                   forwardRef={props.inputRef}
                                                    className={classes.editable}/>
                                     </Tooltip>
 
