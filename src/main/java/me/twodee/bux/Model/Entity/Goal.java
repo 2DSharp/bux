@@ -64,7 +64,7 @@ public class Goal {
 
     @Builder.Default
     @ElementCollection
-    Map<String, StatusTaskList> statusMap = Map.of("To Do", new StatusTaskList(),
-                                                   "In Progress", new StatusTaskList(),
-                                                   "Completed", new StatusTaskList());
+    Map<String, StatusTaskList> taskStatusMap = Map.of("To Do", new StatusTaskList(),
+                                                       "In Progress", new StatusTaskList(),
+                                                       "Completed", new StatusTaskList());
 }
