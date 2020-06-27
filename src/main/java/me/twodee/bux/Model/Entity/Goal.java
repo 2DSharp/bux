@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,4 +68,14 @@ public class Goal {
     Map<String, StatusTaskList> taskStatusMap = Map.of("To Do", new StatusTaskList(),
                                                        "In Progress", new StatusTaskList(),
                                                        "Completed", new StatusTaskList());
+
+    private LocalDateTime startedAt;
+
+    @OneToOne
+    private User startedBy;
+
+    private LocalDateTime endedAt;
+
+    @OneToOne
+    private User endedBy;
 }
