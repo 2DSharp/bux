@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import me.twodee.bux.DTO.DataTransferObject;
 import me.twodee.bux.DTO.Task.TaskDTO;
 import me.twodee.bux.DTO.User.PublicUserDTO;
 import me.twodee.bux.Model.Entity.Goal;
@@ -17,7 +18,7 @@ import java.util.Map;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GoalDTO {
+public class GoalDTO extends DataTransferObject {
     @Getter
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @AllArgsConstructor

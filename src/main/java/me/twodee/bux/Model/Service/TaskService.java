@@ -1,9 +1,12 @@
 package me.twodee.bux.Model.Service;
 
+import me.twodee.bux.DTO.HelperValueObject.Notification;
+import me.twodee.bux.DTO.Project.GoalDTO;
 import me.twodee.bux.DTO.Task.TaskCreationDTO;
 import me.twodee.bux.DTO.Task.TaskDTO;
 import me.twodee.bux.DTO.Task.TaskOrderingDTO;
 import me.twodee.bux.Factory.NotificationFactory;
+import me.twodee.bux.Model.Entity.Goal;
 import me.twodee.bux.Model.Entity.Project;
 import me.twodee.bux.Model.Entity.Task;
 import me.twodee.bux.Model.Entity.User;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -72,8 +76,14 @@ public class TaskService {
         return null;
     }
 
-    public void changeStatus(TaskOrderingDTO dto) {
-        Optional<Task> task = repository.findById(dto.getTaskId());
-        task.ifPresent(entity -> entity.setStatus(dto.getDestinationStatus()));
+    public void changeStatus(TaskOrderingDTO dto, GoalDTO goalDTO) {
+        if (goalDTO.getStatus().equals(Goal.Status.ACTIVE)) {
+            Optional<Task> task = repository.findById(dto.getTaskId());
+            task.ifPresent(entity -> entity.setStatus(dto.getDestinationStatus()));
+            return;
+        }
+        Notification note = new Notification();
+        note.setErrors(Map.of("global", provider.getMessageByLocaleService().getMessage("validation.goal.inactive")));
+        dto.setNotification(note);
     }
 }

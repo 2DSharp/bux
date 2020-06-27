@@ -45,7 +45,13 @@ public class TaskController extends RestAPI {
         if (!accountService.isLoggedIn(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        taskService.changeStatus(dto);
-        return ResponseEntity.ok(goalService.reorderTasksBetweenStatuses(dto));
+
+        taskService.changeStatus(dto, goalService.fetchGoalDetails(dto.getGoalId()));
+        if (!dto.getNotification().hasErrors()) {
+            return ResponseEntity.ok(goalService.reorderTasksBetweenStatuses(dto));
+        }
+        GoalDTO result = GoalDTO.builder().build();
+        result.setNotification(dto.getNotification());
+        return ResponseEntity.ok(result);
     }
 }
