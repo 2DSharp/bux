@@ -138,6 +138,11 @@ const DnDTable = (props: DnDTableProps) => {
         "mdi-checkbox-marked-circle-outline": !actionIconHover,
         "mdi-checkbox-marked-circle": actionIconHover
     });
+    const handleKeyDown = (event: { key: string; }) => {
+        if (event.key === 'Enter') {
+            onSubmit()
+        }
+    }
     return (
         <FormData onChange={onFormChange} onSubmit={onSubmit}>
             <div className={`table-container ${classes.root}`}>
@@ -174,6 +179,7 @@ const DnDTable = (props: DnDTableProps) => {
                                         <TextField value={newTaskData['title']} name="title"
                                                    placeholder="What's the task?"
                                                    autoFocus
+                                                   onKeyDown={handleKeyDown}
                                                    forwardRef={props.inputRef}
                                                    className={classes.editable}/>
                                     </Tooltip>
