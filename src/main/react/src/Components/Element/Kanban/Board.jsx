@@ -58,7 +58,7 @@ const Board = (props) => {
 
     const onDragEnd = result => {
         DragHandler.dragEnd(result, columns, setColumns);
-        const {destination, source} = result;
+        const {destination, source, draggableId} = result;
 
         const start = columns[source.droppableId];
         const finish = columns[destination.droppableId];
@@ -81,7 +81,8 @@ const Board = (props) => {
                     source: source.index,
                     destination: destination.index,
                     sourceStatus: source.droppableId,
-                    destinationStatus: destination.droppableId
+                    destinationStatus: destination.droppableId,
+                    taskId: draggableId
                 }, (result) => {
                     refreshTasks(result);
                 },

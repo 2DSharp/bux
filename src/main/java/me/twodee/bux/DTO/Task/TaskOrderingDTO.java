@@ -13,4 +13,5 @@ public class TaskOrderingDTO extends DataTransferObject {
     private String status;
     private String sourceStatus;
     private String destinationStatus;
+    private String taskId;
 }

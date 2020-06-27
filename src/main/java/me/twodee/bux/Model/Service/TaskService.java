@@ -2,6 +2,7 @@ package me.twodee.bux.Model.Service;
 
 import me.twodee.bux.DTO.Task.TaskCreationDTO;
 import me.twodee.bux.DTO.Task.TaskDTO;
+import me.twodee.bux.DTO.Task.TaskOrderingDTO;
 import me.twodee.bux.Factory.NotificationFactory;
 import me.twodee.bux.Model.Entity.Project;
 import me.twodee.bux.Model.Entity.Task;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -68,5 +70,10 @@ public class TaskService {
             return new User(id);
         }
         return null;
+    }
+
+    public void changeStatus(TaskOrderingDTO dto) {
+        Optional<Task> task = repository.findById(dto.getTaskId());
+        task.ifPresent(entity -> entity.setStatus(dto.getDestinationStatus()));
     }
 }

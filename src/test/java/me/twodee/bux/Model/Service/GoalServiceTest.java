@@ -19,8 +19,8 @@ class GoalServiceTest {
         list.add("D");
 
         System.out.println("ORIGINAL: " + list);
+        dragAndDrop(list, 2, 3);
 
-
-        System.out.println("CHANGED: " + dragAndDrop(list, 2, 3));
+        System.out.println("CHANGED: " + list);
     }
 }
