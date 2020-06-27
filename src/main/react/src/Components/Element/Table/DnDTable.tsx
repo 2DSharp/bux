@@ -22,9 +22,9 @@ interface DnDTableData {
 }
 
 interface DnDTableProps {
+    showAdder: boolean;
     data: DnDTableData
     tasks: TaskData[],
-    inputRef?: any,
     adderId: string,
     project: string,
     goal?: number,
@@ -151,6 +151,7 @@ const DnDTable = (props: DnDTableProps) => {
                             )}
                             {provided.placeholder}
                             <tr id={props.adderId}/>
+                            {props.showAdder &&
                             <tr className={classes.row} style={{backgroundColor: "rgba(135, 206, 235, 0.2)"}}>
 
                                 <td style={{textAlign: "center"}} className={classes.id}>
@@ -170,8 +171,8 @@ const DnDTable = (props: DnDTableProps) => {
                                 <td className={classes.title}>
                                     <Tooltip color={"volcano"} visible={errors.title} title={errors['title']}>
                                         <TextField value={newTaskData['title']} name="title"
-                                                   forwardRef={props.inputRef}
                                                    placeholder="What's the task?"
+                                                   autoFocus
                                                    className={classes.editable}/>
                                     </Tooltip>
 
@@ -191,6 +192,7 @@ const DnDTable = (props: DnDTableProps) => {
                                                      className={classes.editable}/>
                                 </td>
                             </tr>
+                            }
                             </tbody>
                         }
                     </Droppable>

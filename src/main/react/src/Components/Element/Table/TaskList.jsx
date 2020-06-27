@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {DragDropContext} from "react-beautiful-dnd";
 import {makeStyles} from "@material-ui/styles";
 import DnDTable from "./DnDTable";
@@ -58,22 +58,17 @@ const TaskList = (props) => {
             }
         });
     }
-    const useFocus = () => {
-        const htmlElRef = useRef(null)
-        const setFocus = () => {
-            htmlElRef.current && htmlElRef.current.focus()
-        }
 
-        return [htmlElRef, setFocus]
+    const moveToAdder = () => {
+        setMoveToTaskAdder(true);
     }
-    const [inputRef, setInputFocus] = useFocus();
     return (
         <div> {props.data &&
         <DragDropContext onDragEnd={handleDrag}>
             <div className={classes.taskBlock}>
                 <div><h3><span style={{display: "inline-block", margin: 1}}>Tasks</span>
                     <ScrollIntoView style={{display: "inline-block"}} selector="#tasks-adder">
-                        <MdIcon value={"mdi-plus"} onClick={setInputFocus}
+                        <MdIcon value={"mdi-plus"} onClick={moveToAdder}
                                 className={classes.addIcon}/>
                     </ScrollIntoView>
                 </h3></div>
@@ -81,11 +76,10 @@ const TaskList = (props) => {
                 <nav className={`panel ${classes.panel}`}>
                     <DnDTable onAdd={refreshTasks} goal={props.goalId} project={props.project}
                               adderId={"tasks-adder"} data={columns['tasks']}
-                              moveToAdder={moveToTaskAdder}
-                              inputRef={inputRef}
+                              showAdder={moveToTaskAdder}
                               tasks={columns['tasks'].taskIds.map(task => tasks[task])}/>
                 </nav>
-                <div onClick={setInputFocus} className={classes.bottomAdder}><MdIcon value={"mdi-plus"}/><span>Create a new task</span>
+                <div onClick={moveToAdder} className={classes.bottomAdder}><MdIcon value={"mdi-plus"}/><span>Create a new task</span>
                 </div>
             </div>
             <div className={classes.taskBlock}>
