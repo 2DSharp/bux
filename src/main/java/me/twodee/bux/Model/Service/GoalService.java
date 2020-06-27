@@ -86,6 +86,11 @@ public class GoalService {
         return buildGoalForTaskDataWithColumns(dto, goal);
     }
 
+    public GoalDTO fetchGoalDetails(int goalId) {
+        Optional<Goal> goal = repository.findById(goalId);
+        return goal.map(this::buildGoalDto).orElse(null);
+    }
+
     private GoalDTO buildGoalForTaskData(GoalDTO dto, List<Task> tasks) {
         dto.setTaskIds(tasks.stream().map(Task::getId).collect(Collectors.toList()));
         dto.setTasks(tasks.stream().collect(Collectors.toMap(Task::getId, TaskDTO::build)));
