@@ -36,8 +36,8 @@ const TaskList = (props) => {
 
     const handleDrag = (result) => {
         DragHandler.dragEnd(result, columns, setColumns);
-        const {destination, source, draggableId} = result;
-        postRequest("/updateTaskList", {
+        const {destination, source} = result;
+        postRequest("/goals/tasks/reorder", {
                 goalId: props.goalId,
                 source: source.index,
                 destination: destination.index

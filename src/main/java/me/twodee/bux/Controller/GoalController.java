@@ -67,7 +67,7 @@ public class GoalController extends RestAPI {
         return ResponseEntity.ok(goalService.fetchGoal(projectKey, goal));
     }
 
-    @PostMapping("/updateTaskList")
+    @PostMapping("/goals/tasks/reorder")
     public ResponseEntity<GoalDTO> reorderTaskList(HttpSession session, @RequestBody TaskOrderingDTO dto) {
         if (!accountService.isLoggedIn(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -75,20 +75,12 @@ public class GoalController extends RestAPI {
         return ResponseEntity.ok(goalService.reorderTasks(dto));
     }
 
-    @PostMapping("/updateTaskWithinStatus")
+    @PostMapping("/goals/tasks/reorder/status")
     public ResponseEntity<GoalDTO> reorderStatusList(HttpSession session, @RequestBody TaskOrderingDTO dto) {
         if (!accountService.isLoggedIn(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         return ResponseEntity.ok(goalService.reorderTasksWithinStatus(dto));
-    }
-
-    @PostMapping("/updateTaskBetweenStatuses")
-    public ResponseEntity<GoalDTO> reorderBetweenStatuses(HttpSession session, @RequestBody TaskOrderingDTO dto) {
-        if (!accountService.isLoggedIn(session)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-        return ResponseEntity.ok(goalService.reorderTasksBetweenStatuses(dto));
     }
 
     @GetMapping("/projects/{key}/milestones")

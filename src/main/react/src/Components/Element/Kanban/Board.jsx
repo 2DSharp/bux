@@ -64,7 +64,7 @@ const Board = (props) => {
         const finish = columns[destination.droppableId];
 
         if (start === finish) {
-            postRequest("/updateTaskWithinStatus", {
+            postRequest("/goals/tasks/reorder/status", {
                     goalId: props.id,
                     source: source.index,
                     destination: destination.index,
@@ -76,7 +76,7 @@ const Board = (props) => {
                     console.log(failure);
                 })
         } else {
-            postRequest("/updateTaskBetweenStatuses", {
+            postRequest("/tasks/update/status/drag", {
                     goalId: props.id,
                     source: source.index,
                     destination: destination.index,
