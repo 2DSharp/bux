@@ -18,7 +18,7 @@ const useStyles = makeStyles({
         color: "gray"
     },
     medium: {
-        color: "lightgreen"
+        color: "orange"
     }
 });
 const Priority = (props: PriorityProps) => {
