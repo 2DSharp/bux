@@ -3,7 +3,7 @@ import {DragDropContext} from 'react-beautiful-dnd';
 import Column from "./Column";
 import {DragHandler} from "../../../service/dragHandler";
 import {getRequest, postRequest} from "../../../service/request";
-import {notification} from "antd";
+import {notifyError} from "../../../service/notification";
 
 const data = {
     tasks: {
@@ -28,16 +28,7 @@ const data = {
     columnOrder: ['col1', 'col2']
 
 }
-const openNotification = (error) => {
-    notification[error.type]({
-        message: error.title,
-        description:
-        error.description,
-        onClick: () => {
-            console.log('Notification Clicked!');
-        },
-    });
-};
+
 const Board = (props) => {
 
     const [columns, setColumns] = useState({});
@@ -59,8 +50,6 @@ const Board = (props) => {
                 });
                 setColumns(columnData);
                 setTasks(result.tasks);
-            }, failure => {
-                console.log(failure);
             })
     }
     useEffect(() => {
@@ -79,40 +68,33 @@ const Board = (props) => {
         }
         const start = columns[source.droppableId];
         const finish = columns[destination.droppableId];
-
+        const baseData = {
+            goalId: props.id,
+            source: source.index,
+            destination: destination.index,
+        };
         if (start === finish) {
             postRequest("/goals/tasks/reorder/status", {
-                    goalId: props.id,
-                    source: source.index,
-                    destination: destination.index,
-                    status: source.droppableId
-                }, (result) => {
-                    refreshTasks(result);
-                },
-                (failure) => {
-                    console.log(failure);
-                })
+                ...baseData,
+                status: source.droppableId
+            }, (result) => {
+                refreshTasks(result);
+            })
         } else {
             postRequest("/tasks/update/status/drag", {
-                    goalId: props.id,
-                    source: source.index,
-                    destination: destination.index,
-                    sourceStatus: source.droppableId,
-                    destinationStatus: destination.droppableId,
-                    taskId: draggableId
-                }, (result) => {
-                    refreshTasks(result);
-                    if (result.notification.hasErrors) {
-                        openNotification({
-                            type: 'error',
-                            'title': "That's not allowed",
-                            description: result.notification.errors['global']
-                        })
-                    }
-                },
-                (failure) => {
-                    console.log(failure);
-                })
+                ...baseData,
+                sourceStatus: source.droppableId,
+                destinationStatus: destination.droppableId,
+                taskId: draggableId
+            }, (result) => {
+                refreshTasks(result);
+                if (result.notification.hasErrors) {
+                    notifyError({
+                        title: "That's not allowed",
+                        description: result.notification.errors['global']
+                    })
+                }
+            });
         }
     }
 

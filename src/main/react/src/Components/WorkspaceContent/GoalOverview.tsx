@@ -114,16 +114,19 @@ const GoalOverview = (props: { project: string, id: number }) => {
     const [lastUpdate, setLastUpdate] = useState();
     const [taskData, setTaskData] = useState<GoalTaskData>();
     const [data, setData] = useState<Goal>();
+    const [showChangeLoader, setShowChangeLoader] = useState(false);
     const updateStatus = () => {
+        setShowChangeLoader(true);
         postRequest("/goals/status/update", {goalId: props.id},
             (result) => {
                 setLastUpdate(result.status);
-            }, (failure) => {
-
+            }, () => {
+                setShowChangeLoader(false);
             })
     }
     const StatusUpdater = (props: { status: GoalStatus }) => {
         const style = classNames("button", {
+            "is-loading": showChangeLoader,
             "is-primary": props.status === "PLANNING",
             "is-success": props.status === "ACTIVE",
             "is-light": props.status === "COMPLETED"
@@ -153,10 +156,7 @@ const GoalOverview = (props: { project: string, id: number }) => {
                         },
                     }
                 })
-            }),
-            (error => {
-
-            }))
+            }));
     }, [lastUpdate]);
     return (
 

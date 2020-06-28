@@ -51,9 +51,6 @@ const TaskList = (props) => {
                 destination: destination.index
             }, (result) => {
                 refreshTasks(result);
-            },
-            (failure) => {
-                console.log(failure);
             })
     }
     const refreshTasks = (refreshedTasks) => {

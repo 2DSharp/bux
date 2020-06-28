@@ -123,11 +123,9 @@ const DnDTable = (props: DnDTableProps) => {
                     goalId: props.goal
                 },
                 (result: TaskData) => {
-                    setShowLoader(false);
                     props.onAdd(result);
                     setNewTaskData({...newTaskData, title: ""});
-                }, (failure) => {
-                    console.log(failure);
+                }, () => {
                     setShowLoader(false)
                 })
         } else {

@@ -5,11 +5,11 @@ import {useForm} from "react-hook-form";
 import {Link} from "react-router-dom";
 import cx from 'classnames';
 import "../../sass/card-form.scss"
-import Axios from "axios";
 import TextField from "../Element/Form/TextField";
 import InputContainer from "../Element/Form/InputContainer";
 import {getFormErrors} from "../../service/util";
 import PasswordField from "../Element/Form/PasswordField";
+import {postRequest} from "../../service/request";
 
 const Registration = () => {
     type FormData = {
@@ -34,21 +34,21 @@ const Registration = () => {
 
     const onSubmit = handleSubmit(({name, email, username, password}) => {
         setLoading(true);
-        Axios.post('/accounts/create', {
-            name: name,
-            email: email,
-            username: username,
-            password: password
-        }).then(response => {
-            setSuccess(true);
-        }).catch(error => {
-            const {data} = error.response;
-            if (!data.success) {
-                setServerErrors(data.errors);
-            }
-        }).finally(() => {
-            setLoading(false);
-        });
+        postRequest('/accounts/create', {
+                name: name,
+                email: email,
+                username: username,
+                password: password
+            },
+            (result) => {
+                if (!result.success) {
+                    setServerErrors(result.errors);
+                    return;
+                }
+                setSuccess(true);
+            }, () => {
+                setLoading(false);
+            })
     });
 
 

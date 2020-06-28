@@ -49,7 +49,10 @@ const useStyles = makeStyles({
         textDecoration: "line-through"
     },
     completed: {
-        backgroundColor: "rgba(132, 218, 132, 0.2)"
+        backgroundColor: "#deebff",
+        "&:hover": {
+            backgroundColor: "#94BEFF"
+        }
     }
 });
 const TaskRow = (props: { data: TaskData, index: number, isCompleted: boolean }) => {

@@ -76,11 +76,7 @@ const Goals = (props: { projectKey: string }) => {
                         'Completed': allGoals.filter(goal => (goal.status) === 'COMPLETED'),
                         'Abandoned': allGoals.filter(goal => (goal.status) === 'ABANDONED'),
                     });
-                },
-                (result => {
-
                 })
-            )
         }
         return () => {
             mounted = false;

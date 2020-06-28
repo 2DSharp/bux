@@ -5,11 +5,11 @@ import HeroFullPage from "../Layout/HeroFullPage";
 import Card from "../Layout/Card";
 import {useForm} from "react-hook-form";
 import cx from "classnames";
-import Axios, {AxiosResponse} from "axios";
 import TextField from "../Element/Form/TextField";
 import PasswordField from "../Element/Form/PasswordField";
 import InputContainer from "../Element/Form/InputContainer";
 import {getFormErrors} from "../../service/util";
+import {postRequest} from "../../service/request";
 
 interface LoginResponse {
     success: boolean
@@ -34,20 +34,22 @@ const Login = () => {
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
     const loginUser = async (identifier: string, password: string) => {
-        try {
-            const response: AxiosResponse<LoginResponse> = await Axios.post('/accounts/login', {
+
+        postRequest('/accounts/login', {
                 identifier: identifier,
                 password: password
-            });
-            setLoading(false);
-            setLoggedIn(response.data.success);
-        } catch (error) {
-            const {data} = error.response;
-            if (!data.success) {
-                setServerErrors(data.errors);
-            }
-            setLoading(false);
-        }
+            },
+            (result => {
+                setLoading(false);
+                if (!result.success) {
+                    setServerErrors(result.errors);
+                } else {
+                    setLoggedIn(result.success);
+                }
+            }),
+            () => {
+                setLoading(false);
+            })
     };
 
     const onSubmit = handleSubmit(({identifier, password}) => {

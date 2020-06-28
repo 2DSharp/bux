@@ -6,8 +6,8 @@ import InputContainer from "../Element/Form/InputContainer";
 import {useForm} from "react-hook-form";
 import cx from "classnames";
 import {getFormErrors} from "../../service/util";
-import Axios, {AxiosError, AxiosResponse} from "axios";
 import {Redirect} from "react-router-dom";
+import {postRequest} from "../../service/request";
 
 const CreateNewProject = () => {
     type FormData = {
@@ -25,21 +25,25 @@ const CreateNewProject = () => {
     const [serverErrors, setServerErrors] = useState();
     const onSubmit = handleSubmit(({name, projectKey}) => {
         setLoading(true);
-        Axios.post('/projects/create', {
-            name: name,
-            projectKey: projectKey
-        }).then(response => {
-            setSuccess(true);
-        }).catch((error: AxiosError) => {
-            if (error.response?.status === 403) {
-                setHasPermission(false);
-                return;
+
+        postRequest('/projects/create', {
+                name: name,
+                projectKey: projectKey
+            }, (response) => {
+                if (response.hasErrors) {
+                    setServerErrors(response.errors);
+                    return;
+                }
+                setSuccess(true);
+            },
+            () => setLoading(false),
+            (error) => {
+                if (error?.response && error.response?.status === 403) {
+                    setHasPermission(false);
+                    return;
+                }
             }
-
-            const response = error.response as AxiosResponse;
-            setServerErrors(response.data);
-
-        }).finally(() => setLoading(false));
+        )
     });
     const errorMsgs = {
         required: "This field is required",

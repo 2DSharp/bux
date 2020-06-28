@@ -79,11 +79,9 @@ const NewGoal = (props: NewGoal) => {
                         setErrors(result.errors);
                     }
                     setCreatedGoalId(result.result);
-                }),
-                (failure => {
-                    setErrors({global: "Something went wrong"})
+                }), () => {
                     setLoading(false);
-                }))
+                });
         } else {
             setErrors(result.error);
             setLoading(false);
@@ -96,10 +94,7 @@ const NewGoal = (props: NewGoal) => {
             getRequest('/projects/' + props.project + '/milestones', {},
                 (result => {
                     setMilestones(result);
-                }),
-                () => {
-
-                })
+                }));
         }
         return () => {
             mounted = false

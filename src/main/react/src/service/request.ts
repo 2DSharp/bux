@@ -1,23 +1,46 @@
 import Axios from "axios";
+import {notifyError} from "./notification";
 
 export function getRequest(url: string, params: object, successCallback: (result: any) => void,
-                           errorCallback: (result: object) => void): void {
+                           onFinally?: () => void, errorCallback?: (result?: any) => void): void {
     Axios.get(url, {
         params: params
     }).then(response => {
         successCallback(response.data);
     }).catch(error => {
-        errorCallback(error.response.data);
+        if (errorCallback) {
+            errorCallback(error);
+        }
+        notifyError({
+            title: "Something went wrong",
+            description: "It's not you, it's us. Something's up, we're trying to figure this out."
+        });
+        console.log(error)
+    }).finally(() => {
+        if (onFinally) {
+            onFinally();
+        }
     })
 }
 
 export function postRequest(url: string, data: object, successCallback: (result: any) => void,
-                            errorCallback: (result: object) => void): void {
+                            onFinally?: () => void, errorCallback?: (result?: any) => void): void {
     Axios.post(url, data,)
         .then(response => {
             successCallback(response.data);
         })
         .catch(error => {
-            errorCallback(error.response.data);
-        })
+            if (errorCallback) {
+                errorCallback(error);
+            }
+            notifyError({
+                title: "Something went wrong",
+                description: "It's not you, it's us. Something's up, we're trying to figure this out."
+            });
+            console.log(error)
+        }).finally(() => {
+        if (onFinally) {
+            onFinally();
+        }
+    })
 }
