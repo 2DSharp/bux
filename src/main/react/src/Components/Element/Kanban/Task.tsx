@@ -2,6 +2,9 @@ import React from 'react';
 import {makeStyles} from "@material-ui/styles";
 import {Draggable} from "react-beautiful-dnd";
 import {TaskData} from "../../../types";
+import color from "../../../sass/colors.module.scss"
+import Priority from "../Icon/Priority";
+import moment from 'moment';
 
 interface TaskProps {
     data: TaskData,
@@ -17,24 +20,62 @@ const useStyles = makeStyles({
         boxShadow: "0 2px 2px 0 rgba(0,0,0,0.2)",
         width: "100%",
         padding: 10,
+        paddingBottom: 8,
         borderRadius: 4,
         backgroundColor: "white",
-        minHeight: 80,
+        minHeight: 100,
         cursor: "move",
         fontSize: 14,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        color: color.textDarkColor,
         "&:hover, &:focus": {
             boxShadow: "0 4px 6px 0 rgba(0,0,0,0.2)",
+            backgroundColor: "rgba(148,190,255, 0.2)"
         }
+    },
+    footer: {
+        marginTop: 5
+    },
+    inlineItems: {
+        display: "inline-block",
+    },
+    left: {},
+    right: {
+        float: "right"
+    },
+
+    dataElem: {
+        margin: 3,
+        color: "rgba(0,0,0, 0.6)"
+    },
+    title: {
+        marginBottom: 10
+    },
+    deadline: {
+        fontSize: "12px"
     }
 });
 const Task = (props: TaskProps) => {
     const classes = useStyles();
+    const {data} = props;
     return (
-        <Draggable draggableId={props.data.id} index={props.index}>
+        <Draggable draggableId={data.id} index={props.index}>
             {provided =>
                 <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}
                      className={classes.root}>
-                    <p>{props.data.id} {props.data.title}</p>
+                    <p className={classes.title}>{data.title}</p>
+                    <div className={classes.footer}>
+                        <div className={`${classes.inlineItems} ${classes.left}`}>
+                            <span className={classes.dataElem}> {data.id} </span>
+                            <Priority type={data.priority}/>
+                        </div>
+                        <div className={`${classes.inlineItems} ${classes.right}`}>
+                            <span
+                                className={`${classes.dataElem} ${classes.deadline}`}>{moment(data.deadline).format("MMM DD")}</span>
+                        </div>
+                    </div>
                 </div>
             }
         </Draggable>
