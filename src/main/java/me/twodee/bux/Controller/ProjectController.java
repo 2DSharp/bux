@@ -1,5 +1,7 @@
 package me.twodee.bux.Controller;
 
+import me.twodee.bux.DTO.HelperValueObject.Error;
+import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.ProjectDTO;
 import me.twodee.bux.Model.Service.AccountService;
 import me.twodee.bux.Model.Service.ProjectManagement;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class ProjectController extends RestAPI
@@ -38,15 +39,17 @@ public class ProjectController extends RestAPI
     }
 
     @PostMapping("/projects/create")
-    public ResponseEntity<Map<String, String>> createNewProject(HttpSession session, @RequestBody ProjectDTO dto)
-    {
+    public ResponseEntity<Notification> createNewProject(HttpSession session, @RequestBody ProjectDTO dto) {
         if (!accountService.currentUserCanCreateProject(session)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            Notification note = new Notification();
+            // TODO: put it in messages.properties
+            note.addError(new Error("global", "You're not allowed to create projects in this server"));
+            return new ResponseEntity<>(note, HttpStatus.OK);
         }
 
         projectManagement.createProject(dto, accountService.getUser(session));
         if (dto.getNotification().hasErrors()) {
-            return new ResponseEntity<>(dto.getNotification().getErrors(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(dto.getNotification(), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.CREATED);

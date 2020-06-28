@@ -10,7 +10,7 @@ import java.util.Map;
 public class LoginResponse
 {
     private Map<String, String> errors;
-    private boolean success = true;
+    private boolean success = false;
 
     public LoginResponse(boolean success)
     {

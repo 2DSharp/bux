@@ -38,7 +38,7 @@ public class AccountController extends RestAPI
 
         if (dto.getNotification().hasErrors()) {
             return new ResponseEntity<>(new RegistrationResponse(dto.getNotification().getErrors()),
-                                        HttpStatus.BAD_REQUEST);
+                                        HttpStatus.OK);
         }
         return new ResponseEntity<>(new RegistrationResponse(!dto.getNotification().hasErrors()), HttpStatus.CREATED);
     }
@@ -50,7 +50,7 @@ public class AccountController extends RestAPI
         LoginResponse response;
         if (dto.getNotification().hasErrors()) {
             response = new LoginResponse(dto.getNotification().getErrors());
-            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response = new LoginResponse(true);
         return new ResponseEntity<>(response, HttpStatus.OK);
