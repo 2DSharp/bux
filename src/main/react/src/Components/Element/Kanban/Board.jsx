@@ -103,10 +103,10 @@ const Board = (props) => {
             {columns &&
             <DragDropContext onDragEnd={onDragEnd}>
                 {
-                    columnOrder.map(columnId => {
+                    columnOrder.map((columnId, index) => {
                         const column = columns[columnId];
                         if (column) {
-                            return <Column key={columnId} data={columnId}
+                            return <Column key={columnId} index={index} data={columnId}
                                            tasks={column.taskIds.map(taskId => tasks[taskId])}/>
                         }
                     })
