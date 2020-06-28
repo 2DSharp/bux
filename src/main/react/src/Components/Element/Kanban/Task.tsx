@@ -17,7 +17,7 @@ const useStyles = makeStyles({
     root: {
         marginTop: 5,
         marginBottom: 5,
-        boxShadow: "0 2px 2px 0 rgba(0,0,0,0.2)",
+        boxShadow: "0 2px 3px 1px rgba(0,0,0,0.2)",
         width: "100%",
         padding: 10,
         paddingBottom: 8,
@@ -29,7 +29,6 @@ const useStyles = makeStyles({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        color: color.textDarkColor,
         "&:hover, &:focus": {
             boxShadow: "0 4px 6px 0 rgba(0,0,0,0.2)",
             backgroundColor: "rgba(148,190,255, 0.2)"
@@ -51,6 +50,7 @@ const useStyles = makeStyles({
         color: "rgba(0,0,0, 0.6)"
     },
     title: {
+        color: color.textDarkColor,
         marginBottom: 10
     },
     deadline: {

@@ -62,7 +62,6 @@ const taskData = {
 }
 const useStyles = makeStyles({
     root: {
-        marginLeft: 10,
         marginRight: 20
     },
     heading: {

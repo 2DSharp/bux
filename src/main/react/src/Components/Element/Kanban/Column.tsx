@@ -15,15 +15,18 @@ interface ColumnProps {
 
 const useStyles = makeStyles({
     root: {
-        margin: 10,
+        marginRight: 10,
         borderRadius: 4,
         width: 320,
         display: "flex",
         flexDirection: "column",
-        border: "1px solid #f0f0f0",
+        backgroundColor: "#f0f0f0"
+        // border: "1px solid #f0f0f0",
     },
     header: {
-        padding: 10
+        padding: 10,
+        // boxShadow: "0 4px 4px -6px #222",
+        zIndex: 100
     },
     body: {
         backgroundColor: "#f0f0f0",
