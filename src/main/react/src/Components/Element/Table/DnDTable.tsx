@@ -16,6 +16,7 @@ import {postRequest} from "../../../service/request";
 import TaskRow from "./TaskRow";
 import {convertDateToLocalDate} from "../../../service/util";
 import GeneralSpin from "../Loader/GeneralSpin";
+import IconButton from "../Form/IconButton";
 
 interface DnDTableData {
     id: string,
@@ -103,7 +104,7 @@ const DnDTable = (props: DnDTableProps) => {
     const [errors, setErrors] = useState<any>({});
     const [showLoader, setShowLoader] = useState(false);
     const [newTaskData, setNewTaskData] = useState({
-        title: "",
+        title: '',
         priority: 'MEDIUM' as PriorityType,
         deadline: ""
     });
@@ -132,16 +133,13 @@ const DnDTable = (props: DnDTableProps) => {
             setShowLoader(false)
             setErrors(result.error);
         }
+
     }
     const actionValue = classNames("mdi-24px", {
         "mdi-checkbox-marked-circle-outline": !actionIconHover,
         "mdi-checkbox-marked-circle": actionIconHover
     });
-    const handleKeyDown = (event: { key: string; }) => {
-        if (event.key === 'Enter') {
-            onSubmit()
-        }
-    }
+
     return (
         <FormData onChange={onFormChange} onSubmit={onSubmit}>
             <div className={`table-container ${classes.root}`}>
@@ -166,12 +164,12 @@ const DnDTable = (props: DnDTableProps) => {
                                     }
 
                                     {(!showLoader && !isEmpty(newTaskData['title'])) &&
-                                    <MdIcon onMouseOver={() => setActionIconHover(true)}
-                                            onMouseOut={() => setActionIconHover(false)}
-                                            onClick={onSubmit}
-                                            className={`${classes.check} ${classes.editable}`}
-                                            value={actionValue}/>
-
+                                    <IconButton>
+                                        <MdIcon onMouseOver={() => setActionIconHover(true)}
+                                                onMouseOut={() => setActionIconHover(false)}
+                                                className={`${classes.check} ${classes.editable}`}
+                                                value={actionValue}/>
+                                    </IconButton>
                                     }
                                 </td>
                                 <td className={classes.title}>
@@ -179,7 +177,7 @@ const DnDTable = (props: DnDTableProps) => {
                                         <TextField value={newTaskData['title']} name="title"
                                                    placeholder="What's the task?"
                                                    autoFocus
-                                                   onKeyDown={handleKeyDown}
+
                                                    forwardRef={props.inputRef}
                                                    className={classes.editable}/>
                                     </Tooltip>
