@@ -59,8 +59,9 @@ const Column = (props: ColumnProps) => {
             <div className={classes.header}>
                 <span className={classes.inlineItem}>{props.data}</span>
                 {props.index == 0 &&
-                <MdIcon onClick={() => setActivateAdder(true)} className={`${classes.inlineItem} ${classes.taskAdder}`}
-                        value={"mdi-plus"}/>
+                <MdIcon onClick={() => setActivateAdder(!activateAdder)}
+                        className={`${classes.inlineItem} ${classes.taskAdder}`}
+                        value={activateAdder ? "mdi-minus" : "mdi-plus"}/>
                 }
             </div>
             <Droppable droppableId={props.data}>
