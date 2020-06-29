@@ -7,10 +7,10 @@ import Priority from "../Element/Icon/Priority";
 import {Priority as PriorityType, TaskData, User} from "../../types";
 import moment from "moment";
 import Progress, {Pressure} from "../Element/Progress";
-import SpinLoader from "./SpinLoader";
 import {getRequest, postRequest} from "../../service/request";
 import classNames from "classnames";
 import {makeStyles} from "@material-ui/styles";
+import SpinLoader from "./SpinLoader";
 
 export type GoalStatus = 'PLANNING' | 'ACTIVE' | 'COMPLETED' | 'ABANDONED';
 
@@ -141,20 +141,31 @@ const Goal = (props: { project: string }) => {
                         <span className={classes.heading}><span><h1>{data.title}</h1></span></span>
 
                         <div className={classes.projectActions}>
-                    <span className={classes.projectAction}>
-                        <StatusUpdater status={data.status}/>
-                    </span>
                             <span className={classes.projectAction}>
-                        <Link to={`${url}/board`}>
-                            <button className="button is-light">
-                                <MdIcon value={"mdi-grid-large"}/><span>Board</span>
-                            </button>
-                        </Link>
-                    </span>
+                                <StatusUpdater status={data.status}/>
+                            </span>
                             <span className={classes.projectAction}>
-                        <button className="button is-light"><MdIcon
-                            value={"mdi-cog-outline"}/><span>Settings</span></button>
-                    </span>
+                                <Switch>
+                                    <Route path={`${url}/board`}>
+                                        <Link to={`${url}/`}>
+                                            <button className="button is-light">
+                                                <MdIcon value={"mdi-menu"}/><span>Task list</span>
+                                            </button>
+                                        </Link>
+                                    </Route>
+                                    <Route path={`${url}`}>
+                                        <Link to={`${url}/board`}>
+                                            <button className="button is-light">
+                                                <MdIcon value={"mdi-view-parallel"}/><span>Board</span>
+                                            </button>
+                                        </Link>
+                                    </Route>
+                                </Switch>
+                            </span>
+                            <span className={classes.projectAction}>
+                                <button className="button is-light"><MdIcon
+                                    value={"mdi-cog-outline"}/><span>Settings</span></button>
+                            </span>
                         </div>
                     </div>
                     <div className={classes.meta}>
@@ -185,9 +196,8 @@ const Goal = (props: { project: string }) => {
                                 <Board id={id} data={data}/>
                             </Route>
                             <Route path={`${url}`}>
-                                {taskData &&
-                                <GoalOverview taskData={taskData} data={data} id={id} project={props.project}/>
-                                }
+                                <GoalOverview data={data} id={id} project={props.project}/>
+
                             </Route>
                         </Switch>
                     </div>

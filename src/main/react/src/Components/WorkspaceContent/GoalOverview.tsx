@@ -3,7 +3,7 @@ import TaskList from "../Element/Table/TaskList";
 import {GoalData, GoalTaskData} from "./Goal";
 import {getRequest} from "../../service/request";
 
-const GoalOverview = (props: { project: string, id: number, data: GoalData, taskData: GoalTaskData }) => {
+const GoalOverview = (props: { project: string, id: number, data: GoalData }) => {
 
     const {data} = props;
     const [taskData, setTaskData] = useState<GoalTaskData>();
