@@ -5,55 +5,31 @@ import {DragHandler} from "../../../service/dragHandler";
 import {getRequest, postRequest} from "../../../service/request";
 import {notifyError} from "../../../service/notification";
 
-const data = {
-    tasks: {
-        'task-1': {id: 'task-1', title: 'Add new header'},
-        'task-2': {id: 'task-2', title: 'Update background'},
-        'task-3': {id: 'task-3', title: 'Delete previous font'},
-        'task-4': {id: 'task-4', title: 'Optimize CSS'},
-        'task-5': {id: 'task-5', title: 'Pre-cache JS'}
-    },
-    columns: {
-        "col1": {
-            id: "col1",
-            title: 'TODO',
-            taskIds: ['task-1', "task-2", "task-3"]
-        },
-        "col2": {
-            id: "col2",
-            title: "In Progress",
-            taskIds: ['task-4', 'task-5']
-        }
-    },
-    columnOrder: ['col1', 'col2']
-
-}
-
 const Board = (props) => {
 
     const [columns, setColumns] = useState({});
     const [columnOrder, setColumnOrder] = useState([]);
     const [tasks, setTasks] = useState({});
+    const setDataFromFetchResult = (result) => {
+        setColumnOrder(result.statusList);
+        let columnData = {};
+        result.statusList.map(status => {
+            columnData = {
+                ...columnData,
+                [status]: {
+                    id: status,
+                    taskIds: result.columnData[status].taskIds
+                }
+            };
+        });
+        setColumns(columnData);
+        setTasks(result.tasks);
+    }
     const refreshTasks = () => {
-        getRequest(`/goals/${props.id}/tasks/all`, {},
-            result => {
-                setColumnOrder(result.statusList);
-                let columnData = {};
-                result.statusList.map(status => {
-                    columnData = {
-                        ...columnData,
-                        [status]: {
-                            id: status,
-                            taskIds: result.columnData[status].taskIds
-                        }
-                    };
-                });
-                setColumns(columnData);
-                setTasks(result.tasks);
-            })
+        getRequest(`/goals/${props.id}/tasks/all`, {}, setDataFromFetchResult)
     }
     useEffect(() => {
-        refreshTasks();
+        setDataFromFetchResult(props.data);
     }, []);
 
     const onDragEnd = result => {
