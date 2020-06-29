@@ -46,13 +46,15 @@ const TaskList = (props) => {
             return;
         }
         postRequest("/goals/tasks/reorder", {
-                goalId: props.goalId,
-                source: source.index,
-                destination: destination.index
-            }, (result) => {
-                refreshTasks(result);
-            })
+            goalId: props.goalId,
+            source: source.index,
+            destination: destination.index
+        }, (result) => {
+            refreshTasks(result);
+        })
     }
+    const [inputRef, setInputFocus] = useFocus();
+
     const refreshTasks = (refreshedTasks) => {
         setTasks(refreshedTasks.tasks)
         setColumns({
@@ -64,10 +66,13 @@ const TaskList = (props) => {
         });
     }
 
-    const [inputRef, setInputFocus] = useFocus();
     const moveToAdder = () => {
         setInputFocus();
         setMoveToTaskAdder(true);
+    }
+    const onAdd = (tasks) => {
+        refreshTasks(tasks);
+        moveToAdder();
     }
     return (
         <div> {props.data &&
@@ -81,7 +86,7 @@ const TaskList = (props) => {
                 </h3></div>
                 <div className="is-divider"/>
                 <nav className={`panel ${classes.panel}`}>
-                    <DnDTable onAdd={refreshTasks} goal={props.goalId} project={props.project}
+                    <DnDTable onAdd={onAdd} goal={props.goalId} project={props.project}
                               adderId={"tasks-adder"} data={columns['tasks']}
                               showAdder={moveToTaskAdder}
                               inputRef={inputRef}
