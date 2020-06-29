@@ -64,7 +64,7 @@ public class Goal {
     private List<Task> tasks = new ArrayList<>();
 
     @Builder.Default
-    @ElementCollection
+    @OneToMany(cascade = CascadeType.ALL)
     Map<String, StatusTaskList> taskStatusMap = Map.of("To Do", new StatusTaskList(),
                                                        "In Progress", new StatusTaskList(),
                                                        "Completed", new StatusTaskList());

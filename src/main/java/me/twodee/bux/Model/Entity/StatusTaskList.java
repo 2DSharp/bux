@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +13,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
-public class StatusTaskList implements Serializable {
+@Entity
+public class StatusTaskList {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    int id;
+
+    @ElementCollection
     List<String> tasks = new ArrayList<>();
+
+    public StatusTaskList(List<String> tasks) {
+        this.tasks = tasks;
+    }
 }
