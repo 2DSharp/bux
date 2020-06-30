@@ -1,10 +1,15 @@
-import React from 'react';
+import React, {FormEvent, useState} from 'react';
 import {makeStyles} from "@material-ui/styles";
 import color from "../../../sass/colors.module.scss";
 import TextField from "../Form/TextField";
 import FormData from "../Form/FormData";
 import PrioritySelector from "../Form/PrioritySelector";
 import DatePickerField from "../Form/DatePickerField";
+import IconButton from "../Form/IconButton";
+import MdIcon from "../Icon/MDIcon";
+import {Priority as PriorityType} from "../../../types";
+import validate from "../../../service/validator";
+import {Tooltip} from "antd";
 
 const useStyles = makeStyles({
     // IMPORTANT: DO NOT ADD ANY TRANSITION PROPERTIES,
@@ -47,7 +52,8 @@ const useStyles = makeStyles({
         marginBottom: 20
     },
     deadline: {
-        fontSize: "12px"
+        fontSize: "12px",
+        marginRight: 10
     },
     titleAdder: {
         border: "none",
@@ -66,18 +72,44 @@ const useStyles = makeStyles({
     }
 });
 
+const rules = {
+    title: {
+        required: true,
+        message: {
+            required: "Enter a task name for a small task. Example: Fix the launch pad"
+        }
+    }
+}
 const AdderCard = (props: { onSubmit: any }) => {
     const classes = useStyles();
-    const handleSubmit = () => {
-        props.onSubmit();
+    const [newTaskData, setNewTaskData] = useState({
+        title: '',
+        priority: 'MEDIUM' as PriorityType,
+        deadline: ""
+    });
+    const [errors, setErrors] = useState<any>({});
+    const handleSubmit = (event: FormEvent) => {
+        const result = (validate(newTaskData, rules));
+        if (result.success) {
+            props.onSubmit(newTaskData);
+        } else {
+            setErrors(result.error);
+        }
     }
-    const onChange = () => {
 
+    const onFormChange = (name: string, value: string) => {
+        setNewTaskData({...newTaskData, [name]: value})
     }
+
     return (
         <div className={classes.root}>
-            <FormData onSubmit={handleSubmit} onChange={onChange}>
-                <div className={classes.title}><TextField autoFocus className={classes.titleAdder}/></div>
+            <FormData onChange={onFormChange} onSubmit={handleSubmit}>
+                <Tooltip color={"volcano"} placement="right" visible={errors.title} title={errors.title}>
+
+                    <div className={classes.title}>
+                        <TextField autoFocus className={classes.titleAdder}/>
+                    </div>
+                </Tooltip>
                 <div className={classes.footer}>
                     <div className={`${classes.inlineItems} ${classes.left}`}>
                         <PrioritySelector iconsOnly default="MEDIUM"/>
@@ -86,6 +118,8 @@ const AdderCard = (props: { onSubmit: any }) => {
                             <span className={`${classes.dataElem} ${classes.deadline}`}>
                                 <DatePickerField className={classes.datePicker} placeholder="Deadline"/>
                             </span>
+                        <IconButton><MdIcon value={"mdi-18px mdi-check"}/></IconButton>
+
                     </div>
                 </div>
             </FormData>

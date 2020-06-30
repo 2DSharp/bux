@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {makeStyles} from "@material-ui/styles";
 import Task from "./Task";
 import {Droppable} from "react-beautiful-dnd";
-import {TaskData} from "../../../types";
+import {Priority, TaskData} from "../../../types";
 import MdIcon from "../Icon/MDIcon";
 import AdderCard from "./AdderCard";
 
@@ -53,6 +53,9 @@ const useStyles = makeStyles({
 const Column = (props: ColumnProps) => {
     const classes = useStyles();
     const [activateAdder, setActivateAdder] = useState(false);
+    const addNewTask = (data: { title: string, priority: Priority, deadline: string }) => {
+
+    }
     return (
         <div className={classes.root}>
 
@@ -68,8 +71,7 @@ const Column = (props: ColumnProps) => {
                 {provided =>
                     <div {...provided.droppableProps} ref={provided.innerRef} className={classes.body}>
                         {
-                            activateAdder && <AdderCard onSubmit={() => {
-                            }}/>
+                            activateAdder && <AdderCard onSubmit={addNewTask}/>
                         }
                         {props.tasks.map((task, index) => task &&
                             <Task index={index} key={task.id} data={task}/>)}
