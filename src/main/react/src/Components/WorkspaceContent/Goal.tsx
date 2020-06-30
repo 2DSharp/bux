@@ -147,7 +147,7 @@ const Goal = (props: { project: string }) => {
                             <span className={classes.projectAction}>
                                 <Switch>
                                     <Route path={`${url}/board`}>
-                                        <Link to={`${url}/`}>
+                                        <Link to={`${url}`}>
                                             <button className="button is-light">
                                                 <MdIcon value={"mdi-menu"}/><span>Task list</span>
                                             </button>
