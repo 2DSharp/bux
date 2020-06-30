@@ -21,6 +21,7 @@ public class StatusTaskList {
     int id;
 
     @ElementCollection
+    @OrderColumn(name = "column_task_order")
     List<String> tasks = new ArrayList<>();
 
     public StatusTaskList(List<String> tasks) {
