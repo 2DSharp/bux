@@ -7,10 +7,11 @@ import Priority from "../Element/Icon/Priority";
 import {Priority as PriorityType, TaskData, User} from "../../types";
 import moment from "moment";
 import Progress, {Pressure} from "../Element/Progress";
-import {getRequest, postRequest} from "../../service/request";
+import {getRequest} from "../../service/request";
 import classNames from "classnames";
 import {makeStyles} from "@material-ui/styles";
 import SpinLoader from "./SpinLoader";
+import GoalStatusChanger from "../Element/Modal/GoalStatusChanger";
 
 export type GoalStatus = 'PLANNING' | 'ACTIVE' | 'COMPLETED' | 'ABANDONED';
 
@@ -26,7 +27,9 @@ export type GoalData = {
     priority: PriorityType
     createdBy: User,
     tasks?: TaskData[],
-    statusList: string[]
+    statusList: string[],
+    taskIds: string[],
+    columnData: any
 }
 
 const useStyles = makeStyles({
@@ -89,14 +92,10 @@ const Goal = (props: { project: string }) => {
     const [taskData, setTaskData] = useState<GoalTaskData>();
     const [data, setData] = useState<GoalData>();
     const [showChangeLoader, setShowChangeLoader] = useState(false);
-    const updateStatus = () => {
-        setShowChangeLoader(true);
-        postRequest("/goals/status/update", {goalId: id},
-            (result) => {
-                setLastUpdate(result.status);
-            }, () => {
-                setShowChangeLoader(false);
-            })
+
+    const [dialogVisibility, setDialogVisibility] = useState(false);
+    const showConfirmationDialog = () => {
+        setDialogVisibility(true);
     }
     const StatusUpdater = (props: { status: GoalStatus }) => {
         const style = classNames("button", {
@@ -115,7 +114,7 @@ const Goal = (props: { project: string }) => {
                     return <><MdIcon value={"mdi-check-all"}/><span>Completed</span></>;
             }
         }
-        return <button onClick={updateStatus} className={style}>{nextAction(props.status)}</button>;
+        return <button onClick={showConfirmationDialog} className={style}>{nextAction(props.status)}</button>;
     };
     useEffect(() => {
         getRequest(`/projects/${props.project}/goals/${id}`, {},
@@ -197,10 +196,12 @@ const Goal = (props: { project: string }) => {
                             </Route>
                             <Route path={`${url}`}>
                                 <GoalOverview data={data} id={id} project={props.project}/>
-
                             </Route>
                         </Switch>
                     </div>
+                    <GoalStatusChanger visible={dialogVisibility} data={data}
+                                       setModalVisible={value => setDialogVisibility(value)}
+                                       goalId={id} setLastUpdate={value => setLastUpdate(value)}/>
                 </>
                 : <SpinLoader/>
             }
