@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Droppable} from "react-beautiful-dnd";
 import {makeStyles} from "@material-ui/styles";
-import {Priority as PriorityType, TaskData, User} from "../../../types";
+import {Priority as PriorityType, TaskData} from "../../../types";
 import variables from "../../../sass/colors.module.scss";
 import TextField from "../Form/TextField";
 import PrioritySelector from "../Form/PrioritySelector";
@@ -12,7 +12,7 @@ import FormData from "../Form/FormData";
 import classNames from "classnames";
 import validate, {isEmpty} from "../../../service/validator";
 import {Tooltip} from "antd";
-import {postRequest} from "../../../service/request";
+import {getRequest, postRequest} from "../../../service/request";
 import TaskRow from "./TaskRow";
 import {convertDateToLocalDate} from "../../../service/util";
 import GeneralSpin from "../Loader/GeneralSpin";
@@ -33,17 +33,6 @@ interface DnDTableProps {
     inputRef?: any,
     statusList: string[]
 }
-
-const users: User[] = [
-    {
-        name: "Dedipyaman",
-        username: "twodee"
-    },
-    {
-        name: "John Doe",
-        username: "jdoe"
-    }
-]
 
 const useStyles = makeStyles({
     id: {
@@ -139,7 +128,12 @@ const DnDTable = (props: DnDTableProps) => {
         "mdi-checkbox-marked-circle-outline": !actionIconHover,
         "mdi-checkbox-marked-circle": actionIconHover
     });
-
+    const [users, setUsers] = useState([]);
+    useEffect(() => {
+        getRequest('/users', {}, (result => {
+            setUsers(result);
+        }))
+    }, []);
     return (
         <FormData onChange={onFormChange} onSubmit={onSubmit}>
             <div className={`table-container ${classes.root}`}>

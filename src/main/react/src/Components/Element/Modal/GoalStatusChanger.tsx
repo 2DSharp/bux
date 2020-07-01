@@ -17,7 +17,6 @@ interface GoalStatusChangerProps {
 const GoalStatusChanger = (props: GoalStatusChangerProps) => {
     const [showChangeLoader, setShowChangeLoader] = useState(false);
     const {data} = props;
-    console.log(data);
     const createMessage = () => {
         switch (data.status) {
             case "PLANNING":
