@@ -25,17 +25,20 @@ import java.util.Set;
 @Service
 public class TaskService {
     private final TaskRepository repository;
-    private SpringHelperDependencyProvider provider;
-    private ProjectManagement projectManagement;
+    private final AccountService accountService;
+    private final SpringHelperDependencyProvider provider;
+    private final ProjectManagement projectManagement;
 
     @Autowired
     public TaskService(TaskRepository repository,
                        SpringHelperDependencyProvider provider,
-                       ProjectManagement projectManagement
+                       ProjectManagement projectManagement,
+                       AccountService accountService
     ) {
         this.repository = repository;
         this.provider = provider;
         this.projectManagement = projectManagement;
+        this.accountService = accountService;
     }
 
     public TaskDTO createTask(TaskCreationDTO dto, User user, List<String> statuses) {
@@ -69,9 +72,9 @@ public class TaskService {
         return TaskDTO.build(task);
     }
 
-    private User getAssignee(Integer id) {
-        if (id != null) {
-            return new User(id);
+    private User getAssignee(String username) {
+        if (username != null) {
+            return accountService.getUser(username);
         }
         return null;
     }

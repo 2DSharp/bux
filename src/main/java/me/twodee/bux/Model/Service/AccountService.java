@@ -128,6 +128,10 @@ public class AccountService
         return repository.getOne(id);
     }
 
+    public User getUser(String username) {
+        return repository.findUserByUsername(username).orElse(null);
+    }
+
     public List<PublicUserDTO> findAllUsers() {
         return repository.findAll().stream().map(UserDTOFactory::buildPublicUser).collect(Collectors.toList());
     }

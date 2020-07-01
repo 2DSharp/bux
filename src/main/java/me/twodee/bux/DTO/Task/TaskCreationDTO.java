@@ -28,7 +28,7 @@ public class TaskCreationDTO extends DataTransferObject {
     @FutureOrPresent(message = "{validation.task.deadline.past}")
     private LocalDate deadline;
 
-    private Integer assignee = null;
+    private String assignee;
 
     private Task.Priority priority;
 
