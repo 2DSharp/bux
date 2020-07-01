@@ -2,9 +2,11 @@ package me.twodee.bux.Model.Service;
 
 import me.twodee.bux.DTO.HelperValueObject.Error;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
+import me.twodee.bux.DTO.User.PublicUserDTO;
 import me.twodee.bux.DTO.User.UserDTO;
 import me.twodee.bux.DTO.User.UserLoginDTO;
 import me.twodee.bux.Factory.NotificationFactory;
+import me.twodee.bux.Factory.UserDTOFactory;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.UserRepository;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
@@ -15,10 +17,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -119,14 +119,16 @@ public class AccountService
         return notification;
     }
 
-    public boolean usersExist()
-    {
+    public boolean usersExist() {
         return repository.count() > 0;
     }
 
-    public User getUser(HttpSession session)
-    {
+    public User getUser(HttpSession session) {
         Integer id = (Integer) (session.getAttribute(SESS_USER_ID));
         return repository.getOne(id);
+    }
+
+    public List<PublicUserDTO> findAllUsers() {
+        return repository.findAll().stream().map(UserDTOFactory::buildPublicUser).collect(Collectors.toList());
     }
 }
