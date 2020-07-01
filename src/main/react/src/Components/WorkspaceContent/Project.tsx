@@ -5,19 +5,23 @@ import {Link, Route, Switch, useParams, useRouteMatch} from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Loading from "../Page/Loading";
 import Goal from "./Goal";
+import useBreadcrumbs from 'use-react-router-breadcrumbs';
 
 const Project = () => {
     const {id} = useParams();
     let {url} = useRouteMatch();
-
+    const routes = [{path: '/', breadcrumb: null}];
+    const breadcrumbs = useBreadcrumbs(routes);
     return (
         <ContentWithMenu menu={<ProjectMenu/>}>
             <div className="project-container">
+
                 <nav className="breadcrumb" style={{marginBottom: '1em'}} aria-label="breadcrumbs">
                     <ul>
-                        <li><Link to="/projects">Projects</Link></li>
-                        <li><Link to={`/projects/${id}`}>{id}</Link></li>
-                        <li className="is-active"><a href="#" aria-current="page">Dashboard</a></li>
+                        {breadcrumbs.map(({match, breadcrumb}) => (
+                            <li><Link to={match.url}>{breadcrumb}</Link></li>
+
+                        ))}
                     </ul>
                 </nav>
                 <Switch>
