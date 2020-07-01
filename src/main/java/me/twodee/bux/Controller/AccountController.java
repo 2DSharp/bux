@@ -60,7 +60,7 @@ public class AccountController extends RestAPI
 
     @GetMapping("/users")
     public ResponseEntity<List<PublicUserDTO>> getAllUsers(HttpSession session) {
-        if (accountService.isLoggedIn(session)) {
+        if (!accountService.isLoggedIn(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
