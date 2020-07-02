@@ -200,8 +200,8 @@ const Goal = (props: { project: string }) => {
                         </Switch>
                     </div>
                     <GoalStatusChanger visible={dialogVisibility} data={data}
-                                       setModalVisible={value => setDialogVisibility(value)}
-                                       goalId={id} setLastUpdate={value => setLastUpdate(value)}/>
+                                       setModalVisible={setDialogVisibility}
+                                       goalId={id} setLastUpdate={setLastUpdate}/>
                 </>
                 : <SpinLoader/>
             }
