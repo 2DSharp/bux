@@ -4,6 +4,7 @@ import Column from "./Column";
 import {DragHandler} from "../../../service/dragHandler";
 import {getRequest, postRequest} from "../../../service/request";
 import {notifyError} from "../../../service/notification";
+import TaskDetails from "../Modal/TaskDetails";
 
 const Board = (props) => {
 
@@ -74,6 +75,9 @@ const Board = (props) => {
         }
     }
 
+    const [detailsVisible, setDetailsVisible] = useState(false);
+    const [currentTaskId, setCurrentTaskId] = useState("");
+
     return (
         <div style={{display: "flex"}}>
             {columns &&
@@ -82,12 +86,19 @@ const Board = (props) => {
                     columnOrder.map((columnId, index) => {
                         const column = columns[columnId];
                         if (column) {
-                            return <Column key={columnId} index={index} data={columnId}
+                            return <Column setCurrentTaskId={id => {
+                                setCurrentTaskId(id);
+                                setDetailsVisible(true)
+                            }} key={columnId} index={index}
+                                           data={columnId}
                                            tasks={column.taskIds.map(taskId => tasks[taskId])}/>
                         }
                     })
                 }
             </DragDropContext>
+            }
+            {currentTaskId &&
+            <TaskDetails visible={detailsVisible} setModalVisible={setDetailsVisible} data={tasks[currentTaskId]}/>
             }
         </div>
     );

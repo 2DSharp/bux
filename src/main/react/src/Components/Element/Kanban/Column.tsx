@@ -10,7 +10,8 @@ import AdderCard from "./AdderCard";
 interface ColumnProps {
     data: string,
     index: number,
-    tasks: TaskData[]
+    tasks: TaskData[],
+    setCurrentTaskId: (id: string) => void
 }
 
 const useStyles = makeStyles({
@@ -74,14 +75,15 @@ const Column = (props: ColumnProps) => {
                             activateAdder && <AdderCard onSubmit={addNewTask}/>
                         }
                         {props.tasks.map((task, index) => task &&
-                            <Task index={index} key={task.id} data={task}/>)}
+                            <Task onClick={() => {
+                                props.setCurrentTaskId(task.id)
+                            }} index={index} key={task.id} data={task}/>)}
                         {provided.placeholder}
                     </div>
                 }
             </Droppable>
         </div>
-    )
-        ;
+    );
 };
 
 export default Column;

@@ -10,7 +10,8 @@ import AvatarIcon from "../Icon/AvatarIcon";
 
 interface TaskProps {
     data: TaskData,
-    index: number
+    index: number,
+    onClick: () => void
 }
 
 const useStyles = makeStyles({
@@ -63,10 +64,12 @@ const useStyles = makeStyles({
 const Task = (props: TaskProps) => {
     const classes = useStyles();
     const {data} = props;
+
     return (
         <Draggable draggableId={data.id} index={props.index}>
             {provided =>
                 <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}
+                     onClick={props.onClick}
                      className={classes.root}>
                     <p className={classes.title}>{data.title}</p>
                     <div className={classes.footer}>
