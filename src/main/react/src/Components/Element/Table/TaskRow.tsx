@@ -55,7 +55,7 @@ const useStyles = makeStyles({
         }
     }
 });
-const TaskRow = (props: { data: TaskData, index: number, isCompleted: boolean }) => {
+const TaskRow = (props: { data: TaskData, index: number, isCompleted: boolean, onClick: () => void }) => {
     const classes = useStyles();
     const taskIdClass = classNames({
         [classes.striked]: props.isCompleted
@@ -63,29 +63,32 @@ const TaskRow = (props: { data: TaskData, index: number, isCompleted: boolean })
     const rowClass = classNames({
         [classes.completed]: props.isCompleted
     })
+
     return <Draggable draggableId={props.data.id} index={props.index}>
         {provided =>
-            <tr {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}
-                className={`${classes.row} ${rowClass}`}>
-                <td className={classes.id}>
-                    <span className={taskIdClass}>{props.data.id}</span>
-                </td>
-                <td className={classes.title}>{props.data.title}</td>
-                <td className={classes.assignedTo} style={{textAlign: "center"}}>
-                    {props.data.assignee &&
-                    <Link to={"/user/" + props.data.assignee.username}>
-                        <AvatarIcon size="small" user={props.data.assignee}/>
-                    </Link>
-                    }
-                </td>
-                <td className={classes.priority} style={{textAlign: "center"}}>
-                    <Priority type={props.data.priority}/>
-                </td>
-                <td style={{textAlign: "center"}}>
-                    {props.data.deadline &&
-                    <span className={classes.deadline}> {moment(props.data.deadline).format("MMM DD YYYY")}</span>}
-                </td>
-            </tr>
+            <>
+                <tr {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}
+                    className={`${classes.row} ${rowClass}`} onClick={props.onClick}>
+                    <td className={classes.id}>
+                        <span className={taskIdClass}>{props.data.id}</span>
+                    </td>
+                    <td className={classes.title}>{props.data.title}</td>
+                    <td className={classes.assignedTo} style={{textAlign: "center"}}>
+                        {props.data.assignee &&
+                        <Link to={"/user/" + props.data.assignee.username}>
+                            <AvatarIcon size="small" user={props.data.assignee}/>
+                        </Link>
+                        }
+                    </td>
+                    <td className={classes.priority} style={{textAlign: "center"}}>
+                        <Priority type={props.data.priority}/>
+                    </td>
+                    <td style={{textAlign: "center"}}>
+                        {props.data.deadline &&
+                        <span className={classes.deadline}> {moment(props.data.deadline).format("MMM DD YYYY")}</span>}
+                    </td>
+                </tr>
+            </>
         }
     </Draggable>
 }

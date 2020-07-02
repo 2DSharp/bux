@@ -31,7 +31,8 @@ interface DnDTableProps {
     goal?: number,
     onAdd: any,
     inputRef?: any,
-    statusList: string[]
+    statusList: string[],
+    onSelect: (task: string) => void
 }
 
 const useStyles = makeStyles({
@@ -144,7 +145,8 @@ const DnDTable = (props: DnDTableProps) => {
                             <tbody {...provided.droppableProps} ref={provided.innerRef}>
 
                             {[...props.tasks].map((task, index) =>
-                                <TaskRow isCompleted={task.status == props.statusList[props.statusList.length - 1]}
+                                <TaskRow onClick={() => props.onSelect(task.id)}
+                                         isCompleted={task.status == props.statusList[props.statusList.length - 1]}
                                          key={task.id} data={task} index={index}/>
                             )}
                             {provided.placeholder}
