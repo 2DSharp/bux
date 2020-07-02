@@ -5,6 +5,8 @@ import {TaskData} from "../../../types";
 import color from "../../../sass/colors.module.scss"
 import Priority from "../Icon/Priority";
 import moment from 'moment';
+import {Link} from "react-router-dom";
+import AvatarIcon from "../Icon/AvatarIcon";
 
 interface TaskProps {
     data: TaskData,
@@ -31,7 +33,8 @@ const useStyles = makeStyles({
         justifyContent: 'space-between',
         "&:hover, &:focus": {
             boxShadow: "0 4px 6px 0 rgba(0,0,0,0.2)",
-            backgroundColor: "rgba(148,190,255, 0.2)"
+            backgroundColor: "rgba(148,190,255, 0.2)",
+            cursor: "move"
         }
     },
     footer: {
@@ -70,6 +73,11 @@ const Task = (props: TaskProps) => {
                         <div className={`${classes.inlineItems} ${classes.left}`}>
                             <span className={classes.dataElem}> {data.id} </span>
                             <Priority type={data.priority}/>
+                            {data.assignee &&
+                            <Link to={"/user/" + data.assignee.username}>
+                                <AvatarIcon size="small" user={data.assignee}/>
+                            </Link>
+                            }
                         </div>
                         <div className={`${classes.inlineItems} ${classes.right}`}>
                             <span
