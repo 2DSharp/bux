@@ -1,6 +1,8 @@
 # bux
 Issue tracker, decision logs and more
 
+![Bux example](https://i.ibb.co/1bdCz5k/bux.png)
+
 **Warning:** This is a work in progress running on the master branch. A production ready release will be tagged with a version number.
 
 ## Build instructions
