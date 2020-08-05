@@ -27,6 +27,9 @@ public class Project
     private String projectKey;
 
     @ManyToOne
+    private Organization organization;
+
+    @ManyToOne
     private User leader;
 
     @GeneratedValue
