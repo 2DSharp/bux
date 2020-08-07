@@ -14,5 +14,4 @@ public class OrgRoleDto extends DataTransferObject {
     private String orgName;
     private OrganizationMember.Role role;
     private PublicUserDTO target;
-    private PublicUserDTO modifier;
 }
