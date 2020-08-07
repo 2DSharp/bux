@@ -1,20 +1,26 @@
 package me.twodee.bux.Model.Entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class OrganizationMember {
     public enum Role {
-        READ, // Can view and track the organization
-        WRITE, // Can contribute to projects
-        ADMIN, // Can add, remove users
-        OWNER, // Can assign admins, modify organization
+        READ(1), // Can view and track the organization
+        WRITE(2), // Can contribute to projects
+        ADMIN(3), // Can add, remove users
+        OWNER(4); // Can assign admins, modify organization
+        public final int level;
+        private Role(int level) {
+            this.level = level;
+        }
     }
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,9 +35,6 @@ public class OrganizationMember {
     @NotNull
     private Role role;
 
-    public OrganizationMember(Organization organization, User user, @NotNull Role role) {
-        this.organization = organization;
-        this.user = user;
-        this.role = role;
-    }
+    @ManyToOne
+    private User assignedBy;
 }
