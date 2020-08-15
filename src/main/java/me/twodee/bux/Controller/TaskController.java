@@ -1,5 +1,6 @@
 package me.twodee.bux.Controller;
 
+import me.twodee.bux.Component.Authorization.RequireLogin;
 import me.twodee.bux.DTO.Project.GoalDTO;
 import me.twodee.bux.DTO.Task.TaskCreationDTO;
 import me.twodee.bux.DTO.Task.TaskDTO;
@@ -40,11 +41,9 @@ public class TaskController extends RestAPI {
         return ResponseEntity.ok(goalWithTaskData);
     }
 
+    @RequireLogin
     @PostMapping("/tasks/update/status/drag")
     public ResponseEntity<GoalDTO> reorderBetweenStatuses(HttpSession session, @RequestBody TaskOrderingDTO dto) {
-        if (!accountService.isLoggedIn(session)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
 
         taskService.changeStatus(dto, goalService.fetchGoalDetails(dto.getGoalId()));
         if (!dto.getNotification().hasErrors()) {

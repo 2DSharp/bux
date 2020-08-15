@@ -1,5 +1,6 @@
 package me.twodee.bux.Controller;
 
+import me.twodee.bux.Component.Authorization.RequireLogin;
 import me.twodee.bux.DTO.HelperValueObject.Error;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.ProjectDTO;
@@ -29,12 +30,10 @@ public class ProjectController extends RestAPI
         this.projectManagement = projectManagement;
     }
 
+    @RequireLogin
     @GetMapping("/projects")
     public ResponseEntity<List<ProjectDTO>> projects(HttpSession session)
     {
-        if (!accountService.isLoggedIn(session)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
         return new ResponseEntity<>(projectManagement.getProjects(), HttpStatus.OK);
     }
 

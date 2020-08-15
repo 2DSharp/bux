@@ -1,5 +1,6 @@
 package me.twodee.bux.Controller;
 
+import me.twodee.bux.Component.Authorization.RequireLogin;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.GoalCreationDTO;
 import me.twodee.bux.DTO.Project.GoalDTO;
@@ -50,6 +51,7 @@ public class GoalController extends RestAPI {
         return new ResponseEntity<>(dto.getNotification(), HttpStatus.OK);
     }
 
+    @RequireLogin
     @GetMapping("/projects/{key}/goals")
     public ResponseEntity<GoalsList> findGoalsForProject(HttpSession session, @PathVariable String key) {
         if (!accountService.isLoggedIn(session)) {
@@ -59,44 +61,33 @@ public class GoalController extends RestAPI {
         return ResponseEntity.ok(goalService.getAllGoalsListForProject(key));
     }
 
+    @RequireLogin
     @GetMapping("/projects/{projectKey}/goals/{goal}")
     public ResponseEntity<GoalDTO> fetchGoalForProject(HttpSession session, @PathVariable String projectKey, @PathVariable int goal) {
-        if (!accountService.isLoggedIn(session)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
         return ResponseEntity.ok(goalService.fetchGoal(projectKey, goal));
     }
 
+    @RequireLogin
     @PostMapping("/goals/tasks/reorder")
     public ResponseEntity<GoalDTO> reorderTaskList(HttpSession session, @RequestBody TaskOrderingDTO dto) {
-        if (!accountService.isLoggedIn(session)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
         return ResponseEntity.ok(goalService.reorderTasks(dto));
     }
 
+    @RequireLogin
     @PostMapping("/goals/tasks/reorder/status")
-    public ResponseEntity<GoalDTO> reorderStatusList(HttpSession session, @RequestBody TaskOrderingDTO dto) {
-        if (!accountService.isLoggedIn(session)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+    public ResponseEntity<GoalDTO> reorderStatusList(@RequestBody TaskOrderingDTO dto) {
         return ResponseEntity.ok(goalService.reorderTasksWithinStatus(dto));
     }
 
+    @RequireLogin
     @GetMapping("/projects/{key}/milestones")
-    public ResponseEntity<List<String>> findMilestonesForProject(HttpSession session, @PathVariable String key) {
-        if (!accountService.isLoggedIn(session)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+    public ResponseEntity<List<String>> findMilestonesForProject(@PathVariable String key) {
         return ResponseEntity.ok(goalService.getAllMilestonesForProject(key));
     }
 
+    @RequireLogin
     @GetMapping("/goals/{id}/tasks/all")
     public ResponseEntity<GoalDTO> getTasksFromGivenType(HttpSession session, @PathVariable("id") int id) {
-        if (!accountService.isLoggedIn(session)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
         return ResponseEntity.ok(goalService.getTasksWithColumnData(id));
     }
 
