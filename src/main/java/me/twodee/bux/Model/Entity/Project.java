@@ -13,16 +13,10 @@ import java.time.LocalDateTime;
 public class Project
 {
 
-    @Pattern(regexp = "^[a-zA-Z].*", message = "{validation.project.name.pattern}")
-    @Size(min = 2, max = 50, message = "{validation.project.name.size}")
-    @NotBlank(message = "{validation.project.name.empty}")
     @Column(unique = true)
     private String name;
 
     @Id
-    @Pattern(regexp = "^[A-Z][A-Z0-9]+$", message = "{validation.project.key.pattern}")
-    @Size(min = 2, max = 8, message = "{validation.project.key.size}")
-    @NotBlank(message = "{validation.project.key.empty}")
     @Column(unique = true)
     private String projectKey;
 
