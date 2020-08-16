@@ -11,8 +11,9 @@ import java.util.function.Predicate;
 public class DtoFilter<T extends DataTransferObject> {
     private final T dto;
     private boolean chainBlocked = false;
-
+    private Notification notification;
     private DtoFilter(T dto) {
+        notification = new Notification();
         this.dto = dto;
     }
 
@@ -24,7 +25,7 @@ public class DtoFilter<T extends DataTransferObject> {
         if (!chainBlocked) {
             var violations = validator.validate(dto);
             if (!violations.isEmpty()) {
-                dto.setNotification(DomainToDTOConverter.convert(violations));
+                notification = (DomainToDTOConverter.convert(violations));
                 chainBlocked = true;
             }
         }
@@ -33,9 +34,7 @@ public class DtoFilter<T extends DataTransferObject> {
 
     private void filter(Predicate<? super T> predicate, Error error, boolean block) {
         if (!predicate.test(dto)) {
-            var note = new Notification();
-            note.addError(error);
-            dto.appendNotification(note);
+            notification.addError(error);
             chainBlocked = block;
         }
     }
@@ -54,7 +53,13 @@ public class DtoFilter<T extends DataTransferObject> {
         return this;
     }
 
-    public T get() {
-        return dto;
+    public T getDtoWithErrors() {
+        T copy = dto;
+        copy.setNotification(notification);
+        return copy;
+    }
+
+    public Notification getNotification() {
+        return notification;
     }
 }

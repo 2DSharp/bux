@@ -21,7 +21,7 @@ class DtoFilterTest {
     @Test
     void testCreation() {
         TestDto dto = new TestDto("John", 12);
-        var res = DtoFilter.start(dto).get();
+        var res = DtoFilter.start(dto).getDtoWithErrors();
 
         assertThat(res.name, equalTo("John"));
         assertThat(res.age, equalTo(12));
@@ -31,16 +31,16 @@ class DtoFilterTest {
     @Test
     void filterFailure() {
         TestDto dto = new TestDto("John", 12);
-        DtoFilter.start(dto).addFilter(e -> e.age > 12, new Error("age", "Age must be greater than 12"));
+        var note = DtoFilter.start(dto).addFilter(e -> e.age > 12, new Error("age", "Age must be greater than 12")).getNotification();
 
-        assertTrue(dto.getNotification().hasErrors());
-        assertThat(dto.getNotification().getErrors().get("age"), equalTo("Age must be greater than 12"));
+        assertTrue(note.hasErrors());
+        assertThat(note.getErrors().get("age"), equalTo("Age must be greater than 12"));
     }
 
     @Test
     void filterPass() {
         TestDto dto = new TestDto("John", 13);
-        var res = DtoFilter.start(dto).addFilter(e -> e.age > 12, new Error("age", "Age must be greater than 12")).get();
+        var res = DtoFilter.start(dto).addFilter(e -> e.age > 12, new Error("age", "Age must be greater than 12")).getDtoWithErrors();
 
         assertFalse(res.getNotification().hasErrors());
     }
@@ -48,9 +48,9 @@ class DtoFilterTest {
     @Test
     void chainFiltersOrder() {
         TestDto dto = new TestDto("John", 12);
-        DtoFilter.start(dto)
+        dto = DtoFilter.start(dto)
                 .addFilter(e -> e.age > 12, new Error("age", "Age must be greater than 12"))
-                .addFilter(e -> e.name.equals("Sean"), new Error("name", "Name doesn't equal Sean"));
+                .addFilter(e -> e.name.equals("Sean"), new Error("name", "Name doesn't equal Sean")).getDtoWithErrors();
 
         assertTrue(dto.getNotification().hasErrors());
         assertFalse(dto.getNotification().getErrors().containsKey("name"));
@@ -58,9 +58,9 @@ class DtoFilterTest {
 
         dto = new TestDto("John", 12);
 
-        DtoFilter.start(dto)
+        dto = DtoFilter.start(dto)
                 .addFilter(e -> e.name.equals("Sean"), new Error("name", "Name doesn't equal Sean"))
-                .addFilter(e -> e.age > 12, new Error("age", "Age must be greater than 12"));
+                .addFilter(e -> e.age > 12, new Error("age", "Age must be greater than 12")).getDtoWithErrors();
 
         assertTrue(dto.getNotification().hasErrors());
         assertTrue(dto.getNotification().getErrors().containsKey("name"));
@@ -70,23 +70,23 @@ class DtoFilterTest {
     @Test
     void testAppendedFilters_NoEffectsOnAbove() {
         TestDto dto = new TestDto("John", 12);
-        DtoFilter.start(dto)
+        var note = DtoFilter.start(dto)
                 .addFilter(e -> e.age > 12, new Error("age", "Age must be greater than 12"))
                 .appendFilter(e -> e.name.equals("Sean"), new Error("name", "Name doesn't equal Sean"))
-                .addFilter(e -> e.name.equals("Done"), new Error("name2", "The second filter should work too"));
+                .addFilter(e -> e.name.equals("Done"), new Error("name2", "The second filter should work too")).getNotification();
 
-        assertTrue(dto.getNotification().hasErrors());
-        assertFalse(dto.getNotification().getErrors().containsKey("name"));
-        assertTrue(dto.getNotification().getErrors().containsKey("age"));
+        assertTrue(note.hasErrors());
+        assertFalse(note.getErrors().containsKey("name"));
+        assertTrue(note.getErrors().containsKey("age"));
     }
 
     @Test
     void testAppendedFilters() {
         TestDto dto = new TestDto("John", 13);
-        DtoFilter.start(dto)
+        dto = DtoFilter.start(dto)
                 .addFilter(e -> e.age > 12, new Error("age", "Age must be greater than 12"))
                 .appendFilter(e -> e.name.equals("Sean"), new Error("name", "Name doesn't equal Sean"))
-                .addFilter(e -> e.name.equals("Done"), new Error("name2", "The second filter should work too"));
+                .addFilter(e -> e.name.equals("Done"), new Error("name2", "The second filter should work too")).getDtoWithErrors();
 
         assertTrue(dto.getNotification().hasErrors());
         assertTrue(dto.getNotification().getErrors().containsKey("name"));
@@ -96,11 +96,11 @@ class DtoFilterTest {
     @Test
     void testAppendedFilters_DoesntContinueAfterBlock() {
         TestDto dto = new TestDto("John", 13);
-        DtoFilter.start(dto)
+        dto = DtoFilter.start(dto)
                 .addFilter(e -> e.age > 12, new Error("age", "Age must be greater than 12"))
                 .appendFilter(e -> e.name.equals("Sean"), new Error("name", "Name doesn't equal Sean"))
                 .addFilter(e -> e.name.equals("Done"), new Error("name2", "The second filter should work too"))
-                .addFilter(e -> e.name.equals("Woop"), new Error("name3", "Shouldn't reach here"));
+                .addFilter(e -> e.name.equals("Woop"), new Error("name3", "Shouldn't reach here")).getDtoWithErrors();
 
         assertTrue(dto.getNotification().hasErrors());
         assertFalse(dto.getNotification().getErrors().containsKey("age"));

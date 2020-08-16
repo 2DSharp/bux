@@ -2,6 +2,7 @@ package me.twodee.bux.Model.Service;
 
 import me.twodee.bux.Component.DtoFilter;
 import me.twodee.bux.DTO.HelperValueObject.Error;
+import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.ProjectDTO;
 import me.twodee.bux.Factory.NotificationFactory;
 import me.twodee.bux.Factory.ProjectDTOFactory;
@@ -9,6 +10,7 @@ import me.twodee.bux.Model.Entity.Project;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.ProjectRepository;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,21 +31,23 @@ public class ProjectManagement {
         this.provider = provider;
     }
 
-    private boolean canCreateProject(ProjectDTO dto, User user) {
-        DtoFilter.start(dto)
+    private Notification checkForErrors(ProjectDTO dto, User user) {
+        return DtoFilter.start(dto)
                 .addFilter(e -> org.hasAdminAccess(e.getOrg(), user), new Error("permission", "You don't have permission to do this"))
                 .validate(provider.getValidator())
                 .appendFilter(this::isNameUnique, new Error("name", provider.getMessageByLocaleService().getMessage(
                         "validation.project.name.exists")))
                 .appendFilter(this::isKeyUnique, new Error("projectKey", provider.getMessageByLocaleService().getMessage(
-                        "validation.project.key.exists")));
-        return !(dto.getNotification().hasErrors());
+                        "validation.project.key.exists"))).getNotification();
     }
 
     public void createProject(ProjectDTO dto, User user) {
 
-        if (!canCreateProject(dto, user))
+        var note = checkForErrors(dto, user);
+        if (note.hasErrors()) {
+            dto.setNotification(note);
             return;
+        }
 
         Project project = new Project(dto.getName(), dto.getProjectKey(), user);
 
