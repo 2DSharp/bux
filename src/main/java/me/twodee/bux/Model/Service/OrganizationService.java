@@ -47,6 +47,12 @@ public class OrganizationService {
         memberRepository.save(member);
     }
 
+    public boolean hasAdminAccess(String orgId, User user) {
+        var org = repository.findByName(orgId);
+        var member = memberRepository.findByOrganizationAndUser(org, user);
+        return member.getRole().level >= OrganizationMember.Role.ADMIN.level;
+    }
+
     public void addToOrg(OrgRoleDto dto, User user) {
         var org = repository.findByName(dto.getOrgName());
         var modifier = memberRepository.findByOrganizationAndUser(org, user);

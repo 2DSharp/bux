@@ -15,7 +15,7 @@ public class OrganizationMember {
     public enum Role {
         READ(1), // Can view and track the organization
         WRITE(2), // Can contribute to projects
-        ADMIN(3), // Can add, remove users
+        ADMIN(3), // Can add, remove users, create projects
         OWNER(4); // Can assign admins, modify organization
         public final int level;
         private Role(int level) {
