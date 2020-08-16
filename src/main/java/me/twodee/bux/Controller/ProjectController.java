@@ -37,14 +37,9 @@ public class ProjectController extends RestAPI
         return new ResponseEntity<>(projectManagement.getProjects(), HttpStatus.OK);
     }
 
+    @RequireLogin
     @PostMapping("/projects/create")
     public ResponseEntity<Notification> createNewProject(HttpSession session, @RequestBody ProjectDTO dto) {
-        if (!accountService.currentUserCanCreateProject(session)) {
-            Notification note = new Notification();
-            // TODO: put it in messages.properties
-            note.addError(new Error("global", "You're not allowed to create projects in this server"));
-            return new ResponseEntity<>(note, HttpStatus.OK);
-        }
 
         projectManagement.createProject(dto, accountService.getUser(session));
         if (dto.getNotification().hasErrors()) {
