@@ -32,7 +32,7 @@ public class ProjectController extends RestAPI
 
     @RequireLogin
     @GetMapping("/projects")
-    public ResponseEntity<List<ProjectDTO>> projects(HttpSession session)
+    public ResponseEntity<List<ProjectDTO>> projects()
     {
         return new ResponseEntity<>(projectManagement.getProjects(), HttpStatus.OK);
     }

@@ -41,6 +41,7 @@ public class GoalController extends RestAPI {
         this.goalService = goalService;
     }
 
+    @RequireLogin
     @PostMapping("/projects/goals/create")
     public ResponseEntity<Notification> createNewGoal(HttpSession session, @RequestBody GoalCreationDTO dto) {
         if (!accountService.currentUserCanCreateProject(session)) {
@@ -53,23 +54,19 @@ public class GoalController extends RestAPI {
 
     @RequireLogin
     @GetMapping("/projects/{key}/goals")
-    public ResponseEntity<GoalsList> findGoalsForProject(HttpSession session, @PathVariable String key) {
-        if (!accountService.isLoggedIn(session)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
+    public ResponseEntity<GoalsList> findGoalsForProject(@PathVariable String key) {
         return ResponseEntity.ok(goalService.getAllGoalsListForProject(key));
     }
 
     @RequireLogin
     @GetMapping("/projects/{projectKey}/goals/{goal}")
-    public ResponseEntity<GoalDTO> fetchGoalForProject(HttpSession session, @PathVariable String projectKey, @PathVariable int goal) {
+    public ResponseEntity<GoalDTO> fetchGoalForProject(@PathVariable String projectKey, @PathVariable int goal) {
         return ResponseEntity.ok(goalService.fetchGoal(projectKey, goal));
     }
 
     @RequireLogin
     @PostMapping("/goals/tasks/reorder")
-    public ResponseEntity<GoalDTO> reorderTaskList(HttpSession session, @RequestBody TaskOrderingDTO dto) {
+    public ResponseEntity<GoalDTO> reorderTaskList(@RequestBody TaskOrderingDTO dto) {
         return ResponseEntity.ok(goalService.reorderTasks(dto));
     }
 
@@ -87,15 +84,13 @@ public class GoalController extends RestAPI {
 
     @RequireLogin
     @GetMapping("/goals/{id}/tasks/all")
-    public ResponseEntity<GoalDTO> getTasksFromGivenType(HttpSession session, @PathVariable("id") int id) {
+    public ResponseEntity<GoalDTO> getTasksFromGivenType(@PathVariable("id") int id) {
         return ResponseEntity.ok(goalService.getTasksWithColumnData(id));
     }
 
+    @RequireLogin
     @GetMapping("/goals/{id}/tasks")
-    public ResponseEntity<GoalDTO> getTasksForGoal(HttpSession session, @PathVariable("id") int id) {
-        if (!accountService.isLoggedIn(session)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+    public ResponseEntity<GoalDTO> getTasksForGoal(@PathVariable("id") int id) {
         return ResponseEntity.ok(goalService.getTasks(id));
     }
 

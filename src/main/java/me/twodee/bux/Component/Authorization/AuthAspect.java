@@ -22,9 +22,10 @@ public class AuthAspect {
         this.auth = auth;
     }
 
-    @Around("@annotation(me.twodee.bux.Component.Authorization.RequireLogin)")
-    public Object checkRequireLogin(ProceedingJoinPoint joinPoint) throws Throwable {
-        if (!auth.isLoggedIn((HttpSession) joinPoint.getArgs()[0])) {
+    @Around("@annotation(me.twodee.bux.Component.Authorization.RequireLogin) && args(session,..)")
+    public Object checkRequireLogin(ProceedingJoinPoint joinPoint, HttpSession session) throws Throwable {
+
+        if (!auth.isLoggedIn(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         return joinPoint.proceed();
