@@ -10,6 +10,7 @@ import MdIcon from "../Element/Icon/MDIcon";
 import SmallTextField from "../Element/Form/SmallTextField";
 import Project from "../WorkspaceContent/Project";
 import Loading from "./Loading";
+import Container from "../Layout/Container";
 
 type Leader = {
     name: string
@@ -77,10 +78,10 @@ const Projects = () => {
                         </Suspense>
                     </Route>
                     <Route path="/projects/">
-                        <div className="columns">
-                            <div className="column project-container">
-                                <div className="container">
-                                    <div className="container">
+                        <Container>
+                            <div style={{minWidth: 1024}}>
+                                <div className="columns">
+                                    <div className="column">
                                         <p className={styles.heading}>Projects</p>
 
                                         <div className="card">
@@ -135,7 +136,7 @@ const Projects = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </Container>
                     </Route>
                 </Switch>
             </>
