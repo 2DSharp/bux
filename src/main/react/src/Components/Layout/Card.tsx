@@ -1,7 +1,7 @@
-import React, {ReactElement} from 'react';
+import React, {ReactElement, ReactNode} from 'react';
 
 interface CardProps {
-    children: ReactElement
+    children: ReactNode
 }
 const Card = (props: CardProps) => {
     return (
