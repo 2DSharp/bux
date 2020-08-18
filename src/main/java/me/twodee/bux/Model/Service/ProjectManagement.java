@@ -56,11 +56,11 @@ public class ProjectManagement {
     }
 
     private boolean isNameUnique(ProjectDTO dto) {
-        return repository.existsProjectByName(dto.getName());
+        return !repository.existsProjectByName(dto.getName());
     }
 
     private boolean isKeyUnique(ProjectDTO dto) {
-        return repository.existsById(dto.getProjectKey());
+        return !repository.existsById(dto.getProjectKey());
     }
 
 
