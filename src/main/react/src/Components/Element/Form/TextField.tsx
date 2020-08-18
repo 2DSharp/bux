@@ -60,7 +60,7 @@ const TextField = (props: TextFieldProps) => {
         }
         removeFieldFromState(props.resetServerErrors, props.name as string)
     }
-    const {forwardRef, ...otherProps} = props;
+    const {forwardRef, hasRightErrorIcon, resetServerErrors, leftIcon, errorMsg, ...otherProps} = props;
     return (
         <>
             {props.label &&
