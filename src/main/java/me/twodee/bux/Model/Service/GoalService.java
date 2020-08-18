@@ -1,5 +1,7 @@
 package me.twodee.bux.Model.Service;
 
+import me.twodee.bux.Component.DtoFilter;
+import me.twodee.bux.DTO.HelperValueObject.Error;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.*;
 import me.twodee.bux.DTO.Task.TaskDTO;
@@ -37,20 +39,21 @@ public class GoalService {
         this.provider = provider;
     }
 
+    private boolean projectExists(GoalCreationDTO dto) {
+        return projectManagement.projectExists(dto.getProjectKey());
+    }
+
     public void createGoal(GoalCreationDTO dto, User user) {
         Set<ConstraintViolation<GoalCreationDTO>> violations = provider.getValidator().validate(dto);
-        if (!violations.isEmpty()) {
-            dto.setNotification(DomainToDTOConverter.convert(violations));
+        var note = DtoFilter.start(dto)
+                .validate(provider.getValidator())
+                .addFilter(this::projectExists, new Error("global", provider.getMessageByLocaleService().getMessage(
+                        "validation.project.key.nonexistent"))).getNotification();
+
+        if (note.hasErrors()) {
+            dto.setNotification(note);
             return;
         }
-
-        if (!projectManagement.projectExists(dto.getProjectKey())) {
-            dto.appendNotification(NotificationFactory.createErrorNotification("global",
-                                                                               provider.getMessageByLocaleService().getMessage(
-                                                                                       "validation.project.key.nonexistent")));
-            return;
-        }
-
         Project project = projectManagement.getProjectReferenceFromKey(dto.getProjectKey());
         Goal goal = Goal.builder()
                 .title(dto.getTitle())
@@ -74,8 +77,7 @@ public class GoalService {
         if (goal.isPresent()) {
             Goal result = repository.save(updateToNextStatus(goal.get(), user));
             return GoalDTO.builder().status(result.getStatus()).build();
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -126,8 +128,8 @@ public class GoalService {
     private GoalDTO buildGoalForTaskDataWithColumns(GoalDTO dto, Goal goal) {
         dto.setStatusList(goal.getStatuses());
         dto.setColumnData(goal.getTaskStatusMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,
-                                                                                               e -> new StatusTaskListDTO(
-                                                                                                       e.getValue()))));
+                e -> new StatusTaskListDTO(
+                        e.getValue()))));
         return buildGoalForTaskData(dto, goal.getTasks());
     }
 
@@ -162,8 +164,7 @@ public class GoalService {
             entity.getTaskStatusMap().get(entity.getStatuses().get(0)).getTasks().add(taskDTO.getId());
             GoalDTO dto = GoalDTO.builder().id(goalId).build();
             return buildGoalForTaskData(dto, repository.save(entity).getTasks());
-        }
-        else {
+        } else {
             // else add to backlog
             return null;
         }
@@ -180,8 +181,8 @@ public class GoalService {
         if (goal.isPresent()) {
             Goal entity = goal.get();
             List<String> taskOrder = dragAndDrop(entity.getTaskStatusMap().get(dto.getStatus()).getTasks(),
-                                                 dto.getSource(),
-                                                 dto.getDestination());
+                    dto.getSource(),
+                    dto.getDestination());
 
             entity.getTaskStatusMap().put(dto.getStatus(), new StatusTaskList(taskOrder));
             GoalDTO result = GoalDTO.builder().id(entity.getId()).build();
