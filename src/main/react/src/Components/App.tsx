@@ -9,6 +9,7 @@ import Registration from "./Page/Registration";
 import Projects from "./Page/Projects";
 import CreateNewProject from "./WorkspaceContent/CreateNewProject";
 import Loading from "./Page/Loading";
+import Home from "./Page/Home";
 
 
 const App = () => {
@@ -24,6 +25,9 @@ const App = () => {
                 </Route>
                 <Route path="/accounts/create">
                     <Registration/>
+                </Route>
+                <Route path="/home">
+                    <Home />
                 </Route>
                 <Route path="/projects">
                     <Suspense fallback={<Loading/>}>
