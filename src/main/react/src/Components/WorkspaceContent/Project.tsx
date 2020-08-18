@@ -14,13 +14,12 @@ const Project = () => {
     const breadcrumbs = useBreadcrumbs(routes);
     return (
         <ContentWithMenu menu={<ProjectMenu/>}>
-            <div className="project-container">
+            <div className="centerpiece">
 
                 <nav className="breadcrumb" style={{marginBottom: '1em'}} aria-label="breadcrumbs">
                     <ul>
                         {breadcrumbs.map(({match, breadcrumb}) => (
                             <li key={match.url}><Link to={match.url}>{breadcrumb}</Link></li>
-
                         ))}
                     </ul>
                 </nav>
