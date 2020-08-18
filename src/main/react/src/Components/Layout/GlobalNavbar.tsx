@@ -24,12 +24,11 @@ const GlobalNavbar = (props: GlobalNavbarProps) => {
 
             <div id="navbarBasicExample" className="navbar-menu">
                 <div className="navbar-start">
-                    <a className={`navbar-item ${style.navItem}`}>
+                    <Link to="/home" className={`navbar-item ${style.navItem} ${props.active == "Home" && style.isActive}`}>
                         <span>Home</span>
+                    </Link>
 
-                    </a>
-
-                    <Link to="/projects" className={`navbar-item ${style.navItem} is-active ${style.isActive}`}>
+                    <Link to="/projects" className={`navbar-item ${style.navItem} ${props.active == "Projects" && style.isActive}`}>
                         Projects
                     </Link>
 
