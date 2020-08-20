@@ -8,6 +8,7 @@ import cx from "classnames";
 import {getFormErrors} from "../../service/util";
 import {Redirect} from "react-router-dom";
 import {postRequest} from "../../service/request";
+import PrimaryButton from "../Element/Button/PrimaryButton";
 
 const CreateNewProject = () => {
     type FormData = {
@@ -77,6 +78,9 @@ const CreateNewProject = () => {
                             <TextField placeholder={"A short 2-8 character identifier"}
                                        label={"Project key"} required={true} name="projectKey"
                                        errorMsg={getFormErrors(errors, serverErrors, "projectKey")}
+                                       style={{
+                                           textTransform: "uppercase"
+                                       }}
                                        forwardRef={register({
                                            required: {
                                                value: true,
@@ -100,9 +104,9 @@ const CreateNewProject = () => {
                             can be keyed as CS. </span>
                         </>
                     </InputContainer>
-                    <button className={btnStatus}>
+                    <PrimaryButton className={btnStatus}>
                         Create
-                    </button>
+                    </PrimaryButton>
                 </form>
             </>
         </HeroFullPage>

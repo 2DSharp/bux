@@ -83,3 +83,9 @@ div {
     }
   }
 }
+
+.primary-btn-override {
+  &:hover {
+    background-color: $blue !important;
+  }
+}
