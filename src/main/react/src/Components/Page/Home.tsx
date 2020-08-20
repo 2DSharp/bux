@@ -7,6 +7,9 @@ import {ReactComponent as DefaultOrgCover} from "../../images/default_org_cover.
 import {ReactComponent as DefaultTasksCover} from "../../images/default_tasks_cover.svg";
 import ProjectCard, {ProjectCardData} from "../Element/Cards/ProjectCard";
 import TeamCard, {TeamCardData} from "../Element/Cards/TeamCard";
+import PrimaryButton from "../Element/Button/PrimaryButton";
+import {Link} from "react-router-dom";
+
 export type CardType = "teams" | "projects" | "tasks";
 
 
@@ -62,12 +65,12 @@ const Section = (props: { name: string, children: ReactNode }) => {
 
 }
 const CardSection = (props: { name: string, data?: any[], type: CardType }) => {
-    const buildCard = (data : any) => {
-        switch(props.type) {
+    const buildCard = (data: any) => {
+        switch (props.type) {
             case "projects":
-                return <ProjectCard data={data} />;
+                return <ProjectCard data={data}/>;
             case "teams":
-                return <TeamCard data={data} />;
+                return <TeamCard data={data}/>;
         }
     }
     return (
@@ -108,7 +111,10 @@ const Fallback = (props: { type: CardType }) => {
             case "projects":
                 return <> Seems like you're not part of any projects yet. Create an organization to add projects. </>
             case "teams":
-                return <> You are not part of any organizations. Create yours now! </>
+                return <>
+                    <div>You are not part of any organizations.</div>
+                    <Link to="/new/team"><PrimaryButton style={{margin: 10}}>Create a team</PrimaryButton></Link>
+                </>
             case "tasks":
                 return <> Any tasks assigned to you or you're watching will appear here. </>
 
@@ -132,8 +138,8 @@ const Home = () => {
             <Container>
                 <div className="columns">
                     <div className="column">
-                        <CardSection name="Teams" type={"teams"} data={teams}/>
-                        <CardSection name="Projects" type="projects" data={projects}/>
+                        <CardSection name="Teams" type={"teams"}/>
+                        <CardSection name="Projects" type="projects" />
                         <CardSection name="Interesting Tasks" type="tasks"/>
                     </div>
                     <div className="column" style={{maxWidth: 420}}>
