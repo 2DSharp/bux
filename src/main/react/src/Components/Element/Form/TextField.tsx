@@ -25,12 +25,13 @@ export interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLA
     onRightIconClick?: MouseEventHandler<HTMLSpanElement>
     label?: string
     resetServerErrors?: Dispatch<SetStateAction<any>>
-    style?: CSSProperties
+    style?: CSSProperties,
+    controlClass?: string
 }
 
 const TextField = (props: TextFieldProps) => {
 
-    const controlClass = cx("control", props.className, {
+    const controlClass = cx("control", props.controlClass, {
         "has-icons-left": props.leftIcon,
         "has-icons-right": props.rightIcon || props.hasRightErrorIcon
     });
@@ -64,13 +65,14 @@ const TextField = (props: TextFieldProps) => {
     return (
         <>
             {props.label &&
-            <Label required={props.required}>{props.label}</Label>
+            <Label for={props.name} required={props.required}>{props.label}</Label>
             }
             <div className={controlClass}>
 
                 <input {...otherProps} style={props.style} type={(props.type) ? props.type : "text"}
                        placeholder={props.placeholder}
                        name={props.name}
+                       id={props.name}
                        className={inputClass}
                        onChange={onChange}
                        autoComplete={props.autoComplete}

@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Label = (props: { children?: any, required?: boolean }) => {
+const Label = (props: { children?: any, for?: string, required?: boolean }) => {
     return (
-        <label className="label">{props.children} {props.required && <span style={{color: "red"}}>*</span>}</label>
+        <label htmlFor={props.for} className="label">{props.children} {props.required && <span style={{color: "red"}}>*</span>}</label>
     );
 };
 
