@@ -5,22 +5,33 @@ import {makeStyles} from "@material-ui/styles";
 import {ReactComponent as DefaultProjectCover} from "../../images/default_project_cover.svg";
 import {ReactComponent as DefaultOrgCover} from "../../images/default_org_cover.svg";
 import {ReactComponent as DefaultTasksCover} from "../../images/default_tasks_cover.svg";
+import {ReactComponent as Comment} from "../../images/comment.svg";
+import {ReactComponent as Assignment} from "../../images/assignment.svg";
+
 import ProjectCard, {ProjectCardData} from "../Element/Cards/ProjectCard";
 import TeamCard, {TeamCardData} from "../Element/Cards/TeamCard";
 import PrimaryButton from "../Element/Button/PrimaryButton";
 import {Link} from "react-router-dom";
+import AvatarIcon from "../Element/Icon/AvatarIcon";
+import NotificationCard from "../Element/Cards/NotificationCard";
 
 export type CardType = "teams" | "projects" | "tasks";
 
 
 const useStyles = makeStyles({
     header: {
-        fontSize: 26,
         paddingTop: 10,
         paddingBottom: 10,
-        marginBottom: 10
-    },
+        marginBottom: 10,
 
+    },
+    big: {
+        fontSize: 26
+    },
+    small: {
+        fontWeight: "bold",
+        fontSize: 16
+    },
     section: {
         margin: 10,
         paddingBottom: 10,
@@ -42,29 +53,36 @@ const teams: TeamCardData[] = [
 
 const projects: ProjectCardData[] = [
     {
-        name: "Bux - OSS Org",
+        name: "Bux",
         description: "Bux is an open source project manager, issue tracker and decision logger bundle",
         members: 4,
         team: "OSS Org"
     },
     {
-        name: "Skletter - OSS Org",
+        name: "Skletter",
         description: "Where magic happens",
         members: 3,
+        team: "OSS Org"
+    },
+    {
+        name: "Friendly Neighbor",
+        description: "Find essentials near you, make requests and give things away",
+        members: 5,
         team: "OSS Org"
     }
 ];
 
 
-const Section = (props: { name: string, children: ReactNode }) => {
+const Section = (props: { name: string, headerType: "small" | "large", children: ReactNode }) => {
     const classes = useStyles();
+
     return <div className={classes.section}>
-        <div className={classes.header}>{props.name}</div>
+        <div className={`${classes.header}  ${props.headerType == "large" ? classes.big : classes.small}`}>{props.name}</div>
         {props.children}
     </div>
 
 }
-const CardSection = (props: { name: string, data?: any[], type: CardType }) => {
+const CardSection = (props: { name: string, data?: any[], type: CardType, singleCol?: boolean }) => {
     const buildCard = (data: any) => {
         switch (props.type) {
             case "projects":
@@ -73,23 +91,34 @@ const CardSection = (props: { name: string, data?: any[], type: CardType }) => {
                 return <TeamCard data={data}/>;
         }
     }
+
+    const buildColumns = (data: any[]) => {
+        return <div className="columns">
+            <div className="column">
+                {data.map((team, index) => (
+                    index % 2 == 0 && buildCard(team)
+                ))
+                }
+            </div>
+            <div className="column">
+                {data.map((team, index) => (
+                    index % 2 != 0 && buildCard(team)
+                ))
+                }
+            </div>
+        </div>
+    }
+
+    const showData = (data: any[], singleCol: boolean | undefined) => {
+        if (singleCol)
+            return data.map(buildCard);
+        return buildColumns(data);
+    }
+
     return (
-        <Section name={props.name}>
+        <Section headerType="large" name={props.name}>
             {
-                props.data ? <div className="columns">
-                        <div className="column">
-                            {props.data.map((team, index) => (
-                                index % 2 == 0 && buildCard(team)
-                            ))
-                            }
-                        </div>
-                        <div className="column">
-                            {props.data.map((team, index) => (
-                                index % 2 != 0 && buildCard(team)
-                            ))
-                            }
-                        </div>
-                    </div>
+                props.data ? showData(props.data, props.singleCol)
                     : <Fallback type={props.type}/>
             }
         </Section>
@@ -131,6 +160,24 @@ const Fallback = (props: { type: CardType }) => {
         </div>
     </div>
 }
+
+const NotificationSection = () => {
+    return (
+        <Section headerType="small" name={"Notifications"}>
+            <NotificationCard icon={<AvatarIcon size="large" user={{name: "John", username: "john"}}/>}
+                              title={"John followed you"} description={"Follow them back?"}/>
+            <NotificationCard icon={<Comment style={{height: 36, width: 36}}/>}
+                              title={"You were mentioned in a comment"}
+                              description={"How about we fix bug TEST-92 with this approach?..."}
+                              reference={{project: "Bux", team: "OSSOrg"}}
+            />
+            <NotificationCard icon={<Assignment style={{height: 36, width: 36}}/>}
+                              title={"You are assigned a task"}
+                              description={"James assigned task TEST-100 to you."}
+                              reference={{project: "Bux", team: "OSSOrg"}}
+            />
+        </Section>);
+}
 const Home = () => {
 
     return (
@@ -138,14 +185,12 @@ const Home = () => {
             <Container>
                 <div className="columns">
                     <div className="column">
-                        <CardSection name="Teams" type={"teams"}/>
-                        <CardSection name="Projects" type="projects" />
-                        <CardSection name="Interesting Tasks" type="tasks"/>
+                        <CardSection name="Teams" data={teams} type={"teams"}/>
+                        <CardSection name="Projects" data={projects} type="projects"/>
+                        <CardSection singleCol name="Interesting Tasks" type="tasks"/>
                     </div>
                     <div className="column" style={{maxWidth: 420}}>
-                        - Mentions/Notifications
-                        - Metrics - Issues opened/Closed
-                        - Activity Graph?
+                        <NotificationSection />
                     </div>
                 </div>
             </Container>
