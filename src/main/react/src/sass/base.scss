@@ -83,8 +83,8 @@ div {
     }
   }
 }
-
 .primary-btn-override {
+  transition: background-color 0.3s;
   &:hover {
     background-color: $blue !important;
   }
