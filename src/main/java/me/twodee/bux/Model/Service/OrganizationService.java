@@ -1,5 +1,6 @@
 package me.twodee.bux.Model.Service;
 
+import me.twodee.bux.Component.DtoFilter;
 import me.twodee.bux.DTO.DataTransferObject;
 import me.twodee.bux.DTO.HelperValueObject.Error;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
@@ -34,8 +35,10 @@ public class OrganizationService {
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void createOrg(OrganizationCreation dto, User user) {
-        // Check for uniqueness
-        if (repository.existsByName(dto.getName())) {
+
+        var note = checkForErrors(dto);
+        if (note.hasErrors()) {
+            dto.setNotification(note);
             return;
         }
         var org = Organization.builder().name(dto.getName()).build();
@@ -45,6 +48,13 @@ public class OrganizationService {
                 .user(user)
                 .build();
         memberRepository.save(member);
+    }
+
+    private Notification checkForErrors(OrganizationCreation dto) {
+        return DtoFilter.start(dto)
+                .validate(helper.getValidator())
+                .addFilter(e -> !repository.existsByName(e.getName()), new Error("name",
+                        helper.getMessageByLocaleService().getMessage("validation.team.name.exists"))).getNotification();
     }
 
     public boolean hasAdminAccess(String orgId, User user) {
@@ -80,11 +90,13 @@ public class OrganizationService {
         }
         permRoleNotify(dto);
     }
+
     private void permRoleNotify(DataTransferObject dto) {
         var note = new Notification();
         note.addError(new Error("permission", helper.getMessageByLocaleService().getMessage("validation.organization.role")));
         dto.setNotification(note);
     }
+
     private boolean canChangeRoles(OrganizationMember modifier, OrganizationMember target) {
         switch (modifier.getRole()) {
             case OWNER:
