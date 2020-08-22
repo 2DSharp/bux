@@ -21,7 +21,7 @@ import javax.validation.constraints.Size;
 public class OrganizationCreation extends DataTransferObject {
 
     @Size(min = 3, max = 16, message = "{validation.team.name.size}")
-    @Pattern(regexp = "^[a-zA-Z0-9_.-]*$", message = "{validation.team.name.pattern}")
+    @Pattern(regexp = "^[A-Za-z0-9][a-zA-Z0-9_.-]*$", message = "{validation.team.name.pattern}")
     @NotBlank(message = "{validation.team.name.empty}")
     private String name;
 
