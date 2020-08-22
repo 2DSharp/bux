@@ -16,7 +16,7 @@ const NewTeamInvitation = () => {
         setValues({...values, [name]: value})
     }
     return (
-        <WizardPage animate={true} width={8} title={"Invite members to your team"} align="right" goBack={true}>
+        <WizardPage animate={true} width={8} title={"Invite members to your team"} align="right">
 
             <div style={{marginTop: 40}} className="columns">
                 <div className="column centered-absolutely">
