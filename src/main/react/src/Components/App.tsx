@@ -4,14 +4,16 @@ import '../sass/base.scss'
 import '../less/app.less'
 
 import Login from "./Page/Login";
-import {BrowserRouter, Link, Route, Switch} from "react-router-dom";
+import {BrowserRouter, Link, Route, Switch, useLocation} from "react-router-dom";
 import Registration from "./Page/Registration";
 import Projects from "./Page/Projects";
-import CreateNewProject from "./WorkspaceContent/CreateNewProject";
+import CreateNewProject from "./Wizard/CreateNewProject";
 import Loading from "./Page/Loading";
 import Home from "./Page/Home";
-import CreateNewTeam from "./WorkspaceContent/CreateNewTeam";
+import CreateNewTeam from "./Wizard/CreateNewTeam";
 import {ReactComponent as NotFoundImage} from "../images/404.svg";
+import {AnimatePresence, motion} from "framer-motion";
+import NewTeamInvitation from "./Wizard/NewTeamInvitation";
 
 const NotFound = () => {
     return <div style={{textAlign: "center"}}>
@@ -20,41 +22,45 @@ const NotFound = () => {
     </div>
 }
 
+
 const App = () => {
-
+    const location = useLocation();
     const Projects = React.lazy(() => import('./Page/Projects'));
-
     return (
-        <BrowserRouter>
+            <AnimatePresence exitBeforeEnter initial={false}>
+                <Switch location={location}>
+                    <Route exact path="/">
+                        <Login/>
+                    </Route>
+                    <Route path="/accounts/create">
+                        <Registration/>
+                    </Route>
+                    <Route path="/home">
+                        <Home/>
+                    </Route>
+                    <Route key="/projects" path="/projects">
+                        <Suspense fallback={<Loading/>}>
+                            <Projects/>
+                        </Suspense>
+                    </Route>
 
-            <Switch>
-                <Route exact path="/">
-                    <Login/>
-                </Route>
-                <Route path="/accounts/create">
-                    <Registration/>
-                </Route>
-                <Route path="/home">
-                    <Home/>
-                </Route>
-                <Route path="/projects">
-                    <Suspense fallback={<Loading/>}>
-                        <Projects/>
-                    </Suspense>
-                </Route>
+                    <Route path="/new/project">
+                        <CreateNewProject/>
+                    </Route>
+                    <Route path="/new/team">
+                        <CreateNewTeam/>
+                    </Route>
+                    <Route path="/team/:id/invite">
+                        <NewTeamInvitation/>
+                    </Route>
+                    <Route>
+                        <NotFound/>
+                    </Route>
+                </Switch>
+            </AnimatePresence>
 
-                <Route path="/new/project">
-                    <CreateNewProject/>
-                </Route>
-                <Route path="/new/team">
-                    <CreateNewTeam/>
-                </Route>
-                <Route>
-                    <NotFound/>
-                </Route>
-            </Switch>
-        </BrowserRouter>
-    );
+    )
+        ;
 };
 
 

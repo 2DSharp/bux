@@ -9,6 +9,7 @@ import {getFormErrors} from "../../service/util";
 import {Redirect} from "react-router-dom";
 import {postRequest} from "../../service/request";
 import PrimaryButton from "../Element/Button/PrimaryButton";
+import MdIcon from "../Element/Icon/MDIcon";
 
 const CreateNewProject = () => {
     type FormData = {
@@ -99,7 +100,7 @@ const CreateNewProject = () => {
                                        hasRightErrorIcon={true}
                             />
 
-                            <span className="help"><i className="mdi mdi-information-outline"/> The key is a unique
+                            <span className="help"><MdIcon value="mdi-information-outline"/> The key is a unique
                             identifier for a project. This will be used to track your issues, logs etc. Eg.: Cloud Server
                             can be keyed as CS. </span>
                         </>
