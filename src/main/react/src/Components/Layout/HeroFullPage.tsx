@@ -8,7 +8,8 @@ interface HeroFullPage {
     title?: string
     width: number
     alignLeft?: boolean
-    goBack?: boolean
+    goBack?: boolean,
+    align?: "-moz-initial" | "inherit" | "initial" | "revert" | "unset" | "left" | "right" | "center" | "end" | "start" | "justify" | "match-parent" | undefined,
 }
 
 const transitionVariants = {
@@ -26,9 +27,7 @@ const transitionVariants = {
     }
 }
 const pageTransitions = {
-    type: "tween",
-    ease: "linear",
-    duration: 2
+    transition: "linear"
 };
 
 const HeroFullPage = (props: HeroFullPage) => {
@@ -56,7 +55,7 @@ const HeroFullPage = (props: HeroFullPage) => {
 
                             <div className="columns is-centered">
                                 <div className={`column is-${props.width}`}>
-                                    <p className={titleStyle}>
+                                    <p style={{textAlign: props.align}} className={titleStyle}>
                                         {titleBar()}
                                     </p>
                                     {props.children}
