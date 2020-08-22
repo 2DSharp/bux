@@ -68,7 +68,7 @@ const Projects = () => {
     if (forbidden)
         return <MotionRedirect to="/"/>;
     if (projects?.length === 0 && loaded)
-        return <EmptyProjectsPrompt/>
+        return <Workspace active="Projects"><EmptyProjectsPrompt/></Workspace>
 
     return (
         <Workspace active="Projects">
