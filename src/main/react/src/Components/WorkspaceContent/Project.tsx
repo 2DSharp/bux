@@ -5,13 +5,13 @@ import {Link, Route, Switch, useParams, useRouteMatch} from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Loading from "../Page/Loading";
 import Goal from "./Goal";
-import useBreadcrumbs from 'use-react-router-breadcrumbs';
+import useBreadcrumbs, {BreadcrumbsRoute} from 'use-react-router-breadcrumbs';
 
 const Project = () => {
     const {id} = useParams();
     let {url} = useRouteMatch();
-    const routes = [{path: '/', breadcrumb: null}];
-    const breadcrumbs = useBreadcrumbs(routes);
+    const routes : BreadcrumbsRoute[] = [];
+    const breadcrumbs = useBreadcrumbs(routes, {excludePaths: ["/"]});
     return (
         <ContentWithMenu menu={<ProjectMenu/>}>
             <div className="centerpiece">

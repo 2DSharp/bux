@@ -185,8 +185,8 @@ const Home = () => {
             <Container>
                 <div className="columns">
                     <div className="column">
-                        <CardSection name="Teams" data={teams} type={"teams"}/>
-                        <CardSection name="Projects" data={projects} type="projects"/>
+                        <CardSection name="Teams" type={"teams"}/>
+                        <CardSection name="Projects" type="projects"/>
                         <CardSection singleCol name="Interesting Tasks" type="tasks"/>
                     </div>
                     <div className="column" style={{maxWidth: 420}}>
