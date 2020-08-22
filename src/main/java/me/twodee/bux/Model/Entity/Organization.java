@@ -21,5 +21,9 @@ public class Organization {
     @Column(unique = true)
     private String name;
 
+    private String description;
+
+    private String imageUrl;
+
     private final LocalDateTime createdAt = LocalDateTime.now();
 }

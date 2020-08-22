@@ -24,4 +24,7 @@ public class OrganizationCreation extends DataTransferObject {
     @Pattern(regexp = "^[a-zA-Z0-9_.-]*$", message = "{validation.team.name.pattern}")
     @NotBlank(message = "{validation.team.name.empty}")
     private String name;
+
+    @Size( max = 140, message = "{validation.team.name.size}")
+    private String description;
 }

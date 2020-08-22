@@ -41,7 +41,7 @@ public class OrganizationService {
             dto.setNotification(note);
             return;
         }
-        var org = Organization.builder().name(dto.getName()).build();
+        var org = Organization.builder().name(dto.getName()).description(dto.getDescription()).build();
         org = repository.save(org);
         OrganizationMember member = OrganizationMember.builder().organization(org)
                 .role(OrganizationMember.Role.OWNER)
