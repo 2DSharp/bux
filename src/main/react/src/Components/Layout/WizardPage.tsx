@@ -3,34 +3,39 @@ import cx from "classnames";
 import GoBack from "../Element/Button/GoBack";
 import {motion} from "framer-motion";
 
-interface HeroFullPage {
+interface WizardPageInterface {
     children: ReactNode;
     title?: string
     width: number
     alignLeft?: boolean
     goBack?: boolean,
     align?: "-moz-initial" | "inherit" | "initial" | "revert" | "unset" | "left" | "right" | "center" | "end" | "start" | "justify" | "match-parent" | undefined,
+    animate?: boolean
 }
 
-const transitionVariants = {
-    in: {
-        opacity: 1,
-        x: 0
-    },
-    initial: {
-        opacity: 0,
-        x: "-100vw"
-    },
-    out: {
-        opacity: 1,
-        x: "100vw"
+const WizardPage = (props: WizardPageInterface) => {
+    let transitionVariants : any = {
+        in: {
+            opacity: 1,
+            x: 0
+        },
+        initial: {
+            opacity: 0,
+            x: "-100vw"
+        },
+        out: {
+            opacity: 1,
+            x: "100vw"
+        }
     }
-}
-const pageTransitions = {
-    transition: "linear"
-};
+    let pageTransitions : any = {
+        transition: "linear"
+    };
 
-const HeroFullPage = (props: HeroFullPage) => {
+    if (!props.animate) {
+        pageTransitions = {};
+        transitionVariants = {};
+    }
     const titleBar = () => {
         if (props.title)
             return <span>{props.title}</span>;
@@ -40,6 +45,7 @@ const HeroFullPage = (props: HeroFullPage) => {
     const titleStyle = cx("title", {
         "has-text-centered": !props.alignLeft
     });
+
     return (
         <section className="hero is-light">
             {
@@ -70,4 +76,4 @@ const HeroFullPage = (props: HeroFullPage) => {
     );
 };
 
-export default HeroFullPage;
+export default WizardPage;

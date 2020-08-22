@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import HeroFullPage from "../Layout/HeroFullPage";
+import WizardPage from "../Layout/WizardPage";
 import InputContainer from "../Element/Form/InputContainer";
 import TextField from "../Element/Form/TextField";
 import {ReactComponent as Collaboration} from "../../images/collaboration.svg";
@@ -15,7 +15,7 @@ const NewTeamInvitation = () => {
         setValues({...values, [name]: value})
     }
     return (
-        <HeroFullPage width={8} title={"Invite members to your team"} align="right" goBack={true}>
+        <WizardPage animate={true} width={8} title={"Invite members to your team"} align="right" goBack={true}>
 
             <div style={{marginTop: 40}} className="columns">
                 <div className="column centered-absolutely">
@@ -54,7 +54,7 @@ const NewTeamInvitation = () => {
                     </FormData>
                 </div>
             </div>
-        </HeroFullPage>
+        </WizardPage>
     );
 };
 

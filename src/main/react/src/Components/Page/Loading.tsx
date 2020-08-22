@@ -1,13 +1,13 @@
 import React from 'react';
-import HeroFullPage from "../Layout/HeroFullPage";
+import WizardPage from "../Layout/WizardPage";
 
 const Loading = () => {
     return (
-        <HeroFullPage width={2}>
+        <WizardPage width={2}>
             <>
                 <div className="spaced-box is-loading"/>
             </>
-        </HeroFullPage>
+        </WizardPage>
     );
 };
 

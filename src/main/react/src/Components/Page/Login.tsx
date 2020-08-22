@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import '@mdi/font/css/materialdesignicons.min.css'
 import {Link, Redirect} from "react-router-dom";
-import HeroFullPage from "../Layout/HeroFullPage";
+import WizardPage from "../Layout/WizardPage";
 import Card from "../Layout/Card";
 import {useForm} from "react-hook-form";
 import cx from "classnames";
@@ -10,6 +10,8 @@ import PasswordField from "../Element/Form/PasswordField";
 import InputContainer from "../Element/Form/InputContainer";
 import {getFormErrors} from "../../service/util";
 import {postRequest} from "../../service/request";
+import {motion} from 'framer-motion';
+import MotionRedirect from "../Element/Routing/MotionRedirect";
 
 interface LoginResponse {
     success: boolean
@@ -65,9 +67,9 @@ const Login = () => {
     };
 
     if (loggedIn)
-        return <Redirect to="/projects"/>;
+        return <MotionRedirect to="/home"/>;
     return (
-        <HeroFullPage width={4}>
+        <WizardPage width={4}>
             <>
                 <Card>
                     <>
@@ -117,7 +119,7 @@ const Login = () => {
                     </>
                 </Card>
             </>
-        </HeroFullPage>
+        </WizardPage>
     );
 };
 

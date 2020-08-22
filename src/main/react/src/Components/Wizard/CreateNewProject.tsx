@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import HeroFullPage from "../Layout/HeroFullPage";
+import WizardPage from "../Layout/WizardPage";
 import "../../sass/card-form.scss"
 import TextField from "../Element/Form/TextField";
 import InputContainer from "../Element/Form/InputContainer";
@@ -10,6 +10,7 @@ import {Redirect} from "react-router-dom";
 import {postRequest} from "../../service/request";
 import PrimaryButton from "../Element/Button/PrimaryButton";
 import MdIcon from "../Element/Icon/MDIcon";
+import MotionRedirect from "../Element/Routing/MotionRedirect";
 
 const CreateNewProject = () => {
     type FormData = {
@@ -52,11 +53,11 @@ const CreateNewProject = () => {
         keySize: "Create a unqiue key in 2-8 characters"
     };
     if (!hasPermission)
-        return <Redirect to="/"/>;
+        return <MotionRedirect to="/"/>;
     if (success)
-        return <Redirect to="/projects"/>
+        return <MotionRedirect to="/projects"/>
     return (
-        <HeroFullPage width={4} title={"Create a new project"} alignLeft={true} goBack={true}>
+        <WizardPage animate width={4} title={"Create a new project"} alignLeft={true} goBack={true}>
             <>
                 <form onSubmit={onSubmit}>
                     <InputContainer>
@@ -110,7 +111,7 @@ const CreateNewProject = () => {
                     </PrimaryButton>
                 </form>
             </>
-        </HeroFullPage>
+        </WizardPage>
     )
 };
 

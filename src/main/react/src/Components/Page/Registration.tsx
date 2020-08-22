@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Card from "../Layout/Card";
-import HeroFullPage from "../Layout/HeroFullPage";
+import WizardPage from "../Layout/WizardPage";
 import {useForm} from "react-hook-form";
 import {Link} from "react-router-dom";
 import cx from 'classnames';
@@ -66,7 +66,7 @@ const Registration = () => {
         "is-loading": loading
     });
     return (
-        <HeroFullPage width={4}>
+        <WizardPage width={4}>
             <Card>
                 <>
                     <div className="spc-10 bottom has-text-centered">
@@ -147,7 +147,7 @@ const Registration = () => {
                     </div>
                 </>
             </Card>
-        </HeroFullPage>
+        </WizardPage>
     );
 };
 

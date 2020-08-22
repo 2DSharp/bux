@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import HeroFullPage from "../Layout/HeroFullPage";
+import WizardPage from "../Layout/WizardPage";
 import TextField from "../Element/Form/TextField";
 import InputContainer from "../Element/Form/InputContainer";
 import FormData from "../Element/Form/FormData";
@@ -25,7 +25,7 @@ const CreateNewTeam = () => {
         history.push(`/team/${values.title}/invite`);
     }
     return (
-        <HeroFullPage width={8} title={"Create a new team"}  goBack={true}>
+        <WizardPage width={8} animate={true} title={"Create a new team"} goBack={true}>
             <div style={{marginTop: 40}} className="columns">
                 <div className="column centered-absolutely">
                     <GoodTeam style={{height: 300, width: 300}}/>
@@ -58,7 +58,7 @@ const CreateNewTeam = () => {
                     </FormData>
                 </div>
             </div>
-        </HeroFullPage>
+        </WizardPage>
     );
 };
 

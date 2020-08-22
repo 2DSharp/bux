@@ -1,10 +1,10 @@
 import React from 'react';
-import HeroFullPage from "../Layout/HeroFullPage";
+import WizardPage from "../Layout/WizardPage";
 import {Link} from "react-router-dom";
 
 const EmptyProjectsPrompt = () => {
     return (
-        <HeroFullPage width={5} title={"You don't have any projects yet"}>
+        <WizardPage width={5} title={"You don't have any projects yet"}>
             <div className="container has-text-centered">
                 <h2 className="subtitle">
                     Get started by creating a new project.
@@ -18,7 +18,7 @@ const EmptyProjectsPrompt = () => {
                     </button>
                 </Link>
             </div>
-        </HeroFullPage>
+        </WizardPage>
 
     );
 };
