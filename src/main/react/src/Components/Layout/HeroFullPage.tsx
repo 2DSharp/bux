@@ -1,14 +1,35 @@
-import React, {ReactElement} from 'react';
+import React, {ReactElement, ReactNode} from 'react';
 import cx from "classnames";
 import GoBack from "../Element/Button/GoBack";
+import {motion} from "framer-motion";
 
 interface HeroFullPage {
-    children: ReactElement;
+    children: ReactNode;
     title?: string
     width: number
     alignLeft?: boolean
     goBack?: boolean
 }
+
+const transitionVariants = {
+    in: {
+        opacity: 1,
+        x: 0
+    },
+    initial: {
+        opacity: 0,
+        x: "-100vw"
+    },
+    out: {
+        opacity: 1,
+        x: "100vw"
+    }
+}
+const pageTransitions = {
+    type: "tween",
+    ease: "linear",
+    duration: 2
+};
 
 const HeroFullPage = (props: HeroFullPage) => {
     const titleBar = () => {
@@ -26,21 +47,26 @@ const HeroFullPage = (props: HeroFullPage) => {
                 props.goBack && <span style={{position: "fixed"}}><GoBack/></span>
 
             }
-            <section className="hero is-light is-fullheight">
-                <div className="hero-body">
-                    <div className="container">
+            <motion.div initial="initial" animate="in" exit="out" variants={transitionVariants}
+                        transition={pageTransitions}>
 
-                        <div className="columns is-centered">
-                            <div className={`column is-${props.width}`}>
-                                <p className={titleStyle}>
-                                    {titleBar()}
-                                </p>
-                                {props.children}
+                <section className="hero is-light is-fullheight">
+                    <div className="hero-body">
+                        <div className="container">
+
+                            <div className="columns is-centered">
+                                <div className={`column is-${props.width}`}>
+                                    <p className={titleStyle}>
+                                        {titleBar()}
+                                    </p>
+                                    {props.children}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </motion.div>
+
         </section>
     );
 };
