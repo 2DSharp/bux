@@ -21,15 +21,18 @@
     "axios": "^0.19.2",
     "classnames": "latest",
     "craco-less": "^1.17.0",
+    "framer-motion": "^2.4.3-beta.2",
     "react": "^16.12.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^16.12.0",
     "react-hook-form": "latest",
-    "react-router-dom": "^5.1.2",
+    "react-router": "5.2.0",
+    "react-router-dom": "5.2.0",
     "react-scripts": "^3.4.0",
     "react-scroll-into-view": "^1.8.2",
     "react-textarea-autosize": "^8.0.1",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "use-react-router-breadcrumbs": "^1.0.4"
   },
   "scripts": {
     "start": "craco start",
