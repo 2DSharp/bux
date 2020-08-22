@@ -2,10 +2,7 @@ import React, {useState} from 'react';
 import HeroFullPage from "../Layout/HeroFullPage";
 import InputContainer from "../Element/Form/InputContainer";
 import TextField from "../Element/Form/TextField";
-import {Tooltip} from "antd";
-import MdIcon from "../Element/Icon/MDIcon";
-import Label from "../Element/Form/Label";
-import ExpandingTextArea from "../Element/Form/ExpandingTextArea";
+import {ReactComponent as Collaboration} from "../../images/collaboration.svg";
 import PrimaryButton from "../Element/Button/PrimaryButton";
 import FormData from "../Element/Form/FormData";
 
@@ -18,10 +15,11 @@ const NewTeamInvitation = () => {
         setValues({...values, [name]: value})
     }
     return (
-        <HeroFullPage width={8} title={"Invite members to your team"} goBack={true}>
+        <HeroFullPage width={8} title={"Invite members to your team"} align="right" goBack={true}>
 
-            <div className="columns">
-                <div className="column">
+            <div style={{marginTop: 40}} className="columns">
+                <div className="column centered-absolutely">
+                    <Collaboration style={{height:300, width: 300}} />
                 </div>
                 <div className="column">
                     <div>
@@ -42,15 +40,13 @@ const NewTeamInvitation = () => {
                                 type="email"
                                 placeholder="email@example.com" name="email2"
                                 hasRightErrorIcon={true}
-                                autoFocus
                             />
                         </InputContainer>
                         <InputContainer small>
                             <TextField
                                 type="email"
-                                placeholder="email@example.com" name="email2"
+                                placeholder="email@example.com" name="email3"
                                 hasRightErrorIcon={true}
-                                autoFocus
                             />
                         </InputContainer>
                         <div style={{height: 20}}/>
