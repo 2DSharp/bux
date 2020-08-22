@@ -1,5 +1,4 @@
 import React, {ReactNode} from 'react';
-import Workspace from "./Workspace";
 import Container from "../Layout/Container";
 import {makeStyles} from "@material-ui/styles";
 import {ReactComponent as DefaultProjectCover} from "../../images/default_project_cover.svg";
@@ -14,6 +13,7 @@ import PrimaryButton from "../Element/Button/PrimaryButton";
 import {Link} from "react-router-dom";
 import AvatarIcon from "../Element/Icon/AvatarIcon";
 import NotificationCard from "../Element/Cards/NotificationCard";
+import Workspace from "../Layout/Workspace";
 
 export type CardType = "teams" | "projects" | "tasks";
 

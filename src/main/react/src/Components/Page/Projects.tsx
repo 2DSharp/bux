@@ -2,7 +2,6 @@ import React, {Suspense, useEffect, useState} from 'react';
 
 import EmptyProjectsPrompt from "../WorkspaceContent/EmptyProjectsPrompt";
 import Axios, {AxiosError} from "axios";
-import Workspace from "./Workspace";
 import '../../sass/project.scss'
 import styles from '../../sass/workspace.module.scss'
 import {Link, Redirect, Route, Switch, useRouteMatch} from "react-router-dom";
@@ -13,6 +12,7 @@ import Loading from "./Loading";
 import Container from "../Layout/Container";
 import PrimaryButton from "../Element/Button/PrimaryButton";
 import MotionRedirect from "../Element/Routing/MotionRedirect";
+import Workspace from "../Layout/Workspace";
 
 type Leader = {
     name: string
