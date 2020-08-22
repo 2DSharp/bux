@@ -14,6 +14,7 @@ import validate from "../../../service/validator";
 import Error from "../Form/Error";
 import {Redirect} from 'react-router-dom';
 import {convertDateToLocalDate} from "../../../service/util";
+import MotionRedirect from "../Routing/MotionRedirect";
 
 
 interface NewGoal {
@@ -106,7 +107,7 @@ const NewGoal = (props: NewGoal) => {
     }
 
     if (createdGoalId) {
-        return <Redirect to={`/projects/${props.project}/goals/${createdGoalId}`}/>;
+        return <MotionRedirect to={`/projects/${props.project}/goals/${createdGoalId}`}/>;
     }
     return (
         <Modal

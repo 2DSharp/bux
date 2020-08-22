@@ -11,6 +11,7 @@ import {Priority as PriorityType} from "../../../types";
 import {Link} from "react-router-dom";
 import Progress, {Pressure} from "../Progress";
 import {GoalStatus} from "../../WorkspaceContent/Goal";
+import PrimaryButton from "../Button/PrimaryButton";
 
 const useStyles = makeStyles({
     root: {
@@ -153,10 +154,10 @@ const Goals = (props: { projectKey: string }) => {
 
                     </div>
                     <div className="panel-block">
-                        <button onClick={() => setModalVisible(true)}
-                                className="button is-primary is-fullwidth">
+                        <PrimaryButton onClick={() => setModalVisible(true)}
+                                className="is-fullwidth">
                             Create a new goal
-                        </button>
+                        </PrimaryButton>
                     </div>
                 </nav>
             </div>

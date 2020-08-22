@@ -11,6 +11,8 @@ import SmallTextField from "../Element/Form/SmallTextField";
 import Project from "../WorkspaceContent/Project";
 import Loading from "./Loading";
 import Container from "../Layout/Container";
+import PrimaryButton from "../Element/Button/PrimaryButton";
+import MotionRedirect from "../Element/Routing/MotionRedirect";
 
 type Leader = {
     name: string
@@ -64,7 +66,7 @@ const Projects = () => {
     }, []);
 
     if (forbidden)
-        return <Redirect to="/"/>;
+        return <MotionRedirect to="/"/>;
     if (projects?.length === 0 && loaded)
         return <EmptyProjectsPrompt/>
 
@@ -109,10 +111,10 @@ const Projects = () => {
 
                                                     <div className="column has-text-right">
                                                         <Link to={"/new/project"}>
-                                                            <button className="button is-primary">
+                                                            <PrimaryButton>
                                                                 <MdIcon value="mdi-plus-circle"/>
                                                                 <span>Create</span>
-                                                            </button>
+                                                            </PrimaryButton>
                                                         </Link>
                                                     </div>
                                                 </div>
