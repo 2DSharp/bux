@@ -10,20 +10,63 @@ import {useHistory} from "react-router-dom";
 import MdIcon from "../Element/Icon/MDIcon";
 import {Tooltip} from "antd";
 import {ReactComponent as GoodTeam} from "../../images/good_team.svg";
+import validate from "../../service/validator";
+import {postRequest} from "../../service/request";
+import classNames from "classnames";
 
+const rules = {
+    name: {
+        required: true,
+        length: {min: 3, max: 25},
+        pattern: new RegExp("^[A-Za-z0-9][a-zA-Z0-9_.-]*$"),
+        message: {
+            required: "This field is required",
+            length: "The team name has to be between 3 to 25 characters",
+            pattern: "The name can contain only letters, numbers, dashes, dots and underscores and has to start with a letter or number"
+        }
+    },
+
+}
 const CreateNewTeam = () => {
     const [values, setValues] = useState({
-        title: null,
+        name: null,
         description: null
     });
+    const [errors, setErrors] = useState<any>({});
+    const [loading, setLoading] = useState<boolean>(false);
+
     const onChange = (name: string, value: string) => {
+        setErrors({...errors, [name]: null});
         setValues({...values, [name]: value})
     }
     let history = useHistory();
 
     const onSubmit = () => {
-        history.push(`/team/${values.title}/invite`);
+        const result = (validate(values, rules));
+        setLoading(true);
+        if (result.success) {
+            postRequest('/teams/create', {
+                    ...values
+                },
+                (result => {
+                    if (result.hasErrors) {
+                        setErrors(result.errors);
+                    } else {
+                        history.push(`/team/${values.name}/invite`);
+                    }
+                }), () => {
+                    setLoading(false);
+                }, () => {
+                    // logout?
+                });
+        } else {
+            setErrors(result.error);
+            setLoading(false);
+        }
     }
+    const loadingStyle = classNames({
+       'is-loading': loading
+    });
     return (
         <WizardPage width={8} animate={true} title={"Create a new team"} goBack={true}>
             <div style={{marginTop: 40}} className="columns">
@@ -36,7 +79,8 @@ const CreateNewTeam = () => {
                             <TextField
                                 label="Team name (Ex. MicrosoftCorp, Adobe)"
                                 required
-                                placeholder="Claim a unique one word name for your team" name="title"
+                                errorMsg={errors.name}
+                                placeholder="Claim a unique one word name for your team" name="name"
                                 hasRightErrorIcon={true}
                                 autoFocus
                             />
@@ -54,7 +98,7 @@ const CreateNewTeam = () => {
                             <ExpandingTextArea name="description" placeholder="A short description about your team"/>
                         </InputContainer>
                         <div style={{height: 20}}/>
-                        <PrimaryButton>Create</PrimaryButton>
+                        <PrimaryButton className={loadingStyle}>Create</PrimaryButton>
                     </FormData>
                 </div>
             </div>
