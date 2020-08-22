@@ -22,45 +22,44 @@ const NotFound = () => {
     </div>
 }
 
-
 const App = () => {
     const location = useLocation();
     const Projects = React.lazy(() => import('./Page/Projects'));
+
     return (
-            <AnimatePresence exitBeforeEnter initial={false}>
-                <Switch location={location}>
-                    <Route exact path="/">
-                        <Login/>
-                    </Route>
-                    <Route path="/accounts/create">
-                        <Registration/>
-                    </Route>
-                    <Route path="/home">
-                        <Home/>
-                    </Route>
-                    <Route key="/projects" path="/projects">
-                        <Suspense fallback={<Loading/>}>
-                            <Projects/>
-                        </Suspense>
-                    </Route>
-
-                    <Route path="/new/project">
-                        <CreateNewProject/>
-                    </Route>
-                    <Route path="/new/team">
-                        <CreateNewTeam/>
-                    </Route>
-                    <Route path="/team/:id/invite">
-                        <NewTeamInvitation/>
-                    </Route>
-                    <Route>
+        <AnimatePresence exitBeforeEnter initial={false}>
+            <Switch location={location} key={location.pathname}>
+                <Route exact path="/">
+                    <Login/>
+                </Route>
+                <Route path="/accounts/create">
+                    <Registration/>
+                </Route>
+                <Route path="/home">
+                    <Home/>
+                </Route>
+                <Route key="/projects" path="/projects">
+                    <Suspense fallback={<Loading/>}>
+                        <Projects/>
+                    </Suspense>
+                </Route>
+                <Route path="/new/project">
+                    <CreateNewProject/>
+                </Route>
+                <Route path="/new/team">
+                    <CreateNewTeam/>
+                </Route>
+                <Route path="/team/:id/invite">
+                    <NewTeamInvitation/>
+                </Route>
+                <Route>
+                    <motion.div exit="undefined">
                         <NotFound/>
-                    </Route>
-                </Switch>
-            </AnimatePresence>
-
-    )
-        ;
+                    </motion.div>
+                </Route>
+            </Switch>
+        </AnimatePresence>
+    );
 };
 
 
