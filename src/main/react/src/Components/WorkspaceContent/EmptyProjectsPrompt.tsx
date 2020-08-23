@@ -1,6 +1,6 @@
 import React from 'react';
 import WizardPage from "../Layout/WizardPage";
-import {Link, useParams} from "react-router-dom";
+import {Link} from "react-router-dom";
 import PrimaryButton from "../Element/Button/PrimaryButton";
 
 const EmptyProjectsPrompt = (props: {teamId: any, url: string}) => {

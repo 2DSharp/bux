@@ -29,7 +29,7 @@ const Projects = () => {
     const [loaded, setLoaded] = useState(false);
     const [forbidden, setForbidden] = useState(false);
     let {url} = useRouteMatch();
-    const {id : teamId} = useParams();
+    const {teamId} = useParams();
 
     const Project = React.lazy(() => import('./../WorkspaceContent/Project'));
 
@@ -99,7 +99,7 @@ const Projects = () => {
                                                                                 leftIcon="mdi-magnify mdi-24px"/>
                                                             </div>
                                                             <div className="control">
-                                                                <Link to={`/team//projects/new`}>
+                                                                <Link to={`/team/projects/new`}>
                                                                     <button
                                                                         className="button is-light-btn small-action-group">
                                                                         <MdIcon value="mdi-filter-variant-plus"/>
@@ -112,7 +112,7 @@ const Projects = () => {
 
 
                                                     <div className="column has-text-right">
-                                                        <Link to={"/new/project"}>
+                                                        <Link to={`/team/${teamId}/projects/new`}>
                                                             <PrimaryButton>
                                                                 <MdIcon value="mdi-plus-circle"/>
                                                                 <span>Create</span>
