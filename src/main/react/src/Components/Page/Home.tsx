@@ -91,7 +91,7 @@ const CardSection = (props: { name: string, loaded: boolean, data?: any[], type:
             case "projects":
                 return <ProjectCard data={data}/>;
             case "teams":
-                return <TeamCard data={data}/>;
+                return <Link to={`/team/${data.name}/projects`}><TeamCard data={data}/></Link>;
         }
     }
 

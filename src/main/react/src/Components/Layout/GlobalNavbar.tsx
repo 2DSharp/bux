@@ -28,33 +28,30 @@ const GlobalNavbar = (props: GlobalNavbarProps) => {
                         <span>Home</span>
                     </Link>
 
-                    <Link to="/projects" className={`navbar-item ${style.navItem} ${props.active == "Projects" && style.isActive}`}>
-                        Projects
-                    </Link>
 
                     <Link to="#" className={`navbar-item ${style.navItem}`}>
-                        Collaborators
+                        Your Tasks
                     </Link>
 
                     <div className="navbar-item has-dropdown is-hoverable">
                         <a className="navbar-link">
-                            More
+                            Teams
                         </a>
 
                         <div className="navbar-dropdown">
+                            <Link to="/teams/new" className={`navbar-item ${style.navItem}`}>
+                                Team1
+                            </Link>
                             <a className={`navbar-item ${style.navItem}`}>
-                                About
-                            </a>
-                            <a className={`navbar-item ${style.navItem}`}>
-                                Jobs
+                                Jobs2
                             </a>
                             <a className={`navbar-item ${style.navItem}`}>
                                 Contact
                             </a>
                             <hr className="navbar-divider"/>
-                            <a className={`navbar-item ${style.navItem}`}>
-                                Report an issue
-                            </a>
+                            <Link to="/teams/new" className={`navbar-item ${style.navItem}`}>
+                                Create a team
+                            </Link>
                         </div>
                     </div>
                 </div>
