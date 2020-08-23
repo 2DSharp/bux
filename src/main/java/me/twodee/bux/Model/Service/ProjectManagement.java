@@ -49,7 +49,6 @@ public class ProjectManagement {
         Organization team = null;
         if (optionalTeam.isPresent())
             team = optionalTeam.get();
-        System.out.println(dto.getProjectKey());
         var note = checkForErrors(dto, team, user);
         if (note.hasErrors()) {
             dto.setNotification(note);
@@ -74,8 +73,9 @@ public class ProjectManagement {
     }
 
 
-    public List<ProjectDTO> getProjects() {
-        return repository.findAll()
+    public List<ProjectDTO> getProjects(String teamId) {
+        // TODO: Check for perms first
+        return repository.findByIdOrganizationId(teamId)
                 .stream()
                 .map(throwingFunctionWrapper(ProjectDTOFactory::buildProjectDTO))
                 .collect(Collectors.toList());

@@ -28,10 +28,10 @@ public class ProjectController extends RestAPI
     }
 
     @RequireLogin
-    @GetMapping("/projects")
-    public ResponseEntity<List<ProjectDTO>> projects()
+    @GetMapping("/team/{teamId}/projects")
+    public ResponseEntity<List<ProjectDTO>> projects(HttpSession session, @PathVariable String teamId)
     {
-        return new ResponseEntity<>(projectManagement.getProjects(), HttpStatus.OK);
+        return new ResponseEntity<>(projectManagement.getProjects(teamId), HttpStatus.OK);
     }
 
     @RequireLogin
