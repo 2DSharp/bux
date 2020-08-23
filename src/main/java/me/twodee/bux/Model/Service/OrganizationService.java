@@ -6,6 +6,7 @@ import me.twodee.bux.DTO.HelperValueObject.Error;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Organization.OrgRoleDto;
 import me.twodee.bux.DTO.Organization.OrganizationCreation;
+import me.twodee.bux.DTO.Organization.TeamDto;
 import me.twodee.bux.Factory.NotificationFactory;
 import me.twodee.bux.Model.Entity.Organization;
 import me.twodee.bux.Model.Entity.OrganizationMember;
@@ -14,11 +15,15 @@ import me.twodee.bux.Model.Repository.OrganizationMemberRepository;
 import me.twodee.bux.Model.Repository.OrganizationRepository;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrganizationService {
@@ -68,6 +73,7 @@ public class OrganizationService {
             return false;
         return member.get().getRole().level >= OrganizationMember.Role.ADMIN.level;
     }
+
     public boolean hasAdminAccess(String orgId, User user) {
         var org = repository.findByName(orgId);
         if (org.isEmpty())
@@ -119,6 +125,7 @@ public class OrganizationService {
     public Optional<Organization> getOrg(String name) {
         return repository.findByName(name);
     }
+
     public void updateMemberRole(OrgRoleDto dto, User user) {
         var org = findTeam(dto.getOrgName(), dto);
         if (org == null)
@@ -159,5 +166,19 @@ public class OrganizationService {
                 return (target.getRole().level <= OrganizationMember.Role.ADMIN.level);
         }
         return false;
+    }
+
+    public ResponseEntity<List<TeamDto>> getTeamsForUser(User user) {
+        var memberForEachOrg = memberRepository.findDistinctByUser(user);
+        List<TeamDto> resultList = memberForEachOrg.stream().map(e -> createTeamDto(e.getOrganization())).collect(Collectors.toList());
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
+    }
+
+    public TeamDto createTeamDto(Organization team) {
+        return TeamDto.builder()
+                .name(team.getName())
+                .description(team.getDescription())
+                .image(team.getImageUrl())
+                .build();
     }
 }

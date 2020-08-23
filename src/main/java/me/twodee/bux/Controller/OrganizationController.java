@@ -3,17 +3,20 @@ package me.twodee.bux.Controller;
 import me.twodee.bux.Component.Authorization.RequireLogin;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Organization.OrganizationCreation;
+import me.twodee.bux.DTO.Organization.TeamDto;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Service.AccountService;
 import me.twodee.bux.Model.Service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 public class OrganizationController extends RestAPI {
@@ -36,5 +39,12 @@ public class OrganizationController extends RestAPI {
             return new ResponseEntity<>(dto.getNotification(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @RequireLogin
+    @GetMapping("/teams")
+    public ResponseEntity<List<TeamDto>> getAllTeams(HttpSession session) {
+        User user = accounts.getUser(session);
+        return service.getTeamsForUser(user);
     }
 }

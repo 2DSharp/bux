@@ -6,9 +6,12 @@ import me.twodee.bux.Model.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface OrganizationMemberRepository extends JpaRepository<OrganizationMember, Integer> {
     Optional<OrganizationMember> findByOrganizationAndUser(Organization organization, User user);
+
+    List<OrganizationMember> findDistinctByUser(User user);
 }
