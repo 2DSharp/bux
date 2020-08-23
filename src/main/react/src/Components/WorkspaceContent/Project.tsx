@@ -8,7 +8,7 @@ import Goal from "./Goal";
 import useBreadcrumbs, {BreadcrumbsRoute} from 'use-react-router-breadcrumbs';
 
 const Project = () => {
-    const {id} = useParams();
+    const {id, teamId} = useParams();
     let {url} = useRouteMatch();
     const routes : BreadcrumbsRoute[] = [];
     const breadcrumbs = useBreadcrumbs(routes, {excludePaths: ["/"]});
@@ -31,7 +31,7 @@ const Project = () => {
                         </Suspense>
                     </Route>
                     <Route path={`${url}`}>
-                        <Dashboard project={id}/>
+                        <Dashboard project={id} team={teamId}/>
                     </Route>
                 </Switch>
             </div>

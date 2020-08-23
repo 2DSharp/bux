@@ -23,6 +23,8 @@ interface NewGoal {
     setModalVisible(isVisible: boolean): void;
 
     project: string
+
+    team: string
 }
 
 const errorMsgs = {
@@ -71,6 +73,7 @@ const NewGoal = (props: NewGoal) => {
         if (result.success) {
             postRequest('/projects/goals/create', {
                     projectKey: props.project,
+                    team: props.team,
                     ...values,
                     deadline: convertDateToLocalDate(values["deadline"])
                 },
@@ -107,7 +110,7 @@ const NewGoal = (props: NewGoal) => {
     }
 
     if (createdGoalId) {
-        return <MotionRedirect to={`/projects/${props.project}/goals/${createdGoalId}`}/>;
+        return <MotionRedirect to={`/team/${props.team}/projects/${props.project}/goals/${createdGoalId}`}/>;
     }
     return (
         <Modal

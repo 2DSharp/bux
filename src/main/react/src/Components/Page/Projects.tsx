@@ -56,7 +56,7 @@ const Projects = () => {
         );
     }
     useEffect(() => {
-        Axios.get('/projects')
+        Axios.get(`/team/${teamId}/projects`)
             .then(response => {
                 setProjects(response.data);
                 setLoaded(true);

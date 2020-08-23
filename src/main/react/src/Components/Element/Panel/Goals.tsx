@@ -53,7 +53,7 @@ type Goal = {
 
 const goalTabs = ['All', 'Planning', 'Active', 'Completed', 'Abandoned']
 
-const Goals = (props: { projectKey: string }) => {
+const Goals = (props: { projectKey: string, team: string }) => {
     const classes = useStyles();
 
 
@@ -67,7 +67,7 @@ const Goals = (props: { projectKey: string }) => {
     useEffect(() => {
         let mounted = true;
         if (mounted) {
-            getRequest('/projects/' + props.projectKey + '/goals', {},
+            getRequest(`/team/${props.team}/projects/${props.projectKey}/goals`, {},
                 (result) => {
                     const allGoals: Goal[] = result.goals;
                     setGoals({
@@ -109,7 +109,7 @@ const Goals = (props: { projectKey: string }) => {
                                             This area seems empty. Create a new goal to get started!
                                         </div>
                                         : goals[activeTab].map(goal => (
-                                            <Link to={`/projects/${props.projectKey}/goals/${goal.id}`} key={goal.id}
+                                            <Link to={`/team/${props.team}/projects/${props.projectKey}/goals/${goal.id}`} key={goal.id}
                                                   className="panel-block">
                                                 <span className="panel-icon">
                                                     <Priority type={goal.priority}/>
@@ -161,7 +161,7 @@ const Goals = (props: { projectKey: string }) => {
                     </div>
                 </nav>
             </div>
-            <NewGoal project={props.projectKey} visible={modalVisible} setModalVisible={setModalVisible}/>
+            <NewGoal team={props.team} project={props.projectKey} visible={modalVisible} setModalVisible={setModalVisible}/>
         </>
     );
 };
