@@ -6,10 +6,7 @@ import me.twodee.bux.DTO.Task.TaskCreationDTO;
 import me.twodee.bux.DTO.Task.TaskDTO;
 import me.twodee.bux.DTO.Task.TaskOrderingDTO;
 import me.twodee.bux.Factory.NotificationFactory;
-import me.twodee.bux.Model.Entity.Goal;
-import me.twodee.bux.Model.Entity.Project;
-import me.twodee.bux.Model.Entity.Task;
-import me.twodee.bux.Model.Entity.User;
+import me.twodee.bux.Model.Entity.*;
 import me.twodee.bux.Model.Repository.TaskRepository;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
 import me.twodee.bux.Util.DomainToDTOConverter;
@@ -48,14 +45,14 @@ public class TaskService {
             return null;
         }
 
-        if (!projectManagement.projectExists(dto.getProjectKey())) {
+        if (!projectManagement.projectExists(new Project.ProjectId(dto.getProjectKey(), dto.getTeam()))) {
             dto.appendNotification(NotificationFactory.createErrorNotification("global",
                                                                                provider.getMessageByLocaleService().getMessage(
                                                                                        "validation.project.key.nonexistent")));
             return null;
         }
 
-        Project project = new Project(dto.getProjectKey());
+        Project project = new Project(new Project.ProjectId(dto.getProjectKey(), new Organization(dto.getTeam())));
         Task task = Task.builder()
                 .project(project)
                 .title(dto.getTitle())

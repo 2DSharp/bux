@@ -28,26 +28,5 @@ public class TaskRepositoryTest {
         repository.deleteAll();
     }
 
-    @Test
-    void testSuccessfulSave() {
-        User usr = new User("User", "u1", "d@d.co", "pass");
-        Project project = new Project("Name", "PROJ", usr);
-        userRepository.save(usr);
-        projectRepository.save(project);
-        Task task = Task.builder().title("Do something").project(project).build();
-        Task savedTask = repository.save(task);
-        assertThat(savedTask.getId(), equalTo("PROJ-1"));
 
-        project = new Project("Name2", "TEST", usr);
-        projectRepository.save(project);
-        task = Task.builder().title("Do something").project(project).build();
-        savedTask = repository.save(task);
-
-        assertThat(savedTask.getId(), equalTo("TEST-1"));
-
-        task = Task.builder().title("Do something 2").project(project).build();
-        savedTask = repository.save(task);
-
-        assertThat(savedTask.getId(), equalTo("TEST-2"));
-    }
 }

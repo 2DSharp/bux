@@ -3,7 +3,7 @@ package me.twodee.bux.Model.Repository;
 import me.twodee.bux.Model.Entity.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProjectRepository extends JpaRepository<Project, String> {
+public interface ProjectRepository extends JpaRepository<Project, Project.ProjectId> {
     boolean existsProjectByName(String name);
 
     @Override

@@ -9,10 +9,7 @@ import me.twodee.bux.Model.Service.ProjectManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -38,10 +35,10 @@ public class ProjectController extends RestAPI
     }
 
     @RequireLogin
-    @PostMapping("/projects/create")
-    public ResponseEntity<Notification> createNewProject(HttpSession session, @RequestBody ProjectDTO dto) {
+    @PostMapping("/team/{teamId}/projects/create")
+    public ResponseEntity<Notification> createNewProject(HttpSession session, @RequestBody ProjectDTO dto, @PathVariable String teamId) {
 
-        projectManagement.createProject(dto, accountService.getUser(session));
+        projectManagement.createProject(dto, teamId, accountService.getUser(session));
         if (dto.getNotification().hasErrors()) {
             return new ResponseEntity<>(dto.getNotification(), HttpStatus.OK);
         }

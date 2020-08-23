@@ -6,6 +6,7 @@ import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Project.ProjectDTO;
 import me.twodee.bux.Factory.NotificationFactory;
 import me.twodee.bux.Factory.ProjectDTOFactory;
+import me.twodee.bux.Model.Entity.Organization;
 import me.twodee.bux.Model.Entity.Project;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.ProjectRepository;
@@ -31,25 +32,34 @@ public class ProjectManagement {
         this.provider = provider;
     }
 
-    private Notification checkForErrors(ProjectDTO dto, User user) {
+    private Notification checkForErrors(ProjectDTO dto, Organization team, User user) {
         return DtoFilter.start(dto)
-                .addFilter(e -> org.hasAdminAccess(e.getOrg(), user), new Error("permission", "You don't have permission to do this"))
+                .addFilter(e -> org.hasAdminAccess(team, user), new Error("permission", provider.getMessageByLocaleService().getMessage(
+                        "validation.project.permission")))
                 .validate(provider.getValidator())
                 .appendFilter(this::isNameUnique, new Error("name", provider.getMessageByLocaleService().getMessage(
                         "validation.project.name.exists")))
-                .appendFilter(this::isKeyUnique, new Error("projectKey", provider.getMessageByLocaleService().getMessage(
+                .appendFilter(e -> isKeyUnique(dto, team), new Error("projectKey", provider.getMessageByLocaleService().getMessage(
                         "validation.project.key.exists"))).getNotification();
     }
 
-    public void createProject(ProjectDTO dto, User user) {
+    public void createProject(ProjectDTO dto, String teamId, User user) {
+        var optionalTeam = org.getOrg(teamId);
 
-        var note = checkForErrors(dto, user);
+        Organization team = null;
+        if (optionalTeam.isPresent())
+            team = optionalTeam.get();
+        System.out.println(dto.getProjectKey());
+        var note = checkForErrors(dto, team, user);
         if (note.hasErrors()) {
             dto.setNotification(note);
             return;
         }
-
-        Project project = new Project(dto.getName(), dto.getProjectKey(), user);
+        Project project = Project.builder()
+                .name(dto.getName())
+                .id(new Project.ProjectId(dto.getProjectKey(), team))
+                .leader(user)
+                .build();
 
         ServiceHelper.safeSaveToRepository(repository, project, () -> dto.setNotification(
                 NotificationFactory.createAmbiguousErrorNotification(provider.getMessageByLocaleService())));
@@ -59,8 +69,8 @@ public class ProjectManagement {
         return !repository.existsProjectByName(dto.getName());
     }
 
-    private boolean isKeyUnique(ProjectDTO dto) {
-        return !repository.existsById(dto.getProjectKey());
+    private boolean isKeyUnique(ProjectDTO dto, Organization team) {
+        return !repository.existsById(new Project.ProjectId(dto.getProjectKey(), team));
     }
 
 
@@ -71,12 +81,12 @@ public class ProjectManagement {
                 .collect(Collectors.toList());
     }
 
-    public boolean projectExists(String projectKey) {
+    public boolean projectExists(Project.ProjectId projectKey) {
         return repository.existsById(projectKey);
     }
 
-    public Project getProjectReferenceFromKey(String projectKey) {
-        Optional<Project> project = repository.findById(projectKey);
+    public Project getProjectReferenceFromKey(Project.ProjectId projectId) {
+        Optional<Project> project = repository.findById(projectId);
         return project.orElse(null);
     }
 }

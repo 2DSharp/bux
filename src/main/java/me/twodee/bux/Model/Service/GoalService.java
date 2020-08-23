@@ -40,7 +40,7 @@ public class GoalService {
     }
 
     private boolean projectExists(GoalCreationDTO dto) {
-        return projectManagement.projectExists(dto.getProjectKey());
+        return projectManagement.projectExists(new Project.ProjectId(dto.getProjectKey(), dto.team));
     }
 
     public void createGoal(GoalCreationDTO dto, User user) {
@@ -54,7 +54,7 @@ public class GoalService {
             dto.setNotification(note);
             return;
         }
-        Project project = projectManagement.getProjectReferenceFromKey(dto.getProjectKey());
+        Project project = projectManagement.getProjectReferenceFromKey(new Project.ProjectId(dto.getProjectKey(), dto.team));
         Goal goal = Goal.builder()
                 .title(dto.getTitle())
                 .priority(dto.getPriority())
@@ -99,16 +99,16 @@ public class GoalService {
         return goal;
     }
 
-    public GoalsList getAllGoalsListForProject(String projectKey) {
-        List<Goal> goals = repository.findByProject(projectManagement.getProjectReferenceFromKey(projectKey));
+    public GoalsList getAllGoalsListForProject(String projectKey, String teamId) {
+        List<Goal> goals = repository.findByProject(projectManagement.getProjectReferenceFromKey(new Project.ProjectId(projectKey, teamId)));
         List<GoalDTO> dtoList = goals.stream().map(this::buildGoalDto)
                 .collect(Collectors.toList());
 
         return new GoalsList(projectKey, dtoList);
     }
 
-    public GoalDTO fetchGoal(String projectKey, int goalId) {
-        Goal goal = repository.findByProjectAndId(new Project(projectKey), goalId);
+    public GoalDTO fetchGoal(String key, String team, int goalId) {
+        Goal goal = repository.findByProjectAndId(new Project(new Project.ProjectId(key, new Organization(team))), goalId);
         GoalDTO dto = buildGoalDto(goal);
 
         return buildGoalForTaskDataWithColumns(dto, goal);

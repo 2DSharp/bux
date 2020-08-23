@@ -17,6 +17,7 @@ public class TaskDTO extends DataTransferObject {
 
     String id;
     String projectKey;
+    String team;
     String title;
     String description;
     LocalDate createdAt;
@@ -29,7 +30,8 @@ public class TaskDTO extends DataTransferObject {
     public static TaskDTO build(Task task) {
         return TaskDTO.builder()
                 .id(task.getId())
-                .projectKey(task.getProject().getProjectKey())
+                .projectKey(task.getProject().getId().getProjectKey())
+                .team(task.getProject().getId().getOrganizationId())
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .createdAt(task.getCreatedAt())

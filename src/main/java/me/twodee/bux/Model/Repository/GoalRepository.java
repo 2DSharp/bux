@@ -14,6 +14,6 @@ public interface GoalRepository extends JpaRepository<Goal, Integer> {
 
     Goal findByProjectAndId(Project project, Integer id);
 
-    @Query("SELECT DISTINCT g.milestone FROM Goal g WHERE g.project.projectKey = ?1")
+    @Query("SELECT DISTINCT g.milestone FROM Goal g WHERE g.project.id.projectKey = ?1")
     List<String> findAllMilestones(String project);
 }

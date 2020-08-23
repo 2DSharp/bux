@@ -36,5 +36,7 @@ public class TaskCreationDTO extends DataTransferObject {
 
     private String projectKey;
 
+    private String team;
+
     private String status;
 }

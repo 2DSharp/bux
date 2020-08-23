@@ -21,7 +21,7 @@ public class TaskIdGenerator extends SequenceStyleGenerator {
     @Override
     public Serializable generate(SharedSessionContractImplementor session,
                                  Object object) throws HibernateException {
-        String projectKey = ((Task) object).getProject().getProjectKey();
+        String projectKey = ((Task) object).getProject().getId().getProjectKey();
 
         try {
             long lastId = getLastId(session, projectKey);

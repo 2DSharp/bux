@@ -53,15 +53,15 @@ public class GoalController extends RestAPI {
     }
 
     @RequireLogin
-    @GetMapping("/projects/{key}/goals")
-    public ResponseEntity<GoalsList> findGoalsForProject(@PathVariable String key) {
-        return ResponseEntity.ok(goalService.getAllGoalsListForProject(key));
+    @GetMapping("/team/{teamId}/projects/{key}/goals")
+    public ResponseEntity<GoalsList> findGoalsForProject(@PathVariable String key, @PathVariable String teamId) {
+        return ResponseEntity.ok(goalService.getAllGoalsListForProject(key, teamId));
     }
 
     @RequireLogin
-    @GetMapping("/projects/{projectKey}/goals/{goal}")
-    public ResponseEntity<GoalDTO> fetchGoalForProject(@PathVariable String projectKey, @PathVariable int goal) {
-        return ResponseEntity.ok(goalService.fetchGoal(projectKey, goal));
+    @GetMapping("/team/{teamId}/projects/{projectKey}/goals/{goal}")
+    public ResponseEntity<GoalDTO> fetchGoalForProject(@PathVariable String projectKey, @PathVariable int goal, @PathVariable String teamId) {
+        return ResponseEntity.ok(goalService.fetchGoal(projectKey, teamId, goal));
     }
 
     @RequireLogin

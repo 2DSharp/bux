@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Getter
 public class GoalCreationDTO extends DataTransferObject {
     private String projectKey;
-
+    public String team;
     @NotBlank(message = "{validation.goal.title.empty}")
     @Size(max = 80, message = "{validation.goal.title.too_long}")
     private String title;

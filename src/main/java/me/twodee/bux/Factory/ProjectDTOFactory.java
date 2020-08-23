@@ -9,7 +9,7 @@ public class ProjectDTOFactory
     {
         return ProjectDTO.builder()
                 .name(project.getName())
-                .projectKey(project.getProjectKey())
+                .projectKey(project.getId().getProjectKey())
                 .creationTime(project.getCreationTime())
                 .leader(UserDTOFactory.buildPublicUser(project.getLeader()))
                 .build();
