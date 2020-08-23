@@ -14,11 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class Organization {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
 
-    @Column(unique = true)
+    @Id
     private String name;
 
     private String description;
@@ -26,4 +23,8 @@ public class Organization {
     private String imageUrl;
 
     private final LocalDateTime createdAt = LocalDateTime.now();
+
+    public Organization(String name) {
+        this.name = name;
+    }
 }
