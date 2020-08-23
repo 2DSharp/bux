@@ -5,7 +5,7 @@ import TextField from "../Element/Form/TextField";
 import {ReactComponent as Collaboration} from "../../images/collaboration.svg";
 import PrimaryButton from "../Element/Button/PrimaryButton";
 import FormData from "../Element/Form/FormData";
-import {Link} from "react-router-dom";
+import {Link, useParams, useRouteMatch, useLocation} from "react-router-dom";
 
 const NewTeamInvitation = () => {
     const [values, setValues] = useState({
@@ -15,6 +15,8 @@ const NewTeamInvitation = () => {
     const onChange = (name: string, value: string) => {
         setValues({...values, [name]: value})
     }
+    const {teamId} = useParams();
+
     return (
         <WizardPage animate={true} width={8} title={"Invite members to your team"} align="right">
 
@@ -52,7 +54,7 @@ const NewTeamInvitation = () => {
                         </InputContainer>
                         <div style={{height: 20}}/>
                         <PrimaryButton>Invite</PrimaryButton>
-                        <span style={{fontSize: 14, margin: 10, display: "inline-block", verticalAlign: "baseline"}}><Link to="/projects">Skip</Link></span>
+                        <span style={{fontSize: 14, margin: 10, display: "inline-block", verticalAlign: "baseline"}}><Link to={`/team/${teamId}/projects`}>Skip</Link></span>
                     </FormData>
                 </div>
             </div>

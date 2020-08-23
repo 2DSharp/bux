@@ -142,7 +142,7 @@ const Fallback = (props: { type: CardType }) => {
             case "teams":
                 return <>
                     <div>You are not part of any organizations.</div>
-                    <Link to="/new/team"><PrimaryButton style={{margin: 10}}>Create a team</PrimaryButton></Link>
+                    <Link to="/teams/new"><PrimaryButton style={{margin: 10}}>Create a team</PrimaryButton></Link>
                 </>
             case "tasks":
                 return <> Any tasks assigned to you or you're watching will appear here. </>

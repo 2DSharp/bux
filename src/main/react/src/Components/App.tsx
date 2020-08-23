@@ -38,18 +38,19 @@ const App = () => {
                 <Route path="/home">
                     <Home/>
                 </Route>
-                <Route key="/projects" path="/projects">
+                <Route path="/team/:teamId/projects/new">
+                    <CreateNewProject/>
+                </Route>
+                <Route path="/team/:teamId/projects">
                     <Suspense fallback={<Loading/>}>
                         <Projects/>
                     </Suspense>
                 </Route>
-                <Route path="/new/project">
-                    <CreateNewProject/>
-                </Route>
-                <Route path="/new/team">
+
+                <Route path="/teams/new">
                     <CreateNewTeam/>
                 </Route>
-                <Route path="/team/:id/invite">
+                <Route path="/team/:teamId/invite">
                     <NewTeamInvitation/>
                 </Route>
                 <Route>

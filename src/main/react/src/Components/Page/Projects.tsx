@@ -4,7 +4,7 @@ import EmptyProjectsPrompt from "../WorkspaceContent/EmptyProjectsPrompt";
 import Axios, {AxiosError} from "axios";
 import '../../sass/project.scss'
 import styles from '../../sass/workspace.module.scss'
-import {Link, Redirect, Route, Switch, useRouteMatch} from "react-router-dom";
+import {Link, Route, Switch, useParams, useRouteMatch} from "react-router-dom";
 import MdIcon from "../Element/Icon/MDIcon";
 import SmallTextField from "../Element/Form/SmallTextField";
 import Project from "../WorkspaceContent/Project";
@@ -29,6 +29,8 @@ const Projects = () => {
     const [loaded, setLoaded] = useState(false);
     const [forbidden, setForbidden] = useState(false);
     let {url} = useRouteMatch();
+    const {id : teamId} = useParams();
+
     const Project = React.lazy(() => import('./../WorkspaceContent/Project'));
 
     const pushProject = (project: Project) => {
@@ -68,18 +70,18 @@ const Projects = () => {
     if (forbidden)
         return <MotionRedirect to="/"/>;
     if (projects?.length === 0 && loaded)
-        return <Workspace active="Projects"><EmptyProjectsPrompt/></Workspace>
+        return <Workspace active="Projects"><EmptyProjectsPrompt teamId={teamId} url={url}/></Workspace>
 
     return (
         <Workspace active="Projects">
             <>
                 <Switch>
-                    <Route path="/projects/:id">
+                    <Route path={`/team/:teamId/projects/:id`}>
                         <Suspense fallback={<Loading/>}>
                             <Project/>
                         </Suspense>
                     </Route>
-                    <Route path="/projects/">
+                    <Route path="/team/:teamId/projects/">
                         <Container>
                             <div style={{minWidth: 1024}}>
                                 <div className="columns">
@@ -97,7 +99,7 @@ const Projects = () => {
                                                                                 leftIcon="mdi-magnify mdi-24px"/>
                                                             </div>
                                                             <div className="control">
-                                                                <Link to={"/new/project"}>
+                                                                <Link to={`/team//projects/new`}>
                                                                     <button
                                                                         className="button is-light-btn small-action-group">
                                                                         <MdIcon value="mdi-filter-variant-plus"/>
