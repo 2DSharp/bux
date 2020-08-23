@@ -23,12 +23,10 @@ public class ProjectDTO extends DataTransferObject {
     @NotBlank(message = "{validation.project.name.empty}")
     private final String name;
 
-    @Pattern(regexp = "^[A-Z][A-Z0-9]+$", message = "{validation.project.key.pattern}")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9]+$", message = "{validation.project.key.pattern}")
     @Size(min = 2, max = 8, message = "{validation.project.key.size}")
     @NotBlank(message = "{validation.project.key.empty}")
     private final String projectKey;
 
     private final PublicUserDTO leader;
-
-    private final String org;
 }
