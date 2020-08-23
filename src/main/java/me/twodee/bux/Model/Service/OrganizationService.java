@@ -6,6 +6,7 @@ import me.twodee.bux.DTO.HelperValueObject.Error;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.Organization.OrgRoleDto;
 import me.twodee.bux.DTO.Organization.OrganizationCreation;
+import me.twodee.bux.Factory.NotificationFactory;
 import me.twodee.bux.Model.Entity.Organization;
 import me.twodee.bux.Model.Entity.OrganizationMember;
 import me.twodee.bux.Model.Entity.User;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class OrganizationService {
@@ -57,16 +60,49 @@ public class OrganizationService {
                         helper.getMessageByLocaleService().getMessage("validation.team.name.exists"))).getNotification();
     }
 
+    public boolean hasAdminAccess(Organization team, User user) {
+        if (team == null)
+            return false;
+        var member = memberRepository.findByOrganizationAndUser(team, user);
+        if (member.isEmpty())
+            return false;
+        return member.get().getRole().level >= OrganizationMember.Role.ADMIN.level;
+    }
     public boolean hasAdminAccess(String orgId, User user) {
         var org = repository.findByName(orgId);
-        var member = memberRepository.findByOrganizationAndUser(org, user);
-        return member.getRole().level >= OrganizationMember.Role.ADMIN.level;
+        if (org.isEmpty())
+            return false;
+        var member = memberRepository.findByOrganizationAndUser(org.get(), user);
+        if (member.isEmpty())
+            return false;
+        return member.get().getRole().level >= OrganizationMember.Role.ADMIN.level;
+    }
+
+    private Organization findTeam(String name, DataTransferObject dto) {
+        var org = repository.findByName(name);
+        if (org.isEmpty()) {
+            nonexistentTeamNotify(dto);
+            return null;
+        }
+        return org.get();
+    }
+
+    private OrganizationMember findMember(Organization team, User user, DataTransferObject dto) {
+        var member = memberRepository.findByOrganizationAndUser(team, user);
+        if (member.isEmpty()) {
+            nonexistentTeamNotify(dto);
+            return null;
+        }
+        return member.get();
     }
 
     public void addToOrg(OrgRoleDto dto, User user) {
-        var org = repository.findByName(dto.getOrgName());
-        var modifier = memberRepository.findByOrganizationAndUser(org, user);
-
+        var org = findTeam(dto.getOrgName(), dto);
+        if (org == null)
+            return;
+        var modifier = findMember(org, user, dto);
+        if (modifier == null)
+            return;
         OrganizationMember member = OrganizationMember.builder()
                 .organization(org)
                 .role(dto.getRole())
@@ -80,10 +116,18 @@ public class OrganizationService {
         permRoleNotify(dto);
     }
 
+    public Optional<Organization> getOrg(String name) {
+        return repository.findByName(name);
+    }
     public void updateMemberRole(OrgRoleDto dto, User user) {
-        var org = repository.findByName(dto.getOrgName());
-        var modifier = memberRepository.findByOrganizationAndUser(org, user);
-        var target = memberRepository.findByOrganizationAndUser(org, new User(dto.getTarget().getUsername()));
+        var org = findTeam(dto.getOrgName(), dto);
+        if (org == null)
+            return;
+        var modifier = findMember(org, user, dto);
+
+        var target = findMember(org, new User(dto.getTarget().getUsername()), dto);
+        if (modifier == null || target == null)
+            return;
         if (canChangeRoles(modifier, target)) {
             target.setRole(dto.getRole());
             return;
@@ -92,10 +136,20 @@ public class OrganizationService {
     }
 
     private void permRoleNotify(DataTransferObject dto) {
-        var note = new Notification();
-        note.addError(new Error("permission", helper.getMessageByLocaleService().getMessage("validation.organization.role")));
+        var note = NotificationFactory.createErrorNotification("permission", helper.getMessageByLocaleService().getMessage("validation.organization.role"));
         dto.setNotification(note);
     }
+
+    private void nonexistentTeamNotify(DataTransferObject dto) {
+        var note = NotificationFactory.createErrorNotification("global", helper.getMessageByLocaleService().getMessage("validation.team.nonexistent"));
+        dto.setNotification(note);
+    }
+
+    private void nonexistentMemberNotify(DataTransferObject dto) {
+        var note = NotificationFactory.createErrorNotification("global", helper.getMessageByLocaleService().getMessage("validation.team.member.nonexistent"));
+        dto.setNotification(note);
+    }
+
 
     private boolean canChangeRoles(OrganizationMember modifier, OrganizationMember target) {
         switch (modifier.getRole()) {
