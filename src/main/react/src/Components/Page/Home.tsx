@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react';
+import React, {ReactNode, useEffect, useState} from 'react';
 import Container from "../Layout/Container";
 import {makeStyles} from "@material-ui/styles";
 import {ReactComponent as DefaultProjectCover} from "../../images/default_project_cover.svg";
@@ -14,6 +14,8 @@ import {Link} from "react-router-dom";
 import AvatarIcon from "../Element/Icon/AvatarIcon";
 import NotificationCard from "../Element/Cards/NotificationCard";
 import Workspace from "../Layout/Workspace";
+import {getRequest} from "../../service/request";
+import SpinLoader from "../WorkspaceContent/SpinLoader";
 
 export type CardType = "teams" | "projects" | "tasks";
 
@@ -77,12 +79,13 @@ const Section = (props: { name: string, headerType: "small" | "large", children:
     const classes = useStyles();
 
     return <div className={classes.section}>
-        <div className={`${classes.header}  ${props.headerType == "large" ? classes.big : classes.small}`}>{props.name}</div>
+        <div
+            className={`${classes.header}  ${props.headerType == "large" ? classes.big : classes.small}`}>{props.name}</div>
         {props.children}
     </div>
 
 }
-const CardSection = (props: { name: string, data?: any[], type: CardType, singleCol?: boolean }) => {
+const CardSection = (props: { name: string, loaded: boolean, data?: any[], type: CardType, singleCol?: boolean }) => {
     const buildCard = (data: any) => {
         switch (props.type) {
             case "projects":
@@ -118,8 +121,10 @@ const CardSection = (props: { name: string, data?: any[], type: CardType, single
     return (
         <Section headerType="large" name={props.name}>
             {
-                props.data ? showData(props.data, props.singleCol)
-                    : <Fallback type={props.type}/>
+                props.loaded ? (
+                    (props.data && props.data.length > 0) ? showData(props.data, props.singleCol)
+                        : <Fallback type={props.type}/>
+                ) : <SpinLoader bodySize={200}/>
             }
         </Section>
     );
@@ -179,18 +184,26 @@ const NotificationSection = () => {
         </Section>);
 }
 const Home = () => {
-
+    const [teams, setTeams] = useState([]);
+    const [teamsLoaded, setTeamsLoaded] = useState(false);
+    useEffect(() => {
+        getRequest(`/teams`, {},
+            (result) => {
+                setTeams(result);
+                setTeamsLoaded(true);
+            })
+    }, []);
     return (
         <Workspace active="Home">
             <Container>
                 <div className="columns">
                     <div className="column">
-                        <CardSection name="Teams" type={"teams"}/>
-                        <CardSection name="Projects" type="projects"/>
-                        <CardSection singleCol name="Interesting Tasks" type="tasks"/>
+                        <CardSection name="Teams" loaded={teamsLoaded} data={teams} type={"teams"}/>
+                        <CardSection loaded={true} name="Projects" type="projects"/>
+                        <CardSection loaded={true} singleCol name="Interesting Tasks" type="tasks"/>
                     </div>
                     <div className="column" style={{maxWidth: 420}}>
-                        <NotificationSection />
+                        <NotificationSection/>
                     </div>
                 </div>
             </Container>
