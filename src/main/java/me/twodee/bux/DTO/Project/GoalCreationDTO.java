@@ -15,20 +15,25 @@ import java.time.LocalDate;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Getter
 public class GoalCreationDTO extends DataTransferObject {
-    private String projectKey;
+
+    @NotBlank(message = "{validation.goal.project.empty}")
+    private final String projectKey;
+
+    @NotBlank(message = "{validation.goal.team.empty}")
     public String team;
+
     @NotBlank(message = "{validation.goal.title.empty}")
     @Size(max = 80, message = "{validation.goal.title.too_long}")
-    private String title;
+    private final String title;
 
     @Size(max = 200, message = "{validation.goal.description.too_long}")
-    private String description;
+    private final String description;
 
     @FutureOrPresent(message = "{validation.goal.deadline.past}")
-    private LocalDate deadline;
+    private final LocalDate deadline;
 
     @Size(max = 15, message = "{validation.goal.milestone.too_long}")
-    private String milestone;
+    private final String milestone;
 
-    private Goal.Priority priority;
+    private final Goal.Priority priority;
 }
