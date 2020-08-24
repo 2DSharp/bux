@@ -19,7 +19,7 @@ const Project = () => {
     const routes: BreadcrumbsRoute[] = [
         {path: `${url}/goals/:id`, breadcrumb: DynamicGoalBreadCrumb}
     ];
-    const breadcrumbs = useBreadcrumbs(routes, {excludePaths: ["/"]});
+    const breadcrumbs = useBreadcrumbs(routes, {excludePaths: ["/", "/team", `${url}/goals`]});
     return (
         <ContentWithMenu menu={<ProjectMenu/>}>
             <div className="centerpiece">
