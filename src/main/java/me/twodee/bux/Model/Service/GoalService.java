@@ -56,10 +56,7 @@ public class GoalService {
             return;
         }
         Project project = new Project(new Project.ProjectId(dto.getProjectKey(), dto.team));
-        String id = generateId();
-        System.out.println(id);
         Goal goal = Goal.builder()
-                .id(id)
                 .title(dto.getTitle())
                 .priority(dto.getPriority())
                 .description(dto.getDescription())

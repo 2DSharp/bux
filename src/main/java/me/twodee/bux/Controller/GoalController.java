@@ -60,7 +60,7 @@ public class GoalController extends RestAPI {
 
     @RequireLogin
     @GetMapping("/team/{teamId}/projects/{projectKey}/goals/{goal}")
-    public ResponseEntity<GoalDTO> fetchGoalForProject(@PathVariable String projectKey, @PathVariable int goal, @PathVariable String teamId) {
+    public ResponseEntity<GoalDTO> fetchGoalForProject(@PathVariable String projectKey, @PathVariable String goal, @PathVariable String teamId) {
         return ResponseEntity.ok(goalService.fetchGoal(projectKey, teamId, goal));
     }
 
@@ -84,13 +84,13 @@ public class GoalController extends RestAPI {
 
     @RequireLogin
     @GetMapping("/goals/{id}/tasks/all")
-    public ResponseEntity<GoalDTO> getTasksFromGivenType(@PathVariable("id") int id) {
+    public ResponseEntity<GoalDTO> getTasksFromGivenType(@PathVariable("id") String id) {
         return ResponseEntity.ok(goalService.getTasksWithColumnData(id));
     }
 
     @RequireLogin
     @GetMapping("/goals/{id}/tasks")
-    public ResponseEntity<GoalDTO> getTasksForGoal(@PathVariable("id") int id) {
+    public ResponseEntity<GoalDTO> getTasksForGoal(@PathVariable("id") String id) {
         return ResponseEntity.ok(goalService.getTasks(id));
     }
 

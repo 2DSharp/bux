@@ -1,6 +1,7 @@
 package me.twodee.bux.Model.Entity;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -8,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static me.twodee.bux.Util.CryptoUtil.generateId;
 
 @Entity
 @Getter
@@ -30,6 +33,10 @@ public class Goal {
     }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "goal_id")
+    @GenericGenerator(
+            name = "goal_id",
+            strategy = "me.twodee.bux.Util.GoalIdGenerator")
     private String id;
 
     private String title;
