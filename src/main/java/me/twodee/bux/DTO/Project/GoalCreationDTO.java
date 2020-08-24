@@ -8,6 +8,7 @@ import me.twodee.bux.Model.Entity.Goal;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -29,11 +30,12 @@ public class GoalCreationDTO extends DataTransferObject {
     @Size(max = 200, message = "{validation.goal.description.too_long}")
     private final String description;
 
+    @NotNull(message = "{validation.goal.deadline.empty}")
     @FutureOrPresent(message = "{validation.goal.deadline.past}")
     private final LocalDate deadline;
 
     @Size(max = 15, message = "{validation.goal.milestone.too_long}")
     private final String milestone;
 
-    private final Goal.Priority priority;
+    private final Goal.Priority priority = Goal.Priority.MEDIUM;
 }
