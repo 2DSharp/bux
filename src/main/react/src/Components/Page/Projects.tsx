@@ -76,7 +76,7 @@ const Projects = () => {
         <Workspace active="Projects">
             <>
                 <Switch>
-                    <Route path={`/team/:teamId/projects/:id`}>
+                    <Route path={`/team/:teamId/projects/:projectKey`}>
                         <Suspense fallback={<Loading/>}>
                             <Project/>
                         </Suspense>

@@ -1,4 +1,4 @@
-import React, {Suspense} from 'react';
+import React, {Suspense, useState} from 'react';
 import ContentWithMenu from "../Layout/ContentWithMenu";
 import ProjectMenu from "../Layout/ProjectMenu";
 import {Link, Route, Switch, useParams, useRouteMatch} from "react-router-dom";
@@ -6,11 +6,19 @@ import Dashboard from "./Dashboard";
 import Loading from "../Page/Loading";
 import Goal from "./Goal";
 import useBreadcrumbs, {BreadcrumbsRoute} from 'use-react-router-breadcrumbs';
+import {ellipsize} from "../../service/util";
 
 const Project = () => {
-    const {id, teamId} = useParams();
+
+    const [breadcrumbName, setBreadcrumbName] = useState<string>();
+    const {projectKey, teamId} = useParams();
     let {url} = useRouteMatch();
-    const routes : BreadcrumbsRoute[] = [];
+    const DynamicGoalBreadCrumb = () => {
+        return <span>{breadcrumbName && ellipsize(breadcrumbName, 45, true)}</span>;
+    };
+    const routes: BreadcrumbsRoute[] = [
+        {path: `${url}/goals/:id`, breadcrumb: DynamicGoalBreadCrumb}
+    ];
     const breadcrumbs = useBreadcrumbs(routes, {excludePaths: ["/"]});
     return (
         <ContentWithMenu menu={<ProjectMenu/>}>
@@ -24,14 +32,13 @@ const Project = () => {
                     </ul>
                 </nav>
                 <Switch>
-
                     <Route path={`${url}/goals/:id`}>
                         <Suspense fallback={<Loading/>}>
-                            <Goal team={teamId} project={id}/>
+                            <Goal onLoadUpdateName={setBreadcrumbName} team={teamId} project={projectKey}/>
                         </Suspense>
                     </Route>
                     <Route path={`${url}`}>
-                        <Dashboard project={id} team={teamId}/>
+                        <Dashboard project={projectKey} team={teamId}/>
                     </Route>
                 </Switch>
             </div>
