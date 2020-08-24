@@ -59,4 +59,8 @@ public class GoalDTO extends DataTransferObject {
     private List<String> statusList;
 
     private Map<String, StatusTaskListDTO> columnData;
+
+    private String projectKey;
+
+    private String team;
 }

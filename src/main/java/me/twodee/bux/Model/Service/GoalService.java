@@ -46,6 +46,7 @@ public class GoalService {
     public void createGoal(GoalCreationDTO dto, User user) {
         var note = DtoFilter.start(dto)
                 .validate(provider.getValidator())
+                // Check for project permissions
                 .addFilter(this::projectExists, new Error("global", provider.getMessageByLocaleService().getMessage(
                         "validation.project.key.nonexistent"))).getNotification();
 
@@ -223,6 +224,8 @@ public class GoalService {
         return GoalDTO.builder()
                 .id(goal.getId())
                 .title(goal.getTitle())
+                .team(goal.getProject().getId().getOrganizationId())
+                .projectKey(goal.getProject().getId().getProjectKey())
                 .description(goal.getDescription())
                 .milestone(goal.getMilestone())
                 .priority(goal.getPriority())
