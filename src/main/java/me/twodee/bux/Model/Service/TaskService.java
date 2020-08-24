@@ -8,10 +8,13 @@ import me.twodee.bux.DTO.Task.TaskOrderingDTO;
 import me.twodee.bux.Factory.NotificationFactory;
 import me.twodee.bux.Model.Entity.*;
 import me.twodee.bux.Model.Repository.TaskRepository;
+import me.twodee.bux.Model.Repository.TaskSequenceRepository;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
 import me.twodee.bux.Util.DomainToDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolation;
 import java.util.List;
@@ -25,19 +28,23 @@ public class TaskService {
     private final AccountService accountService;
     private final SpringHelperDependencyProvider provider;
     private final ProjectManagement projectManagement;
+    private final TaskSequenceRepository taskSequenceRepo;
 
     @Autowired
     public TaskService(TaskRepository repository,
+                       TaskSequenceRepository taskSequenceRepository,
                        SpringHelperDependencyProvider provider,
                        ProjectManagement projectManagement,
                        AccountService accountService
     ) {
         this.repository = repository;
+        this.taskSequenceRepo = taskSequenceRepository;
         this.provider = provider;
         this.projectManagement = projectManagement;
         this.accountService = accountService;
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public TaskDTO createTask(TaskCreationDTO dto, User user, List<String> statuses) {
         Set<ConstraintViolation<TaskCreationDTO>> violations = provider.getValidator().validate(dto);
         if (!violations.isEmpty()) {
@@ -53,8 +60,9 @@ public class TaskService {
         }
 
         Project project = new Project(new Project.ProjectId(dto.getProjectKey(), new Organization(dto.getTeam())));
+        TaskSequence nextSequence = getSequence(project.getId());
         Task task = Task.builder()
-                .project(project)
+                .id(new Task.TaskId(project.getId(), nextSequence))
                 .title(dto.getTitle())
                 .deadline(dto.getDeadline())
                 .priority(dto.getPriority())
@@ -62,11 +70,22 @@ public class TaskService {
                 .status(dto.getStatus())
                 .description(dto.getDescription())
                 .assignee(getAssignee(dto.getAssignee()))
-                .status(statuses.get(0))
+                .status("TODO") // TODO: Remove this debug string with statuses.get(0)
                 .build();
-
+        taskSequenceRepo.save(nextSequence);
         task = repository.save(task);
         return TaskDTO.build(task);
+    }
+
+    private TaskSequence getSequence(Project.ProjectId projectId) {
+
+        TaskSequence sequence = new TaskSequence(projectId);
+        var lastSeq = taskSequenceRepo.findById(sequence.getSequenceId());
+        if (lastSeq.isPresent()) {
+            sequence = lastSeq.get();
+        }
+        sequence.setLastTaskId(sequence.getLastTaskId() + 1);
+        return sequence;
     }
 
     private User getAssignee(String username) {

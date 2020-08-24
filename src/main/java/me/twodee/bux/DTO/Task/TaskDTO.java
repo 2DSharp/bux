@@ -29,9 +29,9 @@ public class TaskDTO extends DataTransferObject {
 
     public static TaskDTO build(Task task) {
         return TaskDTO.builder()
-                .id(task.getId())
-                .projectKey(task.getProject().getId().getProjectKey())
-                .team(task.getProject().getId().getOrganizationId())
+                .id(task.getId().taskKey)
+                .projectKey(task.getId().projectId.getProjectKey())
+                .team(task.getId().projectId.getOrganizationId())
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .createdAt(task.getCreatedAt())

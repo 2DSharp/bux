@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @ToString
@@ -21,15 +22,24 @@ public class Task {
         MEDIUM,
         HIGH
     }
+    @Embeddable
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TaskId implements Serializable {
+        public String taskKey;
+        public Project.ProjectId projectId;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_seq")
-    @GenericGenerator(
-            name = "task_seq",
-            strategy = "me.twodee.bux.Util.TaskIdGenerator")
-    private String id;
+        public TaskId(Project.ProjectId id, TaskSequence nextSequence) {
+            taskKey = id.getProjectKey() + "-" + nextSequence.getLastTaskId();
+            projectId = id;
+        }
+    }
+    @EmbeddedId
+    @Column(length = 255)
+    private TaskId id;
 
-    public Task(String id) {
+    public Task(TaskId id) {
         this.id = id;
     }
 
@@ -45,9 +55,6 @@ public class Task {
 
     @Builder.Default
     private Priority priority = Priority.MEDIUM;
-
-    @ManyToOne
-    private Project project;
 
     @ManyToOne
     private User assignee;
