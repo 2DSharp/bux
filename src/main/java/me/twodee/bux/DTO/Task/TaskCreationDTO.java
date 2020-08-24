@@ -34,8 +34,10 @@ public class TaskCreationDTO extends DataTransferObject {
 
     private int goalId;
 
+    @NotBlank(message = "{validation.general.project.empty}")
     private String projectKey;
 
+    @NotBlank(message = "{validation.general.team.empty}")
     private String team;
 
     private String status;
