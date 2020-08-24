@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project, Project.ProjectId> {
-    boolean existsProjectByName(String name);
+    boolean existsProjectByNameAndIdOrganizationId(String name, String id_organizationId);
 
     @Override
     <S extends Project> S save(S s);

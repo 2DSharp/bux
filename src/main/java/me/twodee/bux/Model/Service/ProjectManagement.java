@@ -37,7 +37,7 @@ public class ProjectManagement {
                 .addFilter(e -> org.hasAdminAccess(team, user), new Error("permission", provider.getMessageByLocaleService().getMessage(
                         "validation.project.permission")))
                 .validate(provider.getValidator())
-                .appendFilter(this::isNameUnique, new Error("name", provider.getMessageByLocaleService().getMessage(
+                .appendFilter(e -> isNameUnique(dto, team), new Error("name", provider.getMessageByLocaleService().getMessage(
                         "validation.project.name.exists")))
                 .appendFilter(e -> isKeyUnique(dto, team), new Error("projectKey", provider.getMessageByLocaleService().getMessage(
                         "validation.project.key.exists"))).getNotification();
@@ -64,8 +64,8 @@ public class ProjectManagement {
                 NotificationFactory.createAmbiguousErrorNotification(provider.getMessageByLocaleService())));
     }
 
-    private boolean isNameUnique(ProjectDTO dto) {
-        return !repository.existsProjectByName(dto.getName());
+    private boolean isNameUnique(ProjectDTO dto, Organization team) {
+        return !repository.existsProjectByNameAndIdOrganizationId(dto.getName(), team.getName());
     }
 
     private boolean isKeyUnique(ProjectDTO dto, Organization team) {
