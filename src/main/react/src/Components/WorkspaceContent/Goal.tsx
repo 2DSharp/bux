@@ -84,7 +84,7 @@ export type GoalTaskData = {
     columns: any
 }
 
-const Goal = (props: { project: string }) => {
+const Goal = (props: { team: string, project: string }) => {
     const {id} = useParams();
     const {url} = useRouteMatch();
     const classes = useStyles();
@@ -117,7 +117,7 @@ const Goal = (props: { project: string }) => {
         return <button onClick={showConfirmationDialog} className={style}>{nextAction(props.status)}</button>;
     };
     useEffect(() => {
-        getRequest(`/projects/${props.project}/goals/${id}`, {},
+        getRequest(`/team/${props.team}/projects/${props.project}/goals/${id}`, {},
             (result => {
                 setData(result);
                 setTaskData({
@@ -195,7 +195,7 @@ const Goal = (props: { project: string }) => {
                                 <Board id={id} data={data}/>
                             </Route>
                             <Route path={`${url}`}>
-                                <GoalOverview data={data} id={id} project={props.project}/>
+                                <GoalOverview team={props.team} data={data} id={id} project={props.project}/>
                             </Route>
                         </Switch>
                     </div>

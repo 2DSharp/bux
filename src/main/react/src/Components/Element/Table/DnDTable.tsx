@@ -28,6 +28,7 @@ interface DnDTableProps {
     tasks: TaskData[],
     adderId: string,
     project: string,
+    team: string,
     goal?: number,
     onAdd: any,
     inputRef?: any,
@@ -111,7 +112,8 @@ const DnDTable = (props: DnDTableProps) => {
                     ...newTaskData,
                     deadline: newTaskData["deadline"] ? convertDateToLocalDate(newTaskData["deadline"]) : null,
                     projectKey: props.project,
-                    goalId: props.goal
+                    goalId: props.goal,
+                    team: props.team
                 },
                 (result: TaskData) => {
                     props.onAdd(result);

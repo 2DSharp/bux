@@ -27,7 +27,7 @@ const Project = () => {
 
                     <Route path={`${url}/goals/:id`}>
                         <Suspense fallback={<Loading/>}>
-                            <Goal project={id}/>
+                            <Goal team={teamId} project={id}/>
                         </Suspense>
                     </Route>
                     <Route path={`${url}`}>

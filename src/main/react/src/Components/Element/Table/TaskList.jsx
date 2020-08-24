@@ -95,7 +95,7 @@ const TaskList = (props) => {
                         </h3></div>
                         <div className="is-divider"/>
                         <nav className={`panel ${classes.panel}`}>
-                            <DnDTable onAdd={onAdd} goal={props.goalId} project={props.project}
+                            <DnDTable onAdd={onAdd} team={props.team} goal={props.goalId} project={props.project}
                                       adderId={"tasks-adder"} data={columns['tasks']}
                                       showAdder={moveToTaskAdder}
                                       inputRef={inputRef}

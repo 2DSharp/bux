@@ -3,7 +3,7 @@ import TaskList from "../Element/Table/TaskList";
 import {GoalData, GoalTaskData} from "./Goal";
 import {getRequest} from "../../service/request";
 
-const GoalOverview = (props: { project: string, id: number, data: GoalData }) => {
+const GoalOverview = (props: { project: string, team: string, id: number, data: GoalData }) => {
 
     const {data} = props;
     const [taskData, setTaskData] = useState<GoalTaskData>();
@@ -27,7 +27,7 @@ const GoalOverview = (props: { project: string, id: number, data: GoalData }) =>
     return (
         <div>{
             taskData &&
-            <TaskList statusList={data.statusList} goalId={data.id} project={props.project}
+            <TaskList statusList={data.statusList} goalId={data.id} team={props.team} project={props.project}
                       onUpdate={() => refreshTasks()}
                       data={taskData}/>
         } </div>
