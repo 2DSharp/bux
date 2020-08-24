@@ -24,14 +24,14 @@ type Project = {
     leader: Leader;
     creationTime: string
 };
-const Projects = () => {
-    const [projects, setProjects] = useState<Project[]>();
-    const [loaded, setLoaded] = useState(false);
-    const [forbidden, setForbidden] = useState(false);
+
+const AllProjects = () => {
     let {url} = useRouteMatch();
     const {teamId} = useParams();
 
-    const Project = React.lazy(() => import('./../WorkspaceContent/Project'));
+    const [projects, setProjects] = useState<Project[]>();
+    const [loaded, setLoaded] = useState(false);
+    const [forbidden, setForbidden] = useState(false);
 
     const pushProject = (project: Project) => {
         return (
@@ -67,10 +67,77 @@ const Projects = () => {
         });
     }, []);
 
+
     if (forbidden)
         return <MotionRedirect to="/"/>;
     if (projects?.length === 0 && loaded)
         return <Workspace active="Projects"><EmptyProjectsPrompt teamId={teamId} url={url}/></Workspace>
+
+    return (
+        <Container>
+            <div style={{minWidth: 1024}}>
+                <div className="columns">
+                    <div className="column">
+                        <p className={styles.heading}>Projects</p>
+
+                        <div className="card">
+                            <div className="card-content small-pad">
+                                <div className="columns">
+                                    <div className="column">
+                                        <div className="field is-grouped is-grouped-multiline">
+                                            <div className="control">
+                                                <SmallTextField placeholder="Search"
+                                                                className="small-action-group"
+                                                                leftIcon="mdi-magnify mdi-24px"/>
+                                            </div>
+                                            <div className="control">
+                                                <Link to={`/team/projects/new`}>
+                                                    <button
+                                                        className="button is-light-btn small-action-group">
+                                                        <MdIcon value="mdi-filter-variant-plus"/>
+                                                        <strong>Filter</strong>
+                                                    </button>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div className="column has-text-right">
+                                        <Link to={`/team/${teamId}/projects/new`}>
+                                            <PrimaryButton>
+                                                <MdIcon value="mdi-plus-circle"/>
+                                                <span>Create</span>
+                                            </PrimaryButton>
+                                        </Link>
+                                    </div>
+                                </div>
+                                <table className="table container is-fluid">
+                                    <thead>
+                                    <tr>
+                                        <th style={{width: 400}}>Name</th>
+                                        <th>Key</th>
+                                        <th>Created at</th>
+                                        <th>Status</th>
+                                        <th>Project Lead</th>
+                                        <th style={{width: 40}}/>
+                                    </tr>
+                                    </thead>
+                                    {
+                                        projects?.map(pushProject)
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Container>
+    );
+}
+const Projects = () => {
+
+    const Project = React.lazy(() => import('./../WorkspaceContent/Project'));
 
     return (
         <Workspace active="Projects">
@@ -82,65 +149,7 @@ const Projects = () => {
                         </Suspense>
                     </Route>
                     <Route path="/team/:teamId/projects/">
-                        <Container>
-                            <div style={{minWidth: 1024}}>
-                                <div className="columns">
-                                    <div className="column">
-                                        <p className={styles.heading}>Projects</p>
-
-                                        <div className="card">
-                                            <div className="card-content small-pad">
-                                                <div className="columns">
-                                                    <div className="column">
-                                                        <div className="field is-grouped is-grouped-multiline">
-                                                            <div className="control">
-                                                                <SmallTextField placeholder="Search"
-                                                                                className="small-action-group"
-                                                                                leftIcon="mdi-magnify mdi-24px"/>
-                                                            </div>
-                                                            <div className="control">
-                                                                <Link to={`/team/projects/new`}>
-                                                                    <button
-                                                                        className="button is-light-btn small-action-group">
-                                                                        <MdIcon value="mdi-filter-variant-plus"/>
-                                                                        <strong>Filter</strong>
-                                                                    </button>
-                                                                </Link>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div className="column has-text-right">
-                                                        <Link to={`/team/${teamId}/projects/new`}>
-                                                            <PrimaryButton>
-                                                                <MdIcon value="mdi-plus-circle"/>
-                                                                <span>Create</span>
-                                                            </PrimaryButton>
-                                                        </Link>
-                                                    </div>
-                                                </div>
-                                                <table className="table container is-fluid">
-                                                    <thead>
-                                                    <tr>
-                                                        <th style={{width: 400}}>Name</th>
-                                                        <th>Key</th>
-                                                        <th>Created at</th>
-                                                        <th>Status</th>
-                                                        <th>Project Lead</th>
-                                                        <th style={{width: 40}}/>
-                                                    </tr>
-                                                    </thead>
-                                                    {
-                                                        projects?.map(pushProject)
-                                                    }
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </Container>
+                        <AllProjects />
                     </Route>
                 </Switch>
             </>
