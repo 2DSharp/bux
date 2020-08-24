@@ -2,10 +2,12 @@ package me.twodee.bux.Util;
 
 import me.twodee.bux.Interface.ThrowingFunction;
 
+import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 
 public class BaseUtil
@@ -36,5 +38,12 @@ public class BaseUtil
         T value = updated.remove(source);
         updated.add(destination, value);
         return updated;
+    }
+    public static byte[] getBytesFromUUID(UUID uuid) {
+        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+        bb.putLong(uuid.getMostSignificantBits());
+        bb.putLong(uuid.getLeastSignificantBits());
+
+        return bb.array();
     }
 }
