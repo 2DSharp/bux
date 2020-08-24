@@ -12,6 +12,7 @@ import classNames from "classnames";
 import {makeStyles} from "@material-ui/styles";
 import SpinLoader from "./SpinLoader";
 import GoalStatusChanger from "../Element/Modal/GoalStatusChanger";
+import {ellipsize} from "../../service/util";
 
 export type GoalStatus = 'PLANNING' | 'ACTIVE' | 'COMPLETED' | 'ABANDONED';
 
@@ -81,10 +82,10 @@ const useStyles = makeStyles({
 
 export type GoalTaskData = {
     tasks: any,
-    columns: any
+    columns: any,
 }
 
-const Goal = (props: { team: string, project: string }) => {
+const Goal = (props: { team: string, project: string, onLoadUpdateName(name: string) : void }) => {
     const {id} = useParams();
     const {url} = useRouteMatch();
     const classes = useStyles();
@@ -119,6 +120,7 @@ const Goal = (props: { team: string, project: string }) => {
     useEffect(() => {
         getRequest(`/team/${props.team}/projects/${props.project}/goals/${id}`, {},
             (result => {
+                props.onLoadUpdateName(result.title);
                 setData(result);
                 setTaskData({
                     tasks: result.tasks,
@@ -137,7 +139,7 @@ const Goal = (props: { team: string, project: string }) => {
             {data ?
                 <>
                     <div className={classes.head}>
-                        <span className={classes.heading}><span><h1>{data.title}</h1></span></span>
+                        <span className={classes.heading}><span><h1>{ellipsize(data.title, 60, true)}</h1></span></span>
 
                         <div className={classes.projectActions}>
                             <span className={classes.projectAction}>
