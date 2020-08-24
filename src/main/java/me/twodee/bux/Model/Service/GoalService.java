@@ -44,7 +44,6 @@ public class GoalService {
     }
 
     public void createGoal(GoalCreationDTO dto, User user) {
-        Set<ConstraintViolation<GoalCreationDTO>> violations = provider.getValidator().validate(dto);
         var note = DtoFilter.start(dto)
                 .validate(provider.getValidator())
                 .addFilter(this::projectExists, new Error("global", provider.getMessageByLocaleService().getMessage(
@@ -54,7 +53,7 @@ public class GoalService {
             dto.setNotification(note);
             return;
         }
-        Project project = projectManagement.getProjectReferenceFromKey(new Project.ProjectId(dto.getProjectKey(), dto.team));
+        Project project = new Project(new Project.ProjectId(dto.getProjectKey(), dto.team));
         Goal goal = Goal.builder()
                 .title(dto.getTitle())
                 .priority(dto.getPriority())
@@ -119,9 +118,10 @@ public class GoalService {
         return goal.map(this::buildGoalDto).orElse(null);
     }
 
+    // TODO: This is unfinished and needs testing
     private GoalDTO buildGoalForTaskData(GoalDTO dto, List<Task> tasks) {
-        dto.setTaskIds(tasks.stream().map(Task::getId).collect(Collectors.toList()));
-        dto.setTasks(tasks.stream().collect(Collectors.toMap(Task::getId, TaskDTO::build)));
+        dto.setTaskIds(tasks.stream().map(e -> e.getId().taskKey).collect(Collectors.toList()));
+        dto.setTasks(tasks.stream().collect(Collectors.toMap(e -> e.getId().taskKey, TaskDTO::build)));
         return dto;
     }
 
@@ -160,7 +160,7 @@ public class GoalService {
         Optional<Goal> goal = repository.findById(goalId);
         if (goal.isPresent()) {
             Goal entity = goal.get();
-            entity.getTasks().add(new Task(taskDTO.getId()));
+            entity.getTasks().add(new Task(new Task.TaskId(taskDTO.getId(), new Project.ProjectId(taskDTO.getProjectKey(), taskDTO.getTeam()))));
             entity.getTaskStatusMap().get(entity.getStatuses().get(0)).getTasks().add(taskDTO.getId());
             GoalDTO dto = GoalDTO.builder().id(goalId).build();
             return buildGoalForTaskData(dto, repository.save(entity).getTasks());
