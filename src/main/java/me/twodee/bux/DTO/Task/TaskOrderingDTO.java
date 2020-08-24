@@ -9,7 +9,7 @@ import me.twodee.bux.DTO.DataTransferObject;
 public class TaskOrderingDTO extends DataTransferObject {
     private int source;
     private int destination;
-    private int goalId;
+    private String goalId;
     private String status;
     private String sourceStatus;
     private String destinationStatus;

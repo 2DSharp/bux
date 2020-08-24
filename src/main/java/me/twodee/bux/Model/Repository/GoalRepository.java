@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface GoalRepository extends JpaRepository<Goal, Integer> {
+public interface GoalRepository extends JpaRepository<Goal, String> {
     List<Goal> findByProject(Project project);
 
-    Goal findByProjectAndId(Project project, Integer id);
+    Goal findByProjectAndId(Project project, String id);
 
     @Query("SELECT DISTINCT g.milestone FROM Goal g WHERE g.project.id.projectKey = ?1")
     List<String> findAllMilestones(String project);

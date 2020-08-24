@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static me.twodee.bux.Util.BaseUtil.dragAndDrop;
+import static me.twodee.bux.Util.CryptoUtil.generateId;
 
 @Service
 public class GoalService {
@@ -55,7 +56,10 @@ public class GoalService {
             return;
         }
         Project project = new Project(new Project.ProjectId(dto.getProjectKey(), dto.team));
+        String id = generateId();
+        System.out.println(id);
         Goal goal = Goal.builder()
+                .id(id)
                 .title(dto.getTitle())
                 .priority(dto.getPriority())
                 .description(dto.getDescription())
@@ -107,14 +111,14 @@ public class GoalService {
         return new GoalsList(projectKey, dtoList);
     }
 
-    public GoalDTO fetchGoal(String key, String team, int goalId) {
+    public GoalDTO fetchGoal(String key, String team, String goalId) {
         Goal goal = repository.findByProjectAndId(new Project(new Project.ProjectId(key, new Organization(team))), goalId);
         GoalDTO dto = buildGoalDto(goal);
 
         return buildGoalForTaskDataWithColumns(dto, goal);
     }
 
-    public GoalDTO fetchGoalDetails(int goalId) {
+    public GoalDTO fetchGoalDetails(String goalId) {
         Optional<Goal> goal = repository.findById(goalId);
         return goal.map(this::buildGoalDto).orElse(null);
     }
@@ -134,13 +138,13 @@ public class GoalService {
         return buildGoalForTaskData(dto, goal.getTasks());
     }
 
-    public GoalDTO getTasksWithColumnData(int id) {
+    public GoalDTO getTasksWithColumnData(String id) {
         GoalDTO dto = GoalDTO.builder().id(id).build();
         return repository.findById(id)
                 .map(value -> buildGoalForTaskDataWithColumns(dto, value)).orElse(null);
     }
 
-    public GoalDTO getTasks(int id) {
+    public GoalDTO getTasks(String id) {
         GoalDTO dto = GoalDTO.builder().id(id).build();
         return repository.findById(id).map(value -> buildGoalForTaskData(dto, value.getTasks())).orElse(null);
     }
@@ -152,12 +156,12 @@ public class GoalService {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getTaskStatusesForGoal(int goalId) {
+    public List<String> getTaskStatusesForGoal(String goalId) {
         Optional<Goal> goal = repository.findById(goalId);
         return goal.map(Goal::getStatuses).orElse(null);
     }
 
-    public GoalDTO addTaskToGoal(TaskDTO taskDTO, int goalId) {
+    public GoalDTO addTaskToGoal(TaskDTO taskDTO, String goalId) {
         Optional<Goal> goal = repository.findById(goalId);
         if (goal.isPresent()) {
             Goal entity = goal.get();

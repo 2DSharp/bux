@@ -30,8 +30,7 @@ public class Goal {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private String id;
 
     private String title;
 

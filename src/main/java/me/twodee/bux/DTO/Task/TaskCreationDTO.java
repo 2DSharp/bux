@@ -32,7 +32,7 @@ public class TaskCreationDTO extends DataTransferObject {
 
     private Task.Priority priority;
 
-    private int goalId;
+    private String goalId;
 
     @NotBlank(message = "{validation.general.project.empty}")
     private String projectKey;

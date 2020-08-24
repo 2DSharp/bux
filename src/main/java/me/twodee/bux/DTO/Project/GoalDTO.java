@@ -32,7 +32,7 @@ public class GoalDTO extends DataTransferObject {
         LOW
     }
 
-    private int id;
+    private String id;
 
     private String title;
 

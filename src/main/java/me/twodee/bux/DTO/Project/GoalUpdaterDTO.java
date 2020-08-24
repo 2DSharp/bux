@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GoalUpdaterDTO {
-    private int goalId;
+    private String goalId;
 }
