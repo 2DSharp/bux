@@ -4,7 +4,7 @@ import "../../sass/project.scss";
 const Container = (props : {children : ReactNode}) => {
     return (
             <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-                <div className="container centerpiece">
+                <div className="container is-fluid centerpiece">
                             {props.children}
                 </div>
             </div>
