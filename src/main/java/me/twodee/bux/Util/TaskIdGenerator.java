@@ -1,5 +1,6 @@
 package me.twodee.bux.Util;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.twodee.bux.Model.Entity.Task;
 import org.hibernate.HibernateException;
@@ -19,12 +20,16 @@ import java.util.Properties;
 public class TaskIdGenerator extends SequenceStyleGenerator {
     private static final String KEYSPACE = "project_";
     @Override
+    @Deprecated
     public Serializable generate(SharedSessionContractImplementor session,
                                  Object object) throws HibernateException {
-        String projectKey = ((Task) object).getProject().getId().getProjectKey();
+        var projectId = ((Task) object).getId().projectId;
+        String projectKey = projectId.getProjectKey();
+        String teamKey = projectId.getOrganizationId();
 
+        String teamProjectIdentifier = teamKey + "_" + projectKey;
         try {
-            long lastId = getLastId(session, projectKey);
+            long lastId = getLastId(session, teamProjectIdentifier);
             return String.format("%s-%s", projectKey, lastId);
         } catch (SQLException e) {
             log.error("Couldn't get the sequence, something's broken", e);
@@ -32,14 +37,14 @@ public class TaskIdGenerator extends SequenceStyleGenerator {
         }
     }
 
-    private Long getLastId(SharedSessionContractImplementor session, String projectKey) throws SQLException {
+    private Long getLastId(SharedSessionContractImplementor session, String key) throws SQLException {
         Connection connection = session.connection();
         Dialect dialect = session.getJdbcServices().getDialect();
 
         if (dialect.supportsSequences()) {
-            return generateIdUsingSequences(dialect, connection, projectKey);
+            return generateIdUsingSequences(dialect, connection, key);
         }
-        return generateIdWithSeparateTable(connection, projectKey);
+        return generateIdWithSeparateTable(connection, key);
     }
 
     private Long generateIdWithSeparateTable(Connection connection, String projectKey) throws SQLException {
