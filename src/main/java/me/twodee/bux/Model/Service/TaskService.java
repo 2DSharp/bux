@@ -51,11 +51,13 @@ public class TaskService {
             dto.setNotification(DomainToDTOConverter.convert(violations));
             return null;
         }
-
+        if (statuses.isEmpty()) {
+            // Validate
+        }
         if (!projectManagement.projectExists(new Project.ProjectId(dto.getProjectKey(), dto.getTeam()))) {
             dto.appendNotification(NotificationFactory.createErrorNotification("global",
-                                                                               provider.getMessageByLocaleService().getMessage(
-                                                                                       "validation.project.key.nonexistent")));
+                    provider.getMessageByLocaleService().getMessage(
+                            "validation.project.key.nonexistent")));
             return null;
         }
 
@@ -70,7 +72,7 @@ public class TaskService {
                 .status(dto.getStatus())
                 .description(dto.getDescription())
                 .assignee(getAssignee(dto.getAssignee()))
-                .status("TODO") // TODO: Remove this debug string with statuses.get(0)
+                .status(statuses.get(0)) // TODO: Remove this debug string with statuses.get(0)
                 .build();
         taskSequenceRepo.save(nextSequence);
         task = repository.save(task);
@@ -97,7 +99,8 @@ public class TaskService {
 
     public void changeStatus(TaskOrderingDTO dto, GoalDTO goalDTO) {
         if (goalDTO.getStatus().equals(Goal.Status.ACTIVE)) {
-            Optional<Task> task = repository.findById(dto.getTaskId());
+            Optional<Task> task = repository.findById(new Task.TaskId(dto.getTaskId(),
+                    new Project.ProjectId(goalDTO.getProjectKey(), goalDTO.getTeam())));
             task.ifPresent(entity -> entity.setStatus(dto.getDestinationStatus()));
             return;
         }
