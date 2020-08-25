@@ -3,6 +3,8 @@ package me.twodee.bux.Model.Service;
 import me.twodee.bux.Component.DtoFilter;
 import me.twodee.bux.DTO.HelperValueObject.Error;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
+import me.twodee.bux.DTO.ListDto;
+import me.twodee.bux.DTO.Organization.TeamDto;
 import me.twodee.bux.DTO.Project.ProjectDTO;
 import me.twodee.bux.Factory.NotificationFactory;
 import me.twodee.bux.Factory.ProjectDTOFactory;
@@ -11,7 +13,6 @@ import me.twodee.bux.Model.Entity.Project;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Repository.ProjectRepository;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,10 +47,9 @@ public class ProjectManagement {
     public void createProject(ProjectDTO dto, String teamId, User user) {
         var optionalTeam = org.getOrg(teamId);
 
-        Organization team = null;
-        if (optionalTeam.isPresent())
-            team = optionalTeam.get();
+        Organization team = optionalTeam.orElse(new Organization());
         var note = checkForErrors(dto, team, user);
+
         if (note.hasErrors()) {
             dto.setNotification(note);
             return;
@@ -73,12 +73,17 @@ public class ProjectManagement {
     }
 
 
-    public List<ProjectDTO> getProjects(String teamId) {
-        // TODO: Check for perms first
-        return repository.findByIdOrganizationId(teamId)
-                .stream()
-                .map(throwingFunctionWrapper(ProjectDTOFactory::buildProjectDTO))
-                .collect(Collectors.toList());
+    public ListDto<ProjectDTO> getProjects(String teamId, User user) {
+        if (org.canSeeProjects(teamId, user)) {
+            var projects = repository.findByIdOrganizationId(teamId)
+                    .stream()
+                    .map(throwingFunctionWrapper(ProjectDTOFactory::buildProjectDTO))
+                    .collect(Collectors.toList());
+            return new ListDto<>(projects);
+        }
+        var result = new ListDto<ProjectDTO>();
+        result.setNotification(NotificationFactory.createErrorNotification("permission", provider.getMessageByLocaleService().getMessage("validation.project.permission")));
+        return result;
     }
 
     public boolean projectExists(Project.ProjectId projectKey) {

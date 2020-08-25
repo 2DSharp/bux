@@ -4,6 +4,7 @@ import me.twodee.bux.Component.DtoFilter;
 import me.twodee.bux.DTO.DataTransferObject;
 import me.twodee.bux.DTO.HelperValueObject.Error;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
+import me.twodee.bux.DTO.ListDto;
 import me.twodee.bux.DTO.Organization.OrgRoleDto;
 import me.twodee.bux.DTO.Organization.OrganizationCreation;
 import me.twodee.bux.DTO.Organization.TeamDto;
@@ -168,10 +169,10 @@ public class OrganizationService {
         return false;
     }
 
-    public ResponseEntity<List<TeamDto>> getTeamsForUser(User user) {
+    public ResponseEntity<ListDto<TeamDto>> getTeamsForUser(User user) {
         var memberForEachOrg = memberRepository.findDistinctByUser(user);
         List<TeamDto> resultList = memberForEachOrg.stream().map(e -> createTeamDto(e.getOrganization())).collect(Collectors.toList());
-        return new ResponseEntity<>(resultList, HttpStatus.OK);
+        return new ResponseEntity<>(new ListDto<>(resultList), HttpStatus.OK);
     }
 
     public TeamDto createTeamDto(Organization team) {
@@ -180,5 +181,12 @@ public class OrganizationService {
                 .description(team.getDescription())
                 .image(team.getImageUrl())
                 .build();
+    }
+
+    public boolean canSeeProjects(String teamId, User user) {
+        var member = memberRepository.findByOrganizationAndUser(new Organization(teamId), user);
+        if (member.isEmpty())
+            return false;
+        return  (member.get().getRole().level >= OrganizationMember.Role.READ.level);
     }
 }

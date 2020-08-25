@@ -3,6 +3,7 @@ package me.twodee.bux.Controller;
 import me.twodee.bux.Component.Authorization.RequireLogin;
 import me.twodee.bux.DTO.HelperValueObject.Error;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
+import me.twodee.bux.DTO.ListDto;
 import me.twodee.bux.DTO.Project.ProjectDTO;
 import me.twodee.bux.Model.Service.AccountService;
 import me.twodee.bux.Model.Service.ProjectManagement;
@@ -29,9 +30,9 @@ public class ProjectController extends RestAPI
 
     @RequireLogin
     @GetMapping("/team/{teamId}/projects")
-    public ResponseEntity<List<ProjectDTO>> projects(HttpSession session, @PathVariable String teamId)
+    public ResponseEntity<ListDto<ProjectDTO>> projects(HttpSession session, @PathVariable String teamId)
     {
-        return new ResponseEntity<>(projectManagement.getProjects(teamId), HttpStatus.OK);
+        return new ResponseEntity<>(projectManagement.getProjects(teamId, accountService.getUser(session)), HttpStatus.OK);
     }
 
     @RequireLogin

@@ -2,6 +2,7 @@ package me.twodee.bux.Controller;
 
 import me.twodee.bux.Component.Authorization.RequireLogin;
 import me.twodee.bux.DTO.HelperValueObject.Notification;
+import me.twodee.bux.DTO.ListDto;
 import me.twodee.bux.DTO.Organization.OrganizationCreation;
 import me.twodee.bux.DTO.Organization.TeamDto;
 import me.twodee.bux.Model.Entity.User;
@@ -43,7 +44,7 @@ public class OrganizationController extends RestAPI {
 
     @RequireLogin
     @GetMapping("/teams")
-    public ResponseEntity<List<TeamDto>> getAllTeams(HttpSession session) {
+    public ResponseEntity<ListDto<TeamDto>> getAllTeams(HttpSession session) {
         User user = accounts.getUser(session);
         return service.getTeamsForUser(user);
     }
