@@ -16,7 +16,7 @@ import java.util.Properties;
 
 import static me.twodee.bux.Util.CryptoUtil.generateId;
 
-public class GoalIdGenerator extends SequenceStyleGenerator {
+public class UniqueIdGenerator extends SequenceStyleGenerator {
 
     @Override
     public Serializable generate(SharedSessionContractImplementor session,

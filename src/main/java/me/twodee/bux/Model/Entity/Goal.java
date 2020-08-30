@@ -36,7 +36,7 @@ public class Goal {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "goal_id")
     @GenericGenerator(
             name = "goal_id",
-            strategy = "me.twodee.bux.Util.GoalIdGenerator")
+            strategy = "me.twodee.bux.Util.UniqueIdGenerator")
     private String id;
 
     private String title;
