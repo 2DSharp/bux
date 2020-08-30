@@ -16,10 +16,14 @@ const Project = () => {
     const DynamicGoalBreadCrumb = () => {
         return <span>{breadcrumbName && ellipsize(breadcrumbName, 45, true)}</span>;
     };
+    const DynamicTeamBreadCrumb = (match: React.PropsWithChildren<any>) => {
+        return <Link to={`${match.match.url}/projects`}>{match.match.params.teamId}</Link>
+    }
     const routes: BreadcrumbsRoute[] = [
-        {path: `${url}/goals/:id`, breadcrumb: DynamicGoalBreadCrumb}
+        {path: `${url}/goals/:id`, breadcrumb: DynamicGoalBreadCrumb},
+        {path: `/team/:teamId`, breadcrumb: DynamicTeamBreadCrumb}
     ];
-    const breadcrumbs = useBreadcrumbs(routes, {excludePaths: ["/", "/team", `${url}/goals`]});
+    const breadcrumbs = useBreadcrumbs(routes, {excludePaths: ["/", "/team", "/team/:teamId/projects", `${url}/goals`]});
     return (
         <ContentWithMenu menu={<ProjectMenu/>}>
             <div className="centerpiece">
