@@ -64,9 +64,7 @@ const CreateNewTeam = () => {
             setLoading(false);
         }
     }
-    const loadingStyle = classNames({
-       'is-loading': loading
-    });
+
     return (
         <WizardPage width={8} animate={true} title={"Create a new team"} goBack={true}>
             <div style={{marginTop: 40}} className="columns">
@@ -98,7 +96,7 @@ const CreateNewTeam = () => {
                             <ExpandingTextArea name="description" placeholder="A short description about your team"/>
                         </InputContainer>
                         <div style={{height: 20}}/>
-                        <PrimaryButton className={loadingStyle}>Create</PrimaryButton>
+                        <PrimaryButton loading={loading}>Create</PrimaryButton>
                     </FormData>
                 </div>
             </div>
