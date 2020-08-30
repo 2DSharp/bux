@@ -58,7 +58,7 @@ const AllProjects = () => {
     useEffect(() => {
         Axios.get(`/team/${teamId}/projects`)
             .then(response => {
-                setProjects(response.data);
+                setProjects(response.data.list);
                 setLoaded(true);
             }).catch((error: AxiosError) => {
             if (error.response?.status == 403) {
@@ -71,7 +71,7 @@ const AllProjects = () => {
     if (forbidden)
         return <MotionRedirect to="/"/>;
     if (projects?.length === 0 && loaded)
-        return <Workspace active="Projects"><EmptyProjectsPrompt teamId={teamId} url={url}/></Workspace>
+        return <Workspace noSpaceTop active="Projects"><EmptyProjectsPrompt teamId={teamId} url={url}/></Workspace>
 
     return (
         <Container>

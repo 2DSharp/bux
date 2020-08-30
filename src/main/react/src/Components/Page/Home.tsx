@@ -16,6 +16,9 @@ import NotificationCard from "../Element/Cards/NotificationCard";
 import Workspace from "../Layout/Workspace";
 import {getRequest} from "../../service/request";
 import SpinLoader from "../WorkspaceContent/SpinLoader";
+import {useSelector, useDispatch} from "react-redux";
+import {SystemState} from "../../types";
+import {changeUsername} from "../../actions";
 
 export type CardType = "teams" | "projects" | "tasks";
 
@@ -186,16 +189,25 @@ const NotificationSection = () => {
 const Home = () => {
     const [teams, setTeams] = useState([]);
     const [teamsLoaded, setTeamsLoaded] = useState(false);
+    const dispatch = useDispatch();
     useEffect(() => {
         getRequest(`/teams`, {},
             (result) => {
-                setTeams(result);
+                setTeams(result.list);
                 setTeamsLoaded(true);
+                // TODO: Remove this
+                dispatch(changeUsername());
             })
     }, []);
+    // TODO: remove this
+    const username = useSelector((state: {logStateReducer : SystemState}) => {
+        return (state.logStateReducer.username);
+    });
+    console.log(username);
     return (
         <Workspace active="Home">
             <Container>
+
                 <div className="columns">
                     <div className="column">
                         <CardSection name="Teams" loaded={teamsLoaded} data={teams} type={"teams"}/>
