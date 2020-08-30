@@ -8,7 +8,9 @@ import me.twodee.bux.DTO.ListDto;
 import me.twodee.bux.DTO.Organization.OrgRoleDto;
 import me.twodee.bux.DTO.Organization.OrganizationCreation;
 import me.twodee.bux.DTO.Organization.TeamDto;
+import me.twodee.bux.DTO.Organization.TeamInvitationDto;
 import me.twodee.bux.Factory.NotificationFactory;
+import me.twodee.bux.Model.Entity.Invitation;
 import me.twodee.bux.Model.Entity.Organization;
 import me.twodee.bux.Model.Entity.OrganizationMember;
 import me.twodee.bux.Model.Entity.User;
@@ -16,8 +18,6 @@ import me.twodee.bux.Model.Repository.OrganizationMemberRepository;
 import me.twodee.bux.Model.Repository.OrganizationRepository;
 import me.twodee.bux.Provider.SpringHelperDependencyProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,20 +26,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static me.twodee.bux.Util.CryptoUtil.generateId;
+
 @Service
 public class OrganizationService {
 
     private final OrganizationMemberRepository memberRepository;
     private final OrganizationRepository repository;
     private final SpringHelperDependencyProvider helper;
+    private final InvitationService invitationService;
 
     @Autowired
     public OrganizationService(OrganizationRepository repository,
                                OrganizationMemberRepository memberRepository,
-                               SpringHelperDependencyProvider helper) {
+                               SpringHelperDependencyProvider helper, InvitationService invitationService) {
         this.repository = repository;
         this.memberRepository = memberRepository;
         this.helper = helper;
+        this.invitationService = invitationService;
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -169,10 +173,10 @@ public class OrganizationService {
         return false;
     }
 
-    public ResponseEntity<ListDto<TeamDto>> getTeamsForUser(User user) {
+    public ListDto<TeamDto> getTeamsForUser(User user) {
         var memberForEachOrg = memberRepository.findDistinctByUser(user);
         List<TeamDto> resultList = memberForEachOrg.stream().map(e -> createTeamDto(e.getOrganization())).collect(Collectors.toList());
-        return new ResponseEntity<>(new ListDto<>(resultList), HttpStatus.OK);
+        return new ListDto<>(resultList);
     }
 
     public TeamDto createTeamDto(Organization team) {
@@ -187,6 +191,27 @@ public class OrganizationService {
         var member = memberRepository.findByOrganizationAndUser(new Organization(teamId), user);
         if (member.isEmpty())
             return false;
-        return  (member.get().getRole().level >= OrganizationMember.Role.READ.level);
+        return (member.get().getRole().level >= OrganizationMember.Role.READ.level);
+    }
+
+    public void inviteMember(User user, String teamId, TeamInvitationDto dto) {
+        if (!hasAdminAccess(teamId, user)) {
+            dto.setNotification(NotificationFactory.createErrorNotification("permission", helper.getMessageByLocaleService().getMessage("validation.organization.role")));
+        }
+        Organization team = new Organization(teamId);
+        List<Invitation> invitations = dto.getEmails().stream()
+                .map(email -> createInvitation(email, user, team))
+                .collect(Collectors.toList());
+
+        invitationService.sendInvitation(invitations);
+    }
+
+    private Invitation createInvitation(String email, User user, Organization org) {
+        return Invitation.builder()
+                .email(email)
+                .token(generateId())
+                .organization(org)
+                .invitedBy(user)
+                .build();
     }
 }

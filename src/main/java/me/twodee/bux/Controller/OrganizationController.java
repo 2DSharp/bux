@@ -5,19 +5,16 @@ import me.twodee.bux.DTO.HelperValueObject.Notification;
 import me.twodee.bux.DTO.ListDto;
 import me.twodee.bux.DTO.Organization.OrganizationCreation;
 import me.twodee.bux.DTO.Organization.TeamDto;
+import me.twodee.bux.DTO.Organization.TeamInvitationDto;
 import me.twodee.bux.Model.Entity.User;
 import me.twodee.bux.Model.Service.AccountService;
 import me.twodee.bux.Model.Service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @RestController
 public class OrganizationController extends RestAPI {
@@ -46,6 +43,17 @@ public class OrganizationController extends RestAPI {
     @GetMapping("/teams")
     public ResponseEntity<ListDto<TeamDto>> getAllTeams(HttpSession session) {
         User user = accounts.getUser(session);
-        return service.getTeamsForUser(user);
+        return new ResponseEntity<>(service.getTeamsForUser(user), HttpStatus.OK);
+
+    }
+
+    @RequireLogin
+    @PostMapping("/teams/{teamId}/members/invite")
+    public ResponseEntity<Notification> inviteMember(HttpSession session, @RequestBody TeamInvitationDto dto, @PathVariable String teamId) {
+        service.inviteMember(accounts.getUser(session), teamId, dto);
+        if (dto.getNotification().hasErrors()) {
+            return new ResponseEntity<>(dto.getNotification(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
