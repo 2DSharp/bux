@@ -210,8 +210,7 @@ public class OrganizationService {
 
     private Invitation createInvitation(String email, User user, Organization org) {
         return Invitation.builder()
-                .email(email)
-                .organization(org)
+                .id(new Invitation.InvitationId(email, org.getName()))
                 .invitedBy(user)
                 .build();
     }

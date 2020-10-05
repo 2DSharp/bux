@@ -7,5 +7,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface InvitationRepository extends JpaRepository<Invitation, String> {
-    List<Invitation> findByOrganizationNameAndCreatedAtGreaterThan(String org, LocalDateTime timeDifference);
+    List<Invitation> findByIdOrganizationAndCreatedAtGreaterThan(String org, LocalDateTime timeDifference);
 }

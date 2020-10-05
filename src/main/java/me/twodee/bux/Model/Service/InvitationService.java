@@ -33,8 +33,8 @@ public class InvitationService {
     }
 
     public void sendInvitation(List<Invitation> invitations) {
-        List<Invitation> activeInvitations = repository.findByOrganizationNameAndCreatedAtGreaterThan(
-                invitations.get(0).getOrganization().getName(), LocalDateTime.now().minusHours(1));
+        List<Invitation> activeInvitations = repository.findByIdOrganizationAndCreatedAtGreaterThan(
+                invitations.get(0).getId().getOrganization(), LocalDateTime.now().minusHours(48));
         Notifier notifier = new Notifier();
         invitations = invitations.stream()
                 .filter(e -> invitationIsNotOld(e, activeInvitations, notifier))
@@ -56,7 +56,7 @@ public class InvitationService {
     }
 
     private boolean invitationIsNotOld(Invitation invitation, List<Invitation> activeInvitations, Notifier notifier) {
-        boolean result = activeInvitations.stream().anyMatch(e -> e.getEmail().equals(invitation.getEmail()));
+        boolean result = activeInvitations.stream().anyMatch(e -> e.getId().getEmail().equals(invitation.getId().getEmail()));
         if (result) {
             notifier.setHasActiveInvitation(true);
         }
@@ -66,8 +66,8 @@ public class InvitationService {
 
     private TeamInvitation createDto(Invitation invitation) {
         return TeamInvitation.builder()
-                .email(invitation.getEmail())
-                .team(invitation.getOrganization().getName())
+                .email(invitation.getId().getEmail())
+                .team(invitation.getId().getOrganization())
                 .token(invitation.getToken())
                 .build();
     }
