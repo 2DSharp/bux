@@ -195,8 +195,10 @@ public class OrganizationService {
     }
 
     public void inviteMember(User user, String teamId, TeamInvitationDto dto) {
+
         if (!hasAdminAccess(teamId, user)) {
             dto.setNotification(NotificationFactory.createErrorNotification("permission", helper.getMessageByLocaleService().getMessage("validation.organization.role")));
+            return;
         }
         Organization team = new Organization(teamId);
         List<Invitation> invitations = dto.getEmails().stream()
@@ -209,7 +211,6 @@ public class OrganizationService {
     private Invitation createInvitation(String email, User user, Organization org) {
         return Invitation.builder()
                 .email(email)
-                .token(generateId())
                 .organization(org)
                 .invitedBy(user)
                 .build();
