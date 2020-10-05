@@ -5,4 +5,5 @@
       "type": "java.lang.String",
       "description": "Secret base64 for JWT, need to find SHA256 for it."
     }
-  ] }
+  ]
+}

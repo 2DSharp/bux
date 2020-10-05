@@ -7,6 +7,8 @@ import me.twodee.bux.Interface.Mailer;
 import me.twodee.bux.Model.Entity.Invitation;
 import me.twodee.bux.Model.Repository.InvitationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,9 +18,13 @@ import java.util.stream.Collectors;
 import static me.twodee.bux.Util.CryptoUtil.generateId;
 
 @Service
+@PropertySource("classpath:values.properties")
 public class InvitationService {
     private InvitationRepository repository;
     Mailer mailer;
+
+    @Value("${invitation.wait.time}")
+    private Integer waitTimeInHours;
 
     @Setter
     @Getter
@@ -34,7 +40,7 @@ public class InvitationService {
 
     public void sendInvitation(List<Invitation> invitations) {
         List<Invitation> activeInvitations = repository.findByIdOrganizationAndCreatedAtGreaterThan(
-                invitations.get(0).getId().getOrganization(), LocalDateTime.now().minusHours(48));
+                invitations.get(0).getId().getOrganization(), LocalDateTime.now().minusHours(waitTimeInHours));
         Notifier notifier = new Notifier();
         invitations = invitations.stream()
                 .filter(e -> invitationIsNotOld(e, activeInvitations, notifier))
