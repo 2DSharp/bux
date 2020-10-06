@@ -83,9 +83,41 @@ div {
     }
   }
 }
-.primary-btn-override {
-  transition: background-color 0.3s;
-  &:hover {
-    background-color: $blue !important;
+.primary-btn {
+  &:hover,
+  &:active {
+    background-color: scale-color($primary, $lightness: -20%) !important;
+    color: #fff !important;
   }
+  &:focus {
+    outline-style: solid;
+    outline-color: transparent;
+    box-shadow: 0 0 0 4px scale-color($primary, $lightness: -40%);
+  }
+}
+
+.btn {
+  &:hover,
+  &:active {
+    background-color: scale-color($stdBtn, $lightness: -20%) !important;
+  }
+  &:focus {
+    outline-style: solid;
+    outline-color: transparent;
+    box-shadow: 0 0 0 4px scale-color($stdBtn, $lightness: -40%);
+  }
+}
+.btn-override {
+  transition: 220ms all ease-in-out;
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
+  padding: 0.25em 0.75em;
+  text-align: center;
+  line-height: 1.1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+
 }

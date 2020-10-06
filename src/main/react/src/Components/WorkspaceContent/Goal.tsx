@@ -13,6 +13,8 @@ import {makeStyles} from "@material-ui/styles";
 import SpinLoader from "./SpinLoader";
 import GoalStatusChanger from "../Element/Modal/GoalStatusChanger";
 import {ellipsize} from "../../service/util";
+import PrimaryButton from "../Element/Button/PrimaryButton";
+import Button from '../Element/Button/Button';
 
 export type GoalStatus = 'PLANNING' | 'ACTIVE' | 'COMPLETED' | 'ABANDONED';
 
@@ -99,11 +101,8 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
         setDialogVisibility(true);
     }
     const StatusUpdater = (props: { status: GoalStatus }) => {
-        const style = classNames("button", {
+        const style = classNames( {
             "is-loading": showChangeLoader,
-            "is-primary": props.status === "PLANNING",
-            "is-success": props.status === "ACTIVE",
-            "is-light": props.status === "COMPLETED"
         });
         const nextAction = (status: GoalStatus): ReactNode => {
             switch (status) {
@@ -115,7 +114,7 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
                     return <><MdIcon value={"mdi-check-all"}/><span>Completed</span></>;
             }
         }
-        return <button onClick={showConfirmationDialog} className={style}>{nextAction(props.status)}</button>;
+        return <PrimaryButton onClick={showConfirmationDialog} className={style}>{nextAction(props.status)}</PrimaryButton>;
     };
     useEffect(() => {
         getRequest(`/team/${props.team}/projects/${props.project}/goals/${id}`, {},
@@ -149,23 +148,23 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
                                 <Switch>
                                     <Route path={`${url}/board`}>
                                         <Link to={`${url}`}>
-                                            <button className="button is-light">
+                                            <Button className="is-light">
                                                 <MdIcon value={"mdi-menu"}/><span>Task list</span>
-                                            </button>
+                                            </Button>
                                         </Link>
                                     </Route>
                                     <Route path={`${url}`}>
                                         <Link to={`${url}/board`}>
-                                            <button className="button is-light">
+                                            <Button className="button is-light">
                                                 <MdIcon value={"mdi-view-parallel"}/><span>Board</span>
-                                            </button>
+                                            </Button>
                                         </Link>
                                     </Route>
                                 </Switch>
                             </span>
                             <span className={classes.projectAction}>
-                                <button className="button is-light"><MdIcon
-                                    value={"mdi-cog-outline"}/><span>Settings</span></button>
+                                <Button className=" is-light"><MdIcon
+                                    value={"mdi-cog-outline"}/><span>Settings</span></Button>
                             </span>
                         </div>
                     </div>
