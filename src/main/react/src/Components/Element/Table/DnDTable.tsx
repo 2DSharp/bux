@@ -38,7 +38,7 @@ interface DnDTableProps {
 
 const useStyles = makeStyles({
     id: {
-        width: 20,
+        width: 100,
         textAlign: "center"
     },
     priority: {
@@ -49,7 +49,6 @@ const useStyles = makeStyles({
         display: "inline-block"
     },
     title: {
-        width: "100%"
     },
     assignedTo: {
         width: 20
@@ -59,7 +58,8 @@ const useStyles = makeStyles({
     },
     table: {
         border: `1px solid ${variables.borderColor}`,
-        margin: 0
+        margin: 0,
+        tableLayout: "fixed"
     },
     editable: {
         height: 30,

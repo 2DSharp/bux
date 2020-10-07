@@ -11,7 +11,7 @@ import classNames from "classnames";
 
 const useStyles = makeStyles({
     id: {
-        width: 20,
+        width: 80,
         textAlign: "center"
     },
     priority: {
@@ -22,7 +22,6 @@ const useStyles = makeStyles({
         display: "inline-block"
     },
     title: {
-        width: "100%"
     },
     assignedTo: {
         width: 20
