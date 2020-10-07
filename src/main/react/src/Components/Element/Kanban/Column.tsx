@@ -21,7 +21,6 @@ const useStyles = makeStyles({
         width: "30%",
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "#f0f0f0"
         // border: "1px solid #f0f0f0",
     },
     header: {
@@ -30,7 +29,6 @@ const useStyles = makeStyles({
         zIndex: 100
     },
     body: {
-        backgroundColor: "#f0f0f0",
         minHeight: 100,
         padding: 5,
         flexGrow: 1,

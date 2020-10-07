@@ -23,6 +23,7 @@ const useStyles = makeStyles({
     projectSwitcher: {
         padding: "0 6px 0 6px",
         margin: 7,
+        marginBottom: 15,
         borderRadius: 8,
         cursor: "pointer",
         transition: "all ease-in 0.3s",
@@ -88,12 +89,22 @@ const ProjectMenu = () => {
             icon: "mdi-chart-bell-curve-cumulative",
             path: "stats"
         },
+    ];
+
+    const actionMenu = [
+        {
+            text: "Help",
+            icon: "mdi-help",
+            path: "help"
+        },
         {
             text: "Settings",
             icon: "mdi-cog-outline",
             path: "settings"
-        }
+        },
+
     ];
+
     const itemClass = (active: boolean | undefined) => classNames({
         [styles.isActive]: active
     });
@@ -114,23 +125,27 @@ const ProjectMenu = () => {
     };
     return (
         <div className={`column sticky is-2 is-fullheight ${styles.fixedColumn}`}>
-            <aside className={`menu  ${styles.menu}`}>
+            <aside style={{position: "relative"}} className={`menu  ${styles.menu}`}>
 
                 <ul className={`menu-list ${dynamicStyles.menuUl}`}>
                     <div className={dynamicStyles.projectSwitcher}>
                         <div className={`${dynamicStyles.iconContainer}`}>
-                            <ProjectDefaultIcon  style={{width: 32, height: 32}}/>
+                            <ProjectDefaultIcon style={{width: 32, height: 32}}/>
                         </div>
                         <div className={dynamicStyles.detailHolder}>
                             <b style={{color: "#252a32", fontSize: 17}}>Bux</b>
                             <div style={{color: "rgba(0, 0, 0, 0.6)", fontSize: 13}}>Glox</div>
                         </div>
                         <div className={dynamicStyles.actionIcon}>
-                            <MdIcon value={"mdi-chevron-down"} />
+                            <MdIcon value={"mdi-chevron-down"}/>
                         </div>
                     </div>
                     {menu.map(generateMenu)}
                 </ul>
+                <ul style={{position: "absolute",marginBottom: 20, bottom: 20}} className={`menu-list ${dynamicStyles.menuUl}`}>
+                    {actionMenu.map(generateMenu)}
+                </ul>
+
             </aside>
         </div>
     );

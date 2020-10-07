@@ -37,7 +37,7 @@ export type GoalData = {
 
 const useStyles = makeStyles({
     root: {
-        marginRight: 20
+        marginRight: 20,
     },
     heading: {
         fontSize: 20,

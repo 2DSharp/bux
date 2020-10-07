@@ -15,7 +15,8 @@ import PrimaryButton from "../Button/PrimaryButton";
 
 const useStyles = makeStyles({
     root: {
-        width: "100%"
+        width: "100%",
+        backgroundColor: "#fff"
     },
     statsContainer: {
         color: "darkgray",

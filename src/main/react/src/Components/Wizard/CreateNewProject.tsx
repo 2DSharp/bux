@@ -71,6 +71,7 @@ const CreateNewProject = () => {
                                            message: errorMsgs.required
                                        }
                                    })}
+                                   autoComplete="off"
                                    resetServerErrors={setServerErrors}
                                    hasRightErrorIcon={true}
                                    label={"Project name"} required={true}
@@ -82,6 +83,7 @@ const CreateNewProject = () => {
                             <TextField placeholder={"A short 2-8 character identifier"}
                                        label={"Project key"} required={true} name="projectKey"
                                        errorMsg={getFormErrors(errors, serverErrors, "projectKey")}
+                                       autoComplete="off"
                                        style={{
                                            textTransform: "uppercase"
                                        }}
