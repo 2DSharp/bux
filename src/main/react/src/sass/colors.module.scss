@@ -2,6 +2,8 @@
 // Load from webpack
 :export {
   primary: $primary;
+  primaryDark: $primary-dark;
+  primaryHover: rgba($primary, 0.1);
   borderColor: #f0f0f0;
   blue: $blue;
   textDarkColor: rgba(0, 0, 0, 0.8);

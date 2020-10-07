@@ -1,41 +1,43 @@
 @import "base";
-.menu {
-  background-color: #040849 !important;
-  -moz-box-shadow: 0 -3px 0 2px #010110;
-  //-webkit-box-shadow: -3px 0 5px 0 #555;
-  -webkit-box-shadow: 0 -3px 0 2px #010110;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
 
-  box-shadow: 0 -3px 0 2px #010110;
+.menu {
+  background-color: #ffffff !important;
+  -webkit-box-shadow: -3px 0 6px 0 #999;
+  -moz-box-shadow: -3px 0 6px 0 #999;
+  box-shadow: -3px 0 6px 0 #999;;
   height: 100% !important;
-  padding-top: 50px !important;
-  width: 215px;
+  padding-top: 30px !important;
+  max-width: 225px;
+  font-family: 'Poppins', Arial, sans-serif !important;
 }
 
 .isActive {
-  background-color: rgba(255, 255, 255, 0.1);
+  color: $primary !important;
+  font-weight: 500 !important;
 }
 
 .iconContainer {
   margin-left: 5px;
-  margin-right: 15px;
+  margin-right: 10px;
   padding: 15px;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.1);
 }
-.icon {
-  font-size: 16px;
-}
+
 .item {
-  font-size: 15px;
+  font-size: 14px;
 
   a {
-    padding-left: 20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-
+    padding-top: 7px;
+    padding-bottom: 7px;
+    margin: 7px;
+    color: #737477 ;
+    border-radius: 10px;
+    transition: all ease-in 0.3s;
     &:hover {
-      background-color: rgba(47, 50, 106, 0.8);
-      color: #fff;
+      color: $primary-dark ;
+      background-color: rgba($primary, 0.1);
     }
   }
 

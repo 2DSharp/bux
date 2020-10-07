@@ -4,6 +4,10 @@ import '../../sass/base.scss'
 import styles from '../../sass/menu.module.scss';
 import classNames from "classnames";
 import {Link, useRouteMatch} from "react-router-dom";
+import {makeStyles} from "@material-ui/styles";
+import {ReactComponent as ProjectDefaultIcon} from "../../images/project_icon.svg";
+import variables from "../../sass/colors.module.scss";
+import MdIcon from "../Element/Icon/MDIcon";
 
 interface MenuItem {
     active?: boolean,
@@ -12,56 +16,96 @@ interface MenuItem {
     path: string
 }
 
+const useStyles = makeStyles({
+    menuUl: {
+        margin: 10
+    },
+    projectSwitcher: {
+        padding: "0 6px 0 6px",
+        margin: 7,
+        borderRadius: 8,
+        cursor: "pointer",
+        transition: "all ease-in 0.3s",
+
+        '&:hover': {
+            backgroundColor: variables.primaryHover
+        }
+    },
+    iconContainer: {
+        display: "inline-flex",
+        verticalAlign: "middle",
+        margin: 8,
+        padding: 5,
+    },
+    detailHolder: {
+        display: "inline-block",
+        verticalAlign: "middle",
+        padding: 3,
+        margin: 3,
+        width: 80,
+        textOverflow: "ellipsis"
+    },
+    actionIcon: {
+        display: "inline-flex",
+        verticalAlign: "middle"
+    }
+
+});
+const ActiveProject = () => {
+
+}
 const ProjectMenu = () => {
     const menu = [
         {
             active: true,
-            text: "Dashboard",
-            icon: "mdi-math-compass",
+            text: "Overview",
+            icon: "mdi-eye-outline",
             path: "dashboard"
         },
         {
             text: "Issues",
-            icon: "mdi-bug",
+            icon: "mdi-bug-outline",
             path: "issues"
         },
         {
-            text: "Tasks",
-            icon: "mdi-view-grid",
-            path: "tasks"
+            text: "Goals",
+            icon: "mdi-math-compass",
+            path: "goals"
         },
         {
-            text: "Teams",
-            icon: "mdi-account-group",
-            path: "teams"
+            text: "Team",
+            icon: "mdi-account-group-outline",
+            path: "team"
 
         },
         {
-            text: "Docs",
+            text: "Documents",
             icon: "mdi-text",
             path: "docs"
         },
         {
-            text: "Progress",
+            text: "Reports",
             icon: "mdi-chart-bell-curve-cumulative",
-            path: "progress"
+            path: "stats"
         },
         {
             text: "Settings",
-            icon: "mdi-cog",
+            icon: "mdi-cog-outline",
             path: "settings"
         }
     ];
     const itemClass = (active: boolean | undefined) => classNames({
         [styles.isActive]: active
     });
+    const dynamicStyles = useStyles();
+
     const {url} = useRouteMatch();
     const generateMenu = (item: MenuItem) => {
         return (
             <li key={item.text} className={styles.item}>
                 <Link to={`${url}/${item.path}`} className={itemClass(item.active)}>
-                    <span className={`icon ${styles.iconContainer}`}>
-                        <i className={`mdi ${styles.icon} ${item.icon}`}/>
+                    <span style={{verticalAlign: "middle"}} className={`icon ${styles.iconContainer}`}>
+                        <i className={`mdi mdi-24px ${styles.icon} ${item.icon}`}/>
                     </span>
                     {item.text}
                 </Link>
@@ -71,7 +115,20 @@ const ProjectMenu = () => {
     return (
         <div className={`column sticky is-2 is-fullheight ${styles.fixedColumn}`}>
             <aside className={`menu  ${styles.menu}`}>
-                <ul className="menu-list">
+
+                <ul className={`menu-list ${dynamicStyles.menuUl}`}>
+                    <div className={dynamicStyles.projectSwitcher}>
+                        <div className={`${dynamicStyles.iconContainer}`}>
+                            <ProjectDefaultIcon  style={{width: 32, height: 32}}/>
+                        </div>
+                        <div className={dynamicStyles.detailHolder}>
+                            <b style={{color: "#252a32", fontSize: 17}}>Bux</b>
+                            <div style={{color: "rgba(0, 0, 0, 0.6)", fontSize: 13}}>Glox</div>
+                        </div>
+                        <div className={dynamicStyles.actionIcon}>
+                            <MdIcon value={"mdi-chevron-down"} />
+                        </div>
+                    </div>
                     {menu.map(generateMenu)}
                 </ul>
             </aside>
