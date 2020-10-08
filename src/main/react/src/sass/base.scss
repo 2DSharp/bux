@@ -1,4 +1,5 @@
 @import "base-override";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
 
 h1 {
   font-size: 24px;
@@ -110,8 +111,9 @@ div {
 .btn-override {
   transition: 220ms all ease-in-out;
   color: #fff;
+  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
   padding: 0.25em 0.75em;
   text-align: center;
   line-height: 1.1;

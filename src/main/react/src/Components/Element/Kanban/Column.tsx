@@ -5,7 +5,7 @@ import {Droppable} from "react-beautiful-dnd";
 import {Priority, TaskData} from "../../../types";
 import MdIcon from "../Icon/MDIcon";
 import AdderCard from "./AdderCard";
-
+import color from "../../../sass/colors.module.scss"
 
 interface ColumnProps {
     data: string,
@@ -16,17 +16,20 @@ interface ColumnProps {
 
 const useStyles = makeStyles({
     root: {
-        marginRight: 10,
         borderRadius: 4,
         width: "30%",
         display: "flex",
         flexDirection: "column",
-        // border: "1px solid #f0f0f0",
+        padding: 10,
+        minHeight: 400,
+        borderRight: "1px solid #f0f0f0",
     },
     header: {
         padding: 10,
         // boxShadow: "0 4px 4px -6px #222",
-        zIndex: 100
+        fontWeight: 500,
+        fontSize: 17,
+        color: color.textDarkColor,
     },
     body: {
         minHeight: 100,
@@ -37,15 +40,31 @@ const useStyles = makeStyles({
         overflowX: "hidden"
     },
     inlineItem: {
-        display: "inline-block"
+        display: "inline-flex",
+        verticalAlign: "middle"
     },
-    taskAdder: {
+    taskAdderBtn: {
         float: "right",
         cursor: "pointer",
         transition: "transform 80ms ease-in",
         textAlign: "center",
         "&:hover": {
             transform: "scale(1.2)"
+        }
+    },
+    taskAdder: {
+        margin: 5,
+        cursor: "pointer",
+        transition: "all 0.2s ease-in",
+        borderRadius: 8,
+        backgroundColor: color.primaryDark,
+        color: "#fff",
+        marginTop: 15,
+        boxShadow: "0 3px 5px rgba(0, 0, 0, 0.18)",
+        padding: 15,
+        "&:hover": {
+            backgroundColor: color.primaryHover,
+            color: color.primaryDark
         }
     }
 })
@@ -60,12 +79,17 @@ const Column = (props: ColumnProps) => {
 
             <div className={classes.header}>
                 <span className={classes.inlineItem}>{props.data}</span>
-                {props.index == 0 &&
-                <MdIcon onClick={() => setActivateAdder(!activateAdder)}
-                        className={`${classes.inlineItem} ${classes.taskAdder}`}
-                        value={activateAdder ? "mdi-minus" : "mdi-plus"}/>
-                }
+
             </div>
+            {props.index == 0 &&
+            <div className={classes.taskAdder}>
+                <span>Add new task
+                <MdIcon onClick={() => setActivateAdder(!activateAdder)}
+                        className={`${classes.inlineItem} ${classes.taskAdderBtn}`}
+                        value={activateAdder ? "mdi-minus mdi-24px" : "mdi-plus mdi-24px"}/>
+                         </span>
+            </div>
+            }
             <Droppable droppableId={props.data}>
                 {provided =>
                     <div {...provided.droppableProps} ref={provided.innerRef} className={classes.body}>

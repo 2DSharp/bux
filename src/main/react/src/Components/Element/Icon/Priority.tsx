@@ -9,7 +9,7 @@ interface PriorityProps {
 
 const useStyles = makeStyles({
     priority: {
-        height: "inherit",
+        // height: "inherit",
     },
     high: {
         color: "red"
@@ -29,7 +29,7 @@ const Priority = (props: PriorityProps) => {
         case "LOW":
             return <MdIcon value="mdi-arrow-down" className={`${classes.priority} ${classes.low}`}/>;
         case "MEDIUM":
-            return <MdIcon value="mdi-circle-medium" className={`${classes.priority} ${classes.medium}`}/>
+            return <MdIcon value="mdi-circle-medium mdi-24px" className={`${classes.priority} ${classes.medium}`}/>
     }
 }
 

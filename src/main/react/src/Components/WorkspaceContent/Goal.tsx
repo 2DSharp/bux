@@ -77,7 +77,7 @@ const useStyles = makeStyles({
         marginBottom: 30
     },
     content: {
-        marginTop: 15,
+        marginTop: 40,
         marginBottom: 15
     }
 });
@@ -168,28 +168,28 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
                             </span>
                         </div>
                     </div>
-                    <div className={classes.meta}>
-                        <div className={classes.description}>{data.description}</div>
-                        <div className={`${classes.stats} columns`}>
-                            <div className="column">
-                                <Priority
-                                    type={data.priority as PriorityType}/><b>Priority: </b>{data.priority}
-                            </div>
-                            <div className="column">
-                                <b>Deadline: </b> {moment(data.deadline).format("MMM DD, YYYY")}
-                            </div>
-                            <div className="column">
-                                <b>Progress:</b> <Progress className={classes.progress} progress={data.progress}
-                                                           pressure={data.pressure as Pressure}/>
-                            </div>
-                            <div className="column">
-                                <b>Status:</b> {data.status}
-                            </div>
-                            <div className="column">
-                                <b>Milestones:</b> {data.milestone ? data.milestone : "None"}
-                            </div>
-                        </div>
-                    </div>
+                    {/*<div className={classes.meta}>*/}
+                    {/*    <div className={classes.description}>{data.description}</div>*/}
+                    {/*    <div className={`${classes.stats} columns`}>*/}
+                    {/*        <div className="column">*/}
+                    {/*            <Priority*/}
+                    {/*                type={data.priority as PriorityType}/><b>Priority: </b>{data.priority}*/}
+                    {/*        </div>*/}
+                    {/*        <div className="column">*/}
+                    {/*            <b>Deadline: </b> {moment(data.deadline).format("MMM DD, YYYY")}*/}
+                    {/*        </div>*/}
+                    {/*        <div className="column">*/}
+                    {/*            <b>Progress:</b> <Progress className={classes.progress} progress={data.progress}*/}
+                    {/*                                       pressure={data.pressure as Pressure}/>*/}
+                    {/*        </div>*/}
+                    {/*        <div className="column">*/}
+                    {/*            <b>Status:</b> {data.status}*/}
+                    {/*        </div>*/}
+                    {/*        <div className="column">*/}
+                    {/*            <b>Milestones:</b> {data.milestone ? data.milestone : "None"}*/}
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                     <div className={classes.content}>
                         <Switch>
                             <Route path={`${url}/board`}>

@@ -7,7 +7,6 @@ import Priority from "../Icon/Priority";
 import moment from 'moment';
 import {Link} from "react-router-dom";
 import AvatarIcon from "../Icon/AvatarIcon";
-
 interface TaskProps {
     data: TaskData,
     index: number,
@@ -18,20 +17,21 @@ const useStyles = makeStyles({
     // IMPORTANT: DO NOT ADD ANY TRANSITION PROPERTIES,
     // The task cards will jump around otherwise
     root: {
-        marginTop: 5,
-        marginBottom: 5,
-        boxShadow: "0 2px 3px 1px rgba(0,0,0,0.2)",
+        marginTop: 10,
+        marginBottom: 15,
+        boxShadow: `0 7px 15px -10px ${color.primaryLight}`,
         width: "100%",
-        padding: 10,
+        padding: 15,
         paddingBottom: 8,
-        borderRadius: 4,
-        backgroundColor: "white",
+        borderRadius: 8,
+        backgroundColor: "#fff",
         minHeight: 100,
         cursor: "move",
         fontSize: 14,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
+        transition: "all 0.2s ease-in",
         "&:hover, &:focus": {
             boxShadow: "0 4px 6px 0 rgba(0,0,0,0.2)",
             backgroundColor: "rgba(148,190,255, 0.2)",
@@ -39,7 +39,8 @@ const useStyles = makeStyles({
         }
     },
     footer: {
-        marginTop: 5
+        marginTop: 5,
+        marginBottom: 3
     },
     inlineItems: {
         display: "inline-block",
@@ -50,15 +51,16 @@ const useStyles = makeStyles({
     },
 
     dataElem: {
-        margin: 3,
         color: "rgba(0,0,0, 0.6)"
     },
     title: {
-        color: color.textDarkColor,
-        marginBottom: 10
+        color: color.textPurple,
+        fontSize: 15,
+        fontWeight: 400,
+        fontFamily: "Poppins, Arial, serif"
     },
     deadline: {
-        fontSize: "12px"
+        fontSize: "14px"
     }
 });
 const Task = (props: TaskProps) => {
@@ -72,18 +74,21 @@ const Task = (props: TaskProps) => {
                      onClick={props.onClick}
                      className={classes.root}>
                     <p className={classes.title}>{data.title}</p>
+                    <span style={{fontSize: 12}} className={classes.dataElem}> {data.id} </span>
+
+                    <div style={{paddingBottom: 10, color: "grey"}}>
+                    </div>
                     <div className={classes.footer}>
                         <div className={`${classes.inlineItems} ${classes.left}`}>
-                            <span className={classes.dataElem}> {data.id} </span>
                             <Priority type={data.priority}/>
+                        </div>
+                        <div className={`${classes.inlineItems} ${classes.right}`}>
                             {data.assignee &&
-                            <Link to={"/user/" + data.assignee.username}>
+                            <Link style={{verticalAlign: "middle", margin: "0 5px 0 5px"}} to={"/user/" + data.assignee.username}>
                                 <AvatarIcon size="small" user={data.assignee}/>
                             </Link>
                             }
-                        </div>
-                        <div className={`${classes.inlineItems} ${classes.right}`}>
-                            <span
+                            <span style={{verticalAlign: "middle"}}
                                 className={`${classes.dataElem} ${classes.deadline}`}>{moment(data.deadline).format("MMM DD")}</span>
                         </div>
                     </div>
