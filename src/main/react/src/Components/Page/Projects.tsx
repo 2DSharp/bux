@@ -13,6 +13,7 @@ import Container from "../Layout/Container";
 import PrimaryButton from "../Element/Button/PrimaryButton";
 import MotionRedirect from "../Element/Routing/MotionRedirect";
 import Workspace from "../Layout/Workspace";
+import {getRequest} from "../../service/request";
 
 type Leader = {
     name: string
@@ -56,15 +57,11 @@ const AllProjects = () => {
         );
     }
     useEffect(() => {
-        Axios.get(`/team/${teamId}/projects`)
-            .then(response => {
-                setProjects(response.data.list);
-                setLoaded(true);
-            }).catch((error: AxiosError) => {
-            if (error.response?.status == 403) {
-                setForbidden(true);
-            }
+        getRequest(`/team/${teamId}/projects`, {}, response => {
+            setProjects(response.list);
+            setLoaded(true);
         });
+
     }, []);
 
 
@@ -149,7 +146,7 @@ const Projects = () => {
                         </Suspense>
                     </Route>
                     <Route path="/team/:teamId/projects/">
-                        <AllProjects />
+                        <AllProjects/>
                     </Route>
                 </Switch>
             </>

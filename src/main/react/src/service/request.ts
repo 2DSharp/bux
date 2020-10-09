@@ -1,4 +1,4 @@
-import Axios from "axios";
+import Axios, {AxiosError} from "axios";
 import {notifyError} from "./notification";
 
 export function getRequest(url: string, params: object, successCallback: (result: any) => void,
@@ -7,7 +7,13 @@ export function getRequest(url: string, params: object, successCallback: (result
         params: params
     }).then(response => {
         successCallback(response.data);
-    }).catch(error => {
+    }).catch((error : AxiosError ) => {
+        console.log(error.response?.status);
+        console.log("error");
+        if (error.response?.status == 401) {
+            // Show them the login screen
+            window.location.href = "/";
+        }
         if (errorCallback) {
             errorCallback(error);
         }
