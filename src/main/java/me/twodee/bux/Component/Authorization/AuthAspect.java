@@ -16,15 +16,16 @@ import javax.servlet.http.HttpSession;
 public class AuthAspect {
 
     AccountService auth;
+    HttpSession session;
 
     @Autowired
-    public AuthAspect(AccountService auth) {
+    public AuthAspect(AccountService auth, HttpSession session) {
         this.auth = auth;
+        this.session = session;
     }
 
-    @Around("@annotation(me.twodee.bux.Component.Authorization.RequireLogin) && args(session,..)")
-    public Object checkRequireLogin(ProceedingJoinPoint joinPoint, HttpSession session) throws Throwable {
-
+    @Around("@annotation(me.twodee.bux.Component.Authorization.RequireLogin)")
+    public Object checkRequireLogin(final ProceedingJoinPoint joinPoint) throws Throwable {
         if (!auth.isLoggedIn(session)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
