@@ -15,6 +15,7 @@ import GoalStatusChanger from "../Element/Modal/GoalStatusChanger";
 import {ellipsize} from "../../service/util";
 import PrimaryButton from "../Element/Button/PrimaryButton";
 import Button from '../Element/Button/Button';
+import variables from "../../sass/colors.module.scss"
 
 export type GoalStatus = 'PLANNING' | 'ACTIVE' | 'COMPLETED' | 'ABANDONED';
 
@@ -41,8 +42,9 @@ const useStyles = makeStyles({
     },
     heading: {
         fontSize: 20,
-        display: "inline-block"
+        flexGrow: 1
     },
+
     progress: {
         height: 10,
         width: 60,
@@ -50,36 +52,52 @@ const useStyles = makeStyles({
         display: "inline-block"
     },
     meta: {
-        marginTop: 15,
+        fontWeight: 500,
         marginBottom: 15,
+        padding: 10,
+        backgroundColor: "#fff",
+        borderRadius: 8,
+        border: `1px solid ${variables.borderColor}`,
         fontSize: 14,
+        color: "rgba(0, 0, 0, 0.7)",
+        margin: 5
     },
-    stats: {
-        marginTop: 10,
+    middle: {
+        flexGrow: 1
     },
+    metaElem: {
+        margin: "0 10px 0 10px"
+    },
+    stats: {},
     description: {
         marginTop: 5,
         marginBottom: 5,
-        maxWidth: 600
+        fontSize: 14
     },
     panel: {},
     projectActions: {
-        display: "inline-block",
-        float: "right",
-        marginRight: 10
+        display: "flex",
+        padding: 5
     },
     projectAction: {
         marginLeft: 5,
         marginRight: 5
     },
-    head: {},
+    head: {
+        marginLeft: 10
+    },
     taskBlock: {
         marginBottom: 30
     },
     content: {
-        marginTop: 40,
+        marginTop: 7,
         marginBottom: 15
-    }
+    },
+    details: {
+        display: "flex",
+        margin: "15px 5px 0 5px"
+    },
+    deadline: {}
 });
 
 export type GoalTaskData = {
@@ -87,7 +105,7 @@ export type GoalTaskData = {
     columns: any,
 }
 
-const Goal = (props: { team: string, project: string, onLoadUpdateName(name: string) : void }) => {
+const Goal = (props: { team: string, project: string, onLoadUpdateName(name: string): void }) => {
     const {id} = useParams();
     const {url} = useRouteMatch();
     const classes = useStyles();
@@ -101,7 +119,7 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
         setDialogVisibility(true);
     }
     const StatusUpdater = (props: { status: GoalStatus }) => {
-        const style = classNames( {
+        const style = classNames({
             "is-loading": showChangeLoader,
         });
         const nextAction = (status: GoalStatus): ReactNode => {
@@ -114,7 +132,8 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
                     return <><MdIcon value={"mdi-check-all"}/><span>Completed</span></>;
             }
         }
-        return <PrimaryButton onClick={showConfirmationDialog} className={style}>{nextAction(props.status)}</PrimaryButton>;
+        return <PrimaryButton onClick={showConfirmationDialog}
+                              className={style}>{nextAction(props.status)}</PrimaryButton>;
     };
     useEffect(() => {
         getRequest(`/team/${props.team}/projects/${props.project}/goals/${id}`, {},
@@ -139,7 +158,33 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
                 <>
                     <div className={classes.head}>
                         <span className={classes.heading}><span><h1>{ellipsize(data.title, 60, true)}</h1></span></span>
+                        <div className={classes.description}>{data.description}</div>
 
+                    </div>
+
+                    <div className={classes.details}>
+                        <div className={classes.meta}>
+                            <div className={classes.stats}>
+                                <MdIcon style={{color: variables.blue}} value={"mdi-finance mdi-24px"}/>
+                                <span className={classes.metaElem}>
+                                    <Priority
+                                        type={data.priority as PriorityType}/>
+                                </span>
+                                <span className={classes.metaElem}>
+                                    <Progress className={`${classes.progress}`} progress={data.progress}
+                                              pressure={data.pressure as Pressure}/>
+                                </span>
+                                <span className={`${classes.deadline} ${classes.metaElem}`}><MdIcon
+                                    value="mdi-timer-outline"/> {moment(data.deadline).format("MMM DD, YYYY")}</span>
+                                <span className={classes.metaElem}>{data.status}</span>
+                                {data.milestone &&
+                                <>
+                                    <MdIcon value="mdi-flag-checkered"/>{data.milestone}
+                                </>
+                                }
+                            </div>
+                        </div>
+                        <div className={classes.middle}/>
                         <div className={classes.projectActions}>
                             <span className={classes.projectAction}>
                                 <StatusUpdater status={data.status}/>
@@ -168,28 +213,6 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
                             </span>
                         </div>
                     </div>
-                    {/*<div className={classes.meta}>*/}
-                    {/*    <div className={classes.description}>{data.description}</div>*/}
-                    {/*    <div className={`${classes.stats} columns`}>*/}
-                    {/*        <div className="column">*/}
-                    {/*            <Priority*/}
-                    {/*                type={data.priority as PriorityType}/><b>Priority: </b>{data.priority}*/}
-                    {/*        </div>*/}
-                    {/*        <div className="column">*/}
-                    {/*            <b>Deadline: </b> {moment(data.deadline).format("MMM DD, YYYY")}*/}
-                    {/*        </div>*/}
-                    {/*        <div className="column">*/}
-                    {/*            <b>Progress:</b> <Progress className={classes.progress} progress={data.progress}*/}
-                    {/*                                       pressure={data.pressure as Pressure}/>*/}
-                    {/*        </div>*/}
-                    {/*        <div className="column">*/}
-                    {/*            <b>Status:</b> {data.status}*/}
-                    {/*        </div>*/}
-                    {/*        <div className="column">*/}
-                    {/*            <b>Milestones:</b> {data.milestone ? data.milestone : "None"}*/}
-                    {/*        </div>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
                     <div className={classes.content}>
                         <Switch>
                             <Route path={`${url}/board`}>

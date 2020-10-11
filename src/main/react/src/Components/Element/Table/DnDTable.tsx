@@ -17,6 +17,10 @@ import TaskRow from "./TaskRow";
 import {convertDateToLocalDate} from "../../../service/util";
 import GeneralSpin from "../Loader/GeneralSpin";
 import IconButton from "../Form/IconButton";
+import {Link} from "react-router-dom";
+import AvatarIcon from "../Icon/AvatarIcon";
+import moment from "moment";
+import Priority from "../Icon/Priority";
 
 interface DnDTableData {
     id: string,
@@ -38,28 +42,42 @@ interface DnDTableProps {
 
 const useStyles = makeStyles({
     id: {
-        width: 100,
-        textAlign: "center"
+        width: 80,
     },
     priority: {
-        width: 80
+        padding: "0 20px 0 20px"
     },
     deadline: {
-        width: 90,
+        padding: "0 20px 0 20px",
         display: "inline-block"
     },
+    rowItem: {
+        display: "inline-block",
+        verticalAlign: "middle"
+    },
     title: {
+        flexGrow: 1,
     },
     assignedTo: {
-        width: 20
+        padding: "0 20px 0 20px"
     },
     row: {
-        backgroundColor: "#fff",
+        //backgroundColor: variables.primaryHover,
+
+        //paddingLeft: 30,
+        fontWeight: 500,
+        width: "100%",
+        display: "flex",
+        padding: 10,
+        //marginBottom: 5,
+        fontSize: 14,
+        borderBottom: `1px solid ${variables.borderColor}`,
+    },
+
+    text: {
+        verticalAlign: "middle"
     },
     table: {
-        border: `1px solid ${variables.borderColor}`,
-        margin: 0,
-        tableLayout: "fixed"
     },
     editable: {
         height: 30,
@@ -75,9 +93,8 @@ const useStyles = makeStyles({
     },
     body: {},
     root: {
-        marginTop: 10,
-        maxHeight: 400,
-        overflowY: "auto",
+        margin: 10,
+        padding: "0 5px"
     }
 });
 
@@ -139,68 +156,82 @@ const DnDTable = (props: DnDTableProps) => {
     }, []);
     return (
         <FormData onChange={onFormChange} onSubmit={onSubmit}>
-            <div className={`table-container ${classes.root}`}>
-                <table className={`table container is-fluid is-hoverable ${classes.table}`}>
-
+            <div className={`${classes.root}`}>
+                <div className={`container is-hoverable ${classes.table}`}>
+                    <div className={classes.row}>
+                        <div className={`${classes.rowItem} ${classes.id}`}>
+                            <span className={`${classes.text}`}>ID</span>
+                        </div>
+                        <div className={`${classes.rowItem} ${classes.title}`}><span
+                            className={classes.text}>Title</span></div>
+                        <div className={`${classes.rowItem} ${classes.assignedTo}`} >
+                            <span className={`${classes.text}`}>Assignee</span>
+                        </div>
+                        <div className={`${classes.rowItem} ${classes.deadline}`}>
+                            <span className={`${classes.text}`}>Deadline</span>
+                        </div>
+                        <div className={`${classes.rowItem} ${classes.priority}`}>
+                            <span className={`${classes.text}`}>Priority</span>
+                        </div>
+                    </div>
                     <Droppable droppableId={props.data.id}>
                         {provided =>
-                            <tbody {...provided.droppableProps} ref={provided.innerRef}>
+                            <div {...provided.droppableProps} ref={provided.innerRef}>
 
-                            {[...props.tasks].map((task, index) =>
-                                <TaskRow onClick={() => props.onSelect(task.id)}
-                                         isCompleted={task.status == props.statusList[props.statusList.length - 1]}
-                                         key={task.id} data={task} index={index}/>
-                            )}
-                            {provided.placeholder}
-                            <tr id={props.adderId}/>
-                            {props.showAdder &&
-                            <tr className={classes.row} style={{backgroundColor: "rgba(135, 206, 235, 0.2)"}}>
+                                {[...props.tasks].map((task, index) =>
+                                    <TaskRow onClick={() => props.onSelect(task.id)}
+                                             isCompleted={task.status == props.statusList[props.statusList.length - 1]}
+                                             key={task.id} data={task} index={index}/>
+                                )}
+                                {provided.placeholder}
+                                {props.showAdder &&
+                                <div className={classes.row} style={{backgroundColor: "rgba(135, 206, 235, 0.2)"}}>
 
-                                <td style={{textAlign: "center"}} className={classes.id}>
-                                    {
-                                        showLoader && <GeneralSpin size={24}/>
-                                    }
+                                    <div style={{textAlign: "center"}} className={classes.id}>
+                                        {
+                                            showLoader && <GeneralSpin size={24}/>
+                                        }
 
-                                    {(!showLoader && !isEmpty(newTaskData['title'])) &&
-                                    <IconButton>
-                                        <MdIcon onMouseOver={() => setActionIconHover(true)}
-                                                onMouseOut={() => setActionIconHover(false)}
-                                                className={`${classes.check} ${classes.editable}`}
-                                                value={actionValue}/>
-                                    </IconButton>
-                                    }
-                                </td>
-                                <td className={classes.title}>
-                                    <Tooltip color={"volcano"} visible={errors.title} title={errors['title']}>
-                                        <TextField value={newTaskData['title']} name="title"
-                                                   placeholder="What's the task?"
-                                                   autoFocus
+                                        {(!showLoader && !isEmpty(newTaskData['title'])) &&
+                                        <IconButton>
+                                            <MdIcon onMouseOver={() => setActionIconHover(true)}
+                                                    onMouseOut={() => setActionIconHover(false)}
+                                                    className={`${classes.check} ${classes.editable}`}
+                                                    value={actionValue}/>
+                                        </IconButton>
+                                        }
+                                    </div>
+                                    <div className={classes.title}>
+                                        <Tooltip color={"volcano"} visible={errors.title} title={errors['title']}>
+                                            <TextField value={newTaskData['title']} name="title"
+                                                       placeholder="What's the task?"
+                                                       autoFocus
 
-                                                   forwardRef={props.inputRef}
-                                                   className={classes.editable}/>
-                                    </Tooltip>
+                                                       forwardRef={props.inputRef}
+                                                       className={classes.editable}/>
+                                        </Tooltip>
 
-                                </td>
-                                <td>
-                                    <UserSelector name="assignee" users={users} style={{width: 140}}
-                                                  placeholder="Assign to..."/>
-                                </td>
-                                <td className={classes.priority}>
-                                    <PrioritySelector name="priority" style={{width: 60}} iconsOnly default="MEDIUM"
-                                                      className={"overriden"}/>
-                                </td>
-                                <td>
-                                    <DatePickerField name="deadline" style={{width: 120}} disablePast
-                                                     placeholder="Deadline"
-                                                     format="MMM DD YYYY"
-                                                     className={classes.editable}/>
-                                </td>
-                            </tr>
-                            }
-                            </tbody>
+                                    </div>
+                                    <div>
+                                        <UserSelector name="assignee" users={users} style={{width: 140}}
+                                                      placeholder="Assign to..."/>
+                                    </div>
+                                    <div className={classes.priority}>
+                                        <PrioritySelector name="priority" style={{width: 60}} iconsOnly default="MEDIUM"
+                                                          className={"overriden"}/>
+                                    </div>
+                                    <div>
+                                        <DatePickerField name="deadline" style={{width: 120}} disablePast
+                                                         placeholder="Deadline"
+                                                         format="MMM DD YYYY"
+                                                         className={classes.editable}/>
+                                    </div>
+                                </div>
+                                }
+                            </div>
                         }
                     </Droppable>
-                </table>
+                </div>
             </div>
         </FormData>
 

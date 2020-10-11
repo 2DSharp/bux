@@ -89,7 +89,7 @@ const Task = (props: TaskProps) => {
                             </Link>
                             }
                             <span style={{verticalAlign: "middle"}}
-                                className={`${classes.dataElem} ${classes.deadline}`}>{moment(data.deadline).format("MMM DD")}</span>
+                                className={`${classes.dataElem} ${classes.deadline}`}>{data.deadline && moment(data.deadline).format("MMM DD")}</span>
                         </div>
                     </div>
                 </div>

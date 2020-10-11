@@ -9,6 +9,7 @@ import {postRequest} from "../../../service/request";
 import ScrollIntoView from "react-scroll-into-view";
 import {useFocus} from "../../../hooks/useFocus";
 import TaskDetails from "../Modal/TaskDetails";
+import {Button, Input} from "antd";
 
 const useStyles = makeStyles({
     taskBlock: {
@@ -21,12 +22,27 @@ const useStyles = makeStyles({
         }
     },
     panel: {
-        marginBottom: "10px !important"
+        marginBottom: "10px !important",
+        borderRadius: 12,
+        padding: 15,
+        minWidth: 560,
+        backgroundColor: "#fff",
+        margin: 10
     },
     bottomAdder: {
         color: variables['blue'],
         cursor: "pointer",
         fontSize: "15px"
+    },
+    panelHeader: {
+        fontSize: 20,
+        display: "flex",
+        margin: "5px 10px",
+        padding: "0 10px 0 10px"
+    },
+    headerBtn: {
+        margin: "0 5px 0 5px",
+        height: "inherit"
     }
 });
 const TaskList = (props) => {
@@ -87,14 +103,21 @@ const TaskList = (props) => {
                 props.data &&
                 <DragDropContext onDragEnd={handleDrag}>
                     <div className={classes.taskBlock}>
-                        <div><h3><span style={{display: "inline-block", margin: 1}}>Tasks</span>
-                            <ScrollIntoView style={{display: "inline-block"}} selector="#tasks-adder">
-                                <MdIcon value={"mdi-plus"} onClick={moveToAdder}
-                                        className={classes.addIcon}/>
-                            </ScrollIntoView>
-                        </h3></div>
-                        <div className="is-divider"/>
                         <nav className={`panel ${classes.panel}`}>
+                            <div className={classes.panelHeader}>
+                                <span style={{flexGrow: 1, marginRight: 5}}>Tasks</span>
+                                {/*<ScrollIntoView style={{display: "inline-block"}} selector="#tasks-adder">*/}
+                                {/*    */}
+                                {/*</ScrollIntoView>*/}
+                                <Input style={{width: 180, minWidth: 60}} placeholder="Search tasks" prefix={<MdIcon value="mdi-magnify mdi-18px" />}/>
+                                <Button className={classes.headerBtn}>Assigned to Me</Button>
+                                <Button type="primary" className={classes.headerBtn}>
+                                    <MdIcon value={"mdi-plus"} onClick={moveToAdder} className={classes.addIcon}/>
+                                    New Task
+                                </Button>
+
+                            </div>
+                            <div className="is-divider"/>
                             <DnDTable onAdd={onAdd} team={props.team} goal={props.goalId} project={props.project}
                                       adderId={"tasks-adder"} data={columns['tasks']}
                                       showAdder={moveToTaskAdder}

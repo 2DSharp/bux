@@ -21,6 +21,7 @@ const useStyles = makeStyles({
         display: "flex",
         flexDirection: "column",
         padding: 10,
+        paddingTop: 3,
         minHeight: 400,
         borderRight: "1px solid #f0f0f0",
     },
@@ -96,10 +97,12 @@ const Column = (props: ColumnProps) => {
                         {
                             activateAdder && <AdderCard onSubmit={addNewTask}/>
                         }
-                        {props.tasks.map((task, index) => task &&
-                            <Task onClick={() => {
-                                props.setCurrentTaskId(task.id)
-                            }} index={index} key={task.id} data={task}/>)}
+                        {
+                            props.tasks.map((task, index) => task &&
+                                <Task onClick={() => {
+                                    props.setCurrentTaskId(task.id)
+                                }} index={index} key={task.id} data={task}/>)
+                        }
                         {provided.placeholder}
                     </div>
                 }

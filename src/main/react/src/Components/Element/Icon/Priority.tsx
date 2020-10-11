@@ -29,7 +29,7 @@ const Priority = (props: PriorityProps) => {
         case "LOW":
             return <MdIcon value="mdi-arrow-down" className={`${classes.priority} ${classes.low}`}/>;
         case "MEDIUM":
-            return <MdIcon value="mdi-circle-medium mdi-24px" className={`${classes.priority} ${classes.medium}`}/>
+            return <MdIcon style={{verticalAlign: "middle"}} value="mdi-circle-medium mdi-24px" className={`${classes.priority} ${classes.medium}`}/>
     }
 }
 
