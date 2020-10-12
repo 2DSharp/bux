@@ -63,10 +63,7 @@ const useStyles = makeStyles({
         textDecoration: "line-through"
     },
     completed: {
-        backgroundColor: "#deebff",
-        "&:hover": {
-            backgroundColor: "#94BEFF"
-        }
+        backgroundColor: "rgba(255,255,0,0.05)"
     },
     text: {
         verticalAlign: "middle"

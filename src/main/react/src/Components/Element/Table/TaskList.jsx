@@ -128,8 +128,7 @@ const TaskList = (props) => {
                                       }}
                                       tasks={columns['tasks'].taskIds.map(task => tasks[task])}/>
                         </nav>
-                        <div onClick={moveToAdder} className={classes.bottomAdder}><MdIcon value={"mdi-plus"}/><span>Create a new task</span>
-                        </div>
+
                     </div>
                     <div className={classes.taskBlock}>
                         <div><h3>Backlog<MdIcon onClick={() => setShowBacklogAdder(!showBacklogAdder)}
@@ -140,6 +139,9 @@ const TaskList = (props) => {
                             {/*          displayAdded={showBacklogAdder}*/}
                             {/*          tasks={columns['backlog'].taskIds.map(task => props.data.tasks[task])}/>*/}
                         </nav>
+                        <div onClick={moveToAdder} className={classes.bottomAdder}>
+                            <MdIcon value={"mdi-plus"}/><span>Create a new task</span>
+                        </div>
                     </div>
                 </DragDropContext>
             }

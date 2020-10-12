@@ -1,4 +1,4 @@
-import React, {ReactNode, useEffect, useState} from 'react';
+import React, {CSSProperties, ReactNode, useEffect, useState} from 'react';
 import {Link, Route, Switch, useParams, useRouteMatch} from "react-router-dom";
 import Board from "../Element/Kanban/Board";
 import GoalOverview from "./GoalOverview";
@@ -16,6 +16,7 @@ import {ellipsize} from "../../service/util";
 import PrimaryButton from "../Element/Button/PrimaryButton";
 import Button from '../Element/Button/Button';
 import variables from "../../sass/colors.module.scss"
+import {ReactComponent as Active} from "../../images/activity.svg";
 
 export type GoalStatus = 'PLANNING' | 'ACTIVE' | 'COMPLETED' | 'ABANDONED';
 
@@ -104,7 +105,17 @@ export type GoalTaskData = {
     tasks: any,
     columns: any,
 }
-
+export const GoalStatus = (props: {status: string, style?: CSSProperties, className?: string}) => {
+    switch (props.status) {
+        case "ACTIVE":
+            return <MdIcon style={{color: "gold", ...props.style}} className={props.className} value="mdi-lightning-bolt mdi-18px"/>;
+        case "COMPLETED":
+            return <MdIcon style={{color: "green", ...props.style}} className={props.className} value="mdi-check-circle-outline mdi-18px"/>;
+        case "PLANNING":
+            return <MdIcon style={{color: "darkorange", ...props.style}} className={props.className} value="mdi-lightbulb-on-outline mdi-18px"/>;
+    }
+    return <>props.status</>;
+};
 const Goal = (props: { team: string, project: string, onLoadUpdateName(name: string): void }) => {
     const {id} = useParams();
     const {url} = useRouteMatch();
@@ -170,13 +181,14 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
                                     <Priority
                                         type={data.priority as PriorityType}/>
                                 </span>
-                                <span className={classes.metaElem}>
+                                <span>
                                     <Progress className={`${classes.progress}`} progress={data.progress}
                                               pressure={data.pressure as Pressure}/>
                                 </span>
                                 <span className={`${classes.deadline} ${classes.metaElem}`}><MdIcon
                                     value="mdi-timer-outline"/> {moment(data.deadline).format("MMM DD, YYYY")}</span>
-                                <span className={classes.metaElem}>{data.status}</span>
+                                <GoalStatus status={data.status} />
+
                                 {data.milestone &&
                                 <>
                                     <MdIcon value="mdi-flag-checkered"/>{data.milestone}
