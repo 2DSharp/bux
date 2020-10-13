@@ -206,7 +206,7 @@ const DnDTable = (props: DnDTableProps) => {
                                             <TextField value={newTaskData['title']} name="title"
                                                        placeholder="What's the task?"
                                                        autoFocus
-
+                                                       autoComplete="none"
                                                        forwardRef={props.inputRef}
                                                        className={classes.editable}/>
                                         </Tooltip>
