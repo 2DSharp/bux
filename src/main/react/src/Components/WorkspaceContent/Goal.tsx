@@ -17,6 +17,7 @@ import PrimaryButton from "../Element/Button/PrimaryButton";
 import Button from '../Element/Button/Button';
 import variables from "../../sass/colors.module.scss"
 import {ReactComponent as Active} from "../../images/activity.svg";
+import {Tooltip} from "antd";
 
 export type GoalStatus = 'PLANNING' | 'ACTIVE' | 'COMPLETED' | 'ABANDONED';
 
@@ -98,21 +99,26 @@ const useStyles = makeStyles({
         display: "flex",
         margin: "15px 5px 0 5px"
     },
-    deadline: {}
+    deadline: {
+        cursor: "pointer"
+    }
 });
 
 export type GoalTaskData = {
     tasks: any,
     columns: any,
 }
-export const GoalStatus = (props: {status: string, style?: CSSProperties, className?: string}) => {
+export const GoalStatus = (props: { status: string, style?: CSSProperties, className?: string }) => {
     switch (props.status) {
         case "ACTIVE":
-            return <MdIcon style={{color: "gold", ...props.style}} className={props.className} value="mdi-lightning-bolt mdi-18px"/>;
+            return <MdIcon style={{color: "gold", ...props.style}} className={props.className}
+                           value="mdi-lightning-bolt mdi-18px"/>;
         case "COMPLETED":
-            return <MdIcon style={{color: "green", ...props.style}} className={props.className} value="mdi-check-circle-outline mdi-18px"/>;
+            return <MdIcon style={{color: "green", ...props.style}} className={props.className}
+                           value="mdi-check-circle-outline mdi-18px"/>;
         case "PLANNING":
-            return <MdIcon style={{color: "darkorange", ...props.style}} className={props.className} value="mdi-lightbulb-on-outline mdi-18px"/>;
+            return <MdIcon style={{color: "darkorange", ...props.style}} className={props.className}
+                           value="mdi-lightbulb-on-outline mdi-18px"/>;
     }
     return <>props.status</>;
 };
@@ -168,7 +174,8 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
             {data ?
                 <>
                     <div className={classes.head}>
-                        <span className={classes.heading}><span><h1>{ellipsize(data.title, 60, true)}</h1></span></span>
+                        <span
+                            className={classes.heading}><span><h1>{ellipsize(data.title, 60, true)} ({data.taskIds.length})</h1></span></span>
                         <div className={classes.description}>{data.description}</div>
 
                     </div>
@@ -185,14 +192,24 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
                                     <Progress className={`${classes.progress}`} progress={data.progress}
                                               pressure={data.pressure as Pressure}/>
                                 </span>
-                                <span className={`${classes.deadline} ${classes.metaElem}`}><MdIcon
-                                    value="mdi-timer-outline"/> {moment(data.deadline).format("MMM DD, YYYY")}</span>
-                                <GoalStatus status={data.status} />
+                                <span className={`${classes.deadline} ${classes.metaElem}`}>
+                                    {/* The span is kept outside to preserve the space between goal status icon and progress */}
+                                    {data.status === "ACTIVE" &&
+                                    <Tooltip
+                                        title={"Ends on: " + moment(data.deadline).format("MMM DD, YYYY")}>
+                                       <span><MdIcon
+                                           value="mdi-timer-outline"/>
+                                           {moment(data.deadline).diff(moment(), 'days')} days remaining</span>
+                                    </Tooltip>
+                                    }
+                                </span>
+
+                                <GoalStatus status={data.status}/>
 
                                 {data.milestone &&
-                                <>
-                                    <MdIcon value="mdi-flag-checkered"/>{data.milestone}
-                                </>
+                                <span className={classes.metaElem}>
+                                        <MdIcon value="mdi-flag-checkered"/>{data.milestone}
+                                    </span>
                                 }
                             </div>
                         </div>
