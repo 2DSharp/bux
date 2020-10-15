@@ -27,6 +27,7 @@ const UserSelector = (props: UserSelectorProps) => {
             className={props.className}
             onSearch={props.onSearch}
             filterOption={true}
+            allowClear
         >
             {
                 props.users.map(user => (
