@@ -10,6 +10,7 @@ import ScrollIntoView from "react-scroll-into-view";
 import {useFocus} from "../../../hooks/useFocus";
 import TaskDetails from "../Modal/TaskDetails";
 import {Button, Input} from "antd";
+import NewTask from "../Modal/NewTask";
 
 const useStyles = makeStyles({
     taskBlock: {
@@ -93,6 +94,7 @@ const TaskList = (props) => {
     }
     const [detailsVisible, setDetailsVisible] = useState(false);
     const [currentTaskId, setCurrentTaskId] = useState("");
+    const [newTaskVisible, setNewTaskVisible] = useState(false);
     const showDetails = taskId => {
         setDetailsVisible(true);
         setCurrentTaskId(taskId);
@@ -111,7 +113,7 @@ const TaskList = (props) => {
                                 {/*</ScrollIntoView>*/}
                                 <Input style={{width: 180, minWidth: 60}} placeholder="Search tasks" prefix={<MdIcon value="mdi-magnify mdi-18px" />}/>
                                 <Button className={classes.headerBtn}>Assigned to Me</Button>
-                                <Button type="primary" className={classes.headerBtn}>
+                                <Button onClick={() => setNewTaskVisible(true)} type="primary" className={classes.headerBtn}>
                                     <MdIcon value={"mdi-plus"} onClick={moveToAdder} className={classes.addIcon}/>
                                     New Task
                                 </Button>
@@ -121,7 +123,6 @@ const TaskList = (props) => {
                             <DnDTable onAdd={onAdd} team={props.team} goal={props.goalId} project={props.project}
                                       adderId={"tasks-adder"} data={columns['tasks']}
                                       showAdder={moveToTaskAdder}
-                                      inputRef={inputRef}
                                       statusList={props.statusList}
                                       onSelect={taskId => {
                                           showDetails(taskId)
@@ -149,6 +150,7 @@ const TaskList = (props) => {
                 currentTaskId &&
                 <TaskDetails visible={detailsVisible} setModalVisible={setDetailsVisible} data={tasks[currentTaskId]}/>
             }
+            <NewTask visible={newTaskVisible} setModalVisible={setNewTaskVisible} onAdd={onAdd}  goal={props.goalId} project={props.project} team={props.team}/>
         </div>
     );
 };
