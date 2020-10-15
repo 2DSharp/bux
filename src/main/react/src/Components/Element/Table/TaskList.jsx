@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {createRef, useEffect, useState} from 'react';
 import {DragDropContext} from "react-beautiful-dnd";
 import {makeStyles} from "@material-ui/styles";
 import DnDTable from "./DnDTable";
@@ -7,7 +7,6 @@ import MdIcon from "../Icon/MDIcon";
 import variables from "../../../sass/colors.module.scss"
 import {postRequest} from "../../../service/request";
 import ScrollIntoView from "react-scroll-into-view";
-import {useFocus} from "../../../hooks/useFocus";
 import TaskDetails from "../Modal/TaskDetails";
 import {Button, Input} from "antd";
 import NewTask from "../Modal/NewTask";
@@ -16,12 +15,7 @@ const useStyles = makeStyles({
     taskBlock: {
         marginBottom: 30
     },
-    addIcon: {
-        cursor: "pointer",
-        "&:hover": {
-            color: variables['blue']
-        }
-    },
+
     panel: {
         marginBottom: "10px !important",
         borderRadius: 12,
@@ -51,7 +45,6 @@ const TaskList = (props) => {
     const [columns, setColumns] = useState(props.data.columns);
     const [tasks, setTasks] = useState(props.data.tasks);
     const [showBacklogAdder, setShowBacklogAdder] = useState(false);
-    const [moveToTaskAdder, setMoveToTaskAdder] = useState(false);
 
     const handleDrag = (result) => {
         DragHandler.dragEnd(result, columns, setColumns);
@@ -71,8 +64,7 @@ const TaskList = (props) => {
             refreshTasks(result);
         })
     }
-    const [inputRef, setInputFocus] = useFocus();
-
+    const [refreshOnAdd, setRefreshOnAdd] = useState(0);
     const refreshTasks = (refreshedTasks) => {
         setTasks(refreshedTasks.tasks)
         setColumns({
@@ -83,21 +75,28 @@ const TaskList = (props) => {
             }
         });
     }
+    const bottomRef = createRef();
 
-    const moveToAdder = () => {
-        setInputFocus();
-        setMoveToTaskAdder(true);
-    }
     const onAdd = (tasks) => {
         refreshTasks(tasks);
-        moveToAdder();
+        setRefreshOnAdd(refreshOnAdd + 1);
     }
+    useEffect(() => {
+        // Don't scroll unless it's the second refresh (happens only when added)
+        if (refreshOnAdd > 0) {
+            scroll()
+        }
+    }, [refreshOnAdd]);
+
     const [detailsVisible, setDetailsVisible] = useState(false);
     const [currentTaskId, setCurrentTaskId] = useState("");
     const [newTaskVisible, setNewTaskVisible] = useState(false);
     const showDetails = taskId => {
         setDetailsVisible(true);
         setCurrentTaskId(taskId);
+    }
+    const scroll = () => {
+        bottomRef.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
     }
     return (
         <div>
@@ -108,21 +107,24 @@ const TaskList = (props) => {
                         <nav className={`panel ${classes.panel}`}>
                             <div className={classes.panelHeader}>
                                 <span style={{flexGrow: 1, marginRight: 5}}>Tasks</span>
-                                {/*<ScrollIntoView style={{display: "inline-block"}} selector="#tasks-adder">*/}
-                                {/*    */}
-                                {/*</ScrollIntoView>*/}
-                                <Input style={{width: 180, minWidth: 60}} placeholder="Search tasks" prefix={<MdIcon value="mdi-magnify mdi-18px" />}/>
+
+                                <Input style={{width: 180, minWidth: 60}} placeholder="Search tasks"
+                                       prefix={<MdIcon value="mdi-magnify mdi-18px"/>}/>
                                 <Button className={classes.headerBtn}>Assigned to Me</Button>
-                                <Button onClick={() => setNewTaskVisible(true)} type="primary" className={classes.headerBtn}>
-                                    <MdIcon value={"mdi-plus"} onClick={moveToAdder} className={classes.addIcon}/>
-                                    New Task
-                                </Button>
+
+                                <ScrollIntoView style={{display: "inline-block"}} selector="#bottom">
+                                    <Button onClick={() => setNewTaskVisible(true)} type="primary"
+                                            className={classes.headerBtn}>
+                                        <MdIcon value={"mdi-plus"}/>
+                                        New Task
+                                    </Button>
+                                </ScrollIntoView>
 
                             </div>
                             <div className="is-divider"/>
-                            <DnDTable onAdd={onAdd} team={props.team} goal={props.goalId} project={props.project}
+                            <DnDTable bottomRef={bottomRef} onAdd={onAdd} team={props.team} goal={props.goalId}
+                                      project={props.project}
                                       adderId={"tasks-adder"} data={columns['tasks']}
-                                      showAdder={moveToTaskAdder}
                                       statusList={props.statusList}
                                       onSelect={taskId => {
                                           showDetails(taskId)
@@ -140,7 +142,7 @@ const TaskList = (props) => {
                             {/*          displayAdded={showBacklogAdder}*/}
                             {/*          tasks={columns['backlog'].taskIds.map(task => props.data.tasks[task])}/>*/}
                         </nav>
-                        <div onClick={moveToAdder} className={classes.bottomAdder}>
+                        <div className={classes.bottomAdder}>
                             <MdIcon value={"mdi-plus"}/><span>Create a new task</span>
                         </div>
                     </div>
@@ -150,7 +152,8 @@ const TaskList = (props) => {
                 currentTaskId &&
                 <TaskDetails visible={detailsVisible} setModalVisible={setDetailsVisible} data={tasks[currentTaskId]}/>
             }
-            <NewTask visible={newTaskVisible} setModalVisible={setNewTaskVisible} onAdd={onAdd}  goal={props.goalId} project={props.project} team={props.team}/>
+            <NewTask visible={newTaskVisible} setModalVisible={setNewTaskVisible} onAdd={onAdd} goal={props.goalId}
+                     project={props.project} team={props.team}/>
         </div>
     );
 };

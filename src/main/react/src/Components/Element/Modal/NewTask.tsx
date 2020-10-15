@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, Tooltip} from "antd";
+import {Modal} from "antd";
 import FormData from "../Form/FormData";
 import InputContainer from "../Form/InputContainer";
 import TextField from "../Form/TextField";
@@ -8,7 +8,6 @@ import DatePickerField from "../Form/DatePickerField";
 import moment from "moment";
 import Error from "../Form/Error";
 import PrioritySelector from "../Form/PrioritySelector";
-import ComboBox from "../Form/ComboBox";
 import ExpandingTextArea from "../Form/ExpandingTextArea";
 import {Priority as PriorityType, TaskData} from "../../../types";
 import UserSelector from "../Form/UserSelector";
@@ -59,6 +58,7 @@ const NewTask = (props: NewTaskProps) => {
     const [values, setValues] = useState<any>({
         title: '',
         priority: 'MEDIUM' as PriorityType,
+        deadline: moment()
     });
     const onSubmit = () => {
         setLoading(true);
@@ -109,6 +109,7 @@ const NewTask = (props: NewTaskProps) => {
                                 label="Title"
                                 required
                                 autoFocus
+                                autoComplete="off"
                                 placeholder="What's the task?" name="title"
                                 hasRightErrorIcon={true}
                                 value={values.title}
@@ -127,7 +128,7 @@ const NewTask = (props: NewTaskProps) => {
 
                         <InputContainer small inline>
                             <Label required>Priority:</Label>
-                            <PrioritySelector default="LOW" name="priority" style={{width: 120}}/>
+                            <PrioritySelector default={values.priority} name="priority" style={{width: 120}}/>
                             {
                                 errors.priority && <Error>{errors.priority}</Error>
                             }

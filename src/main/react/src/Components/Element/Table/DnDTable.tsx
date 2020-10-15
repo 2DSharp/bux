@@ -1,39 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Droppable} from "react-beautiful-dnd";
 import {makeStyles} from "@material-ui/styles";
-import {Priority as PriorityType, TaskData} from "../../../types";
+import {TaskData} from "../../../types";
 import variables from "../../../sass/colors.module.scss";
-import TextField from "../Form/TextField";
-import PrioritySelector from "../Form/PrioritySelector";
-import DatePickerField from "../Form/DatePickerField";
-import MdIcon from "../Icon/MDIcon";
-import UserSelector from "../Form/UserSelector";
-import FormData from "../Form/FormData";
-import classNames from "classnames";
-import validate, {isEmpty} from "../../../service/validator";
-import {Tooltip} from "antd";
-import {getRequest, postRequest} from "../../../service/request";
 import TaskRow from "./TaskRow";
-import {convertDateToLocalDate} from "../../../service/util";
-import GeneralSpin from "../Loader/GeneralSpin";
-import IconButton from "../Form/IconButton";
-import {Link} from "react-router-dom";
-import AvatarIcon from "../Icon/AvatarIcon";
-import moment from "moment";
-import Priority from "../Icon/Priority";
 
 interface DnDTableData {
     id: string,
 }
 
 interface DnDTableProps {
-    showAdder: boolean;
     data: DnDTableData
     tasks: TaskData[],
-    adderId: string,
     project: string,
     team: string,
     goal?: number,
+    bottomRef: any,
     statusList: string[],
     onSelect: (task: string) => void
 }
@@ -76,6 +58,8 @@ const useStyles = makeStyles({
         verticalAlign: "middle"
     },
     table: {
+        maxHeight: 400,
+        overflowY: "auto"
     },
     editable: {
         height: 30,
@@ -100,24 +84,25 @@ const DnDTable = (props: DnDTableProps) => {
     const classes = useStyles();
 
     return (
-            <div className={`${classes.root}`}>
-                <div className={`container is-hoverable ${classes.table}`}>
-                    <div className={classes.row}>
-                        <div className={`${classes.rowItem} ${classes.id}`}>
-                            <span className={`${classes.text}`}>ID</span>
-                        </div>
-                        <div className={`${classes.rowItem} ${classes.title}`}><span
-                            className={classes.text}>Title</span></div>
-                        <div className={`${classes.rowItem} ${classes.assignedTo}`} >
-                            <span className={`${classes.text}`}>Assignee</span>
-                        </div>
-                        <div className={`${classes.rowItem} ${classes.deadline}`}>
-                            <span className={`${classes.text}`}>Deadline</span>
-                        </div>
-                        <div className={`${classes.rowItem} ${classes.priority}`}>
-                            <span className={`${classes.text}`}>Priority</span>
-                        </div>
+        <div className={`${classes.root}`}>
+            <div className={`container is-hoverable`}>
+                <div className={classes.row}>
+                    <div className={`${classes.rowItem} ${classes.id}`}>
+                        <span className={`${classes.text}`}>ID</span>
                     </div>
+                    <div className={`${classes.rowItem} ${classes.title}`}><span
+                        className={classes.text}>Title</span></div>
+                    <div className={`${classes.rowItem} ${classes.assignedTo}`}>
+                        <span className={`${classes.text}`}>Assignee</span>
+                    </div>
+                    <div className={`${classes.rowItem} ${classes.deadline}`}>
+                        <span className={`${classes.text}`}>Deadline</span>
+                    </div>
+                    <div className={`${classes.rowItem} ${classes.priority}`}>
+                        <span className={`${classes.text}`}>Priority</span>
+                    </div>
+                </div>
+                <div className={classes.table}>
                     <Droppable droppableId={props.data.id}>
                         {provided =>
                             <div {...provided.droppableProps} ref={provided.innerRef}>
@@ -131,8 +116,10 @@ const DnDTable = (props: DnDTableProps) => {
                             </div>
                         }
                     </Droppable>
+                    <div id={"bottom"} ref={props.bottomRef}/>
                 </div>
             </div>
+        </div>
 
     );
 };
