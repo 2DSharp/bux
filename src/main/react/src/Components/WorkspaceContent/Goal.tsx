@@ -16,7 +16,6 @@ import {ellipsize} from "../../service/util";
 import PrimaryButton from "../Element/Button/PrimaryButton";
 import Button from '../Element/Button/Button';
 import variables from "../../sass/colors.module.scss"
-import {ReactComponent as Active} from "../../images/activity.svg";
 import {Tooltip} from "antd";
 
 export type GoalStatus = 'PLANNING' | 'ACTIVE' | 'COMPLETED' | 'ABANDONED';
@@ -253,7 +252,7 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
                     <div className={classes.content}>
                         <Switch>
                             <Route path={`${url}/board`}>
-                                <Board id={id} data={data}/>
+                                <Board id={id} data={data} team={props.team} project={props.project}/>
                             </Route>
                             <Route path={`${url}`}>
                                 <GoalOverview team={props.team} data={data} id={id} project={props.project}/>

@@ -2,16 +2,20 @@ import React, {useState} from 'react';
 import {makeStyles} from "@material-ui/styles";
 import Task from "./Task";
 import {Droppable} from "react-beautiful-dnd";
-import {Priority, TaskData} from "../../../types";
+import {TaskData} from "../../../types";
 import MdIcon from "../Icon/MDIcon";
-import AdderCard from "./AdderCard";
 import color from "../../../sass/colors.module.scss"
+import NewTask from "../Modal/NewTask";
 
 interface ColumnProps {
     data: string,
     index: number,
     tasks: TaskData[],
-    setCurrentTaskId: (id: string) => void
+    setCurrentTaskId: (id: string) => void,
+    goalId: string,
+    project: string,
+    team: string,
+    onAdd: any
 }
 
 const useStyles = makeStyles({
@@ -47,11 +51,7 @@ const useStyles = makeStyles({
     taskAdderBtn: {
         float: "right",
         cursor: "pointer",
-        transition: "transform 80ms ease-in",
         textAlign: "center",
-        "&:hover": {
-            transform: "scale(1.2)"
-        }
     },
     taskAdder: {
         margin: 5,
@@ -71,10 +71,8 @@ const useStyles = makeStyles({
 })
 const Column = (props: ColumnProps) => {
     const classes = useStyles();
-    const [activateAdder, setActivateAdder] = useState(false);
-    const addNewTask = (data: { title: string, priority: Priority, deadline: string }) => {
+    const [newTaskVisible, setNewTaskVisible] = useState(false);
 
-    }
     return (
         <div className={classes.root}>
 
@@ -83,20 +81,13 @@ const Column = (props: ColumnProps) => {
 
             </div>
             {props.index == 0 &&
-            <div className={classes.taskAdder}>
-                <span>Add new task
-                <MdIcon onClick={() => setActivateAdder(!activateAdder)}
-                        className={`${classes.inlineItem} ${classes.taskAdderBtn}`}
-                        value={activateAdder ? "mdi-minus mdi-24px" : "mdi-plus mdi-24px"}/>
-                         </span>
+            <div onClick={() => setNewTaskVisible(true)} className={classes.taskAdder}>
+                <span>Add new task <MdIcon className={classes.taskAdderBtn} value={"mdi-plus mdi-24px"}/></span>
             </div>
             }
             <Droppable droppableId={props.data}>
                 {provided =>
                     <div {...provided.droppableProps} ref={provided.innerRef} className={classes.body}>
-                        {
-                            activateAdder && <AdderCard onSubmit={addNewTask}/>
-                        }
                         {
                             props.tasks.map((task, index) => task &&
                                 <Task onClick={() => {
@@ -107,6 +98,9 @@ const Column = (props: ColumnProps) => {
                     </div>
                 }
             </Droppable>
+            <NewTask visible={newTaskVisible} setModalVisible={setNewTaskVisible} onAdd={props.onAdd}
+                     goal={props.goalId}
+                     project={props.project} team={props.team}/>
         </div>
     );
 };

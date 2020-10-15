@@ -91,6 +91,10 @@ const Board = (props) => {
                                 setDetailsVisible(true)
                             }} key={columnId} index={index}
                                            data={columnId}
+                                           onAdd={refreshTasks}
+                                           goalId={props.id}
+                                           project={props.project}
+                                           team={props.team}
                                            tasks={column.taskIds.map(taskId => tasks[taskId])}/>
                         }
                     })
