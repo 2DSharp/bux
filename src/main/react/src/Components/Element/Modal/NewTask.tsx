@@ -58,7 +58,7 @@ const NewTask = (props: NewTaskProps) => {
     const [values, setValues] = useState<any>({
         title: '',
         priority: 'MEDIUM' as PriorityType,
-        deadline: moment()
+        deadline: moment().format("MM-DD-YYYY")
     });
     const onSubmit = () => {
         setLoading(true);
@@ -117,9 +117,9 @@ const NewTask = (props: NewTaskProps) => {
                         </InputContainer>
                         <InputContainer small inline>
                             <Label>Deadline:</Label>
-                            <DatePickerField format="MM/DD/YYYY"
+                            <DatePickerField format="MM-DD-YYYY"
                                              default={moment()}
-                                             disablePast placeholder="MM/DD/YYYY"
+                                             disablePast placeholder="MM-DD-YYYY"
                                              style={{width: 140}} name="deadline"/>
                             {
                                 errors.deadline && <Error>{errors.deadline}</Error>
