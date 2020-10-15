@@ -168,7 +168,14 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
                 })
             }));
     }, [lastUpdate]);
-
+    function buildRelativeDeadlineCounter(deadline : string) : string {
+        let suffix = " days remaining";
+        const diff = moment(deadline).diff(moment(), 'days');
+        if (diff < 0) {
+            suffix = " days ago"
+        }
+        return Math.abs(diff) + suffix;
+    }
     return (
         <div className={classes.root}>
             {data ?
@@ -199,7 +206,8 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
                                         title={"Ends on: " + moment(data.deadline).format("MMM DD, YYYY")}>
                                        <span><MdIcon
                                            value="mdi-timer-outline"/>
-                                           {moment(data.deadline).diff(moment(), 'days')} days remaining</span>
+                                           {buildRelativeDeadlineCounter(data.deadline)}
+                                           </span>
                                     </Tooltip>
                                     }
                                 </span>
