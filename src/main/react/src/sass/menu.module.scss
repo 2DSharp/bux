@@ -45,4 +45,5 @@
 .fixedColumn {
   position: fixed;
   height: 100vh;
+  z-index: map_get($zindex, menu);
 }

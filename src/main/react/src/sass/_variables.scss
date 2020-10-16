@@ -14,3 +14,9 @@ $menu-item-color: rgb(209, 214, 237);
 $family-sans-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
 'Noto Color Emoji';
+
+$zindex: (
+        modal : 10000,
+        header : 9000,
+        menu : 8000,
+);
