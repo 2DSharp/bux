@@ -13,6 +13,7 @@ const ExpandingTextArea = (props) => {
     return (
         <TextareaAutosize {...props} id={props.name} maxRows={props.maxRows} placeholder={props.placeholder}
                           className={`textarea has-fixed-size ${classes.root}`}
+                          value={props.value}
                           onChange={(event) => props.onChange(event.target.value)}
         >
             {props.children}

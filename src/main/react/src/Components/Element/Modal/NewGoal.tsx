@@ -12,7 +12,6 @@ import PrioritySelector from "../Form/PrioritySelector";
 import DatePickerField from "../Form/DatePickerField";
 import validate from "../../../service/validator";
 import Error from "../Form/Error";
-import {Redirect} from 'react-router-dom';
 import {convertDateToLocalDate} from "../../../service/util";
 import MotionRedirect from "../Routing/MotionRedirect";
 
@@ -132,6 +131,7 @@ const NewGoal = (props: NewGoal) => {
                                 required
                                 placeholder="A short name for the goal" name="title"
                                 hasRightErrorIcon={true}
+                                autoComplete="off"
                             />
                         </InputContainer>
                         <InputContainer small inline>
@@ -165,7 +165,7 @@ const NewGoal = (props: NewGoal) => {
                         </InputContainer>
                         <InputContainer small>
                             <Label>Description:</Label>
-                            <ExpandingTextArea style={{fontSize: 14}} maxRows={5}
+                            <ExpandingTextArea value={values.description} style={{fontSize: 14}} maxRows={5}
                                                placeholder="What is this goal about?"
                                                name="description"
                             />

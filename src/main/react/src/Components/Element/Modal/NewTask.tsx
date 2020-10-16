@@ -73,7 +73,7 @@ const NewTask = (props: NewTaskProps) => {
                 },
                 (result: TaskData) => {
                     props.onAdd(result);
-                    setValues({...values, title: ""});
+                    setValues({...values, title: "", description: ""});
                     props.setModalVisible(false);
                 }, () => {
                     setLoading(false)
@@ -142,7 +142,7 @@ const NewTask = (props: NewTaskProps) => {
 
                         <InputContainer small>
                             <Label>Description:</Label>
-                            <ExpandingTextArea style={{fontSize: 14}} maxRows={5}
+                            <ExpandingTextArea value={values.description} style={{fontSize: 14}} maxRows={5}
                                                placeholder="Details about the task"
                                                name="description"
                             />
