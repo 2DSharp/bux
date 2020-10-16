@@ -50,7 +50,14 @@ const useStyles = makeStyles({
         display: "inline-flex",
         verticalAlign: "middle"
     },
-
+    body: {
+        display: "flex",
+        flexDirection: "column",
+        overflowY: "auto"
+    },
+    contextMenu: {
+        flexGrow: 1
+    }
 });
 const ActiveProject = () => {
 
@@ -125,9 +132,9 @@ const ProjectMenu = () => {
     };
     return (
         <div className={`${styles.fixedColumn}`}>
-            <aside style={{position: "relative"}} className={`menu  ${styles.menu}`}>
+            <aside className={`menu ${dynamicStyles.body} ${styles.menu}`}>
 
-                <ul className={`menu-list ${dynamicStyles.menuUl}`}>
+                <ul className={`menu-list ${dynamicStyles.contextMenu} ${dynamicStyles.menuUl}`}>
                     <div className={dynamicStyles.projectSwitcher}>
                         <div className={`${dynamicStyles.iconContainer}`}>
                             <ProjectDefaultIcon style={{width: 32, height: 32}}/>
@@ -142,7 +149,7 @@ const ProjectMenu = () => {
                     </div>
                     {menu.map(generateMenu)}
                 </ul>
-                <ul style={{position: "absolute",marginBottom: 20, bottom: 20}} className={`menu-list ${dynamicStyles.menuUl}`}>
+                <ul style={{marginBottom: 60}} className={`menu-list ${dynamicStyles.menuUl}`}>
                     {actionMenu.map(generateMenu)}
                 </ul>
 
