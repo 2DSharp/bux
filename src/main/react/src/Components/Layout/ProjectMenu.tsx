@@ -49,7 +49,7 @@ const useStyles = makeStyles({
     actionIcon: {
         display: "inline-flex",
         verticalAlign: "middle"
-    }
+    },
 
 });
 const ActiveProject = () => {
@@ -124,7 +124,7 @@ const ProjectMenu = () => {
         );
     };
     return (
-        <div className={`column sticky is-2 is-fullheight ${styles.fixedColumn}`}>
+        <div className={`${styles.fixedColumn}`}>
             <aside style={{position: "relative"}} className={`menu  ${styles.menu}`}>
 
                 <ul className={`menu-list ${dynamicStyles.menuUl}`}>

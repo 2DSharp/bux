@@ -7,9 +7,9 @@ interface ContentWithMenuProps {
 
 const ContentWithMenu = (props: ContentWithMenuProps) => {
     return (
-        <div className="columns">
+        <div style={{display: "flex"}}>
             {props.menu}
-            <div style={{backgroundColor: "#f5f7f9", minHeight: "100vh"}} className="column content-with-menu">
+            <div style={{backgroundColor: "#f5f7f9", minHeight: "100vh"}} className="content-with-menu">
                 {props.children}
             </div>
         </div>
