@@ -28,6 +28,7 @@ const useStyles = makeStyles({
     },
     title: {
         flexGrow: 1,
+        minWidth: 298
     },
     assignedTo: {
         textAlign: "center",
