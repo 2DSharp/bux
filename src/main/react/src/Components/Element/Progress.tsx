@@ -7,7 +7,8 @@ interface ProgressProps {
     progress: number,
     pressure?: Pressure,
     className?: string
-    style?: CSSProperties
+    style?: CSSProperties,
+    showText?: boolean
 }
 
 const Progress = (props: ProgressProps) => {
@@ -25,7 +26,9 @@ const Progress = (props: ProgressProps) => {
                 style={props.style}
                 max="100">{props.progress}%
             </progress>
+            {props.showText &&
             <> {props.progress}%</>
+            }
         </>
     );
 };

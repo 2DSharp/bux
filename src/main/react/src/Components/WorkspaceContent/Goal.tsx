@@ -195,7 +195,7 @@ const Goal = (props: { team: string, project: string, onLoadUpdateName(name: str
                                         type={data.priority as PriorityType}/>
                                 </span>
                                 <span>
-                                    <Progress className={`${classes.progress}`} progress={data.progress}
+                                    <Progress showText className={`${classes.progress}`} progress={data.progress}
                                               pressure={data.pressure as Pressure}/>
                                 </span>
                                 <span className={`${classes.deadline} ${classes.metaElem}`}>
