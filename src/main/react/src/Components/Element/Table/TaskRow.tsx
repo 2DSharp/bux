@@ -40,7 +40,7 @@ const useStyles = makeStyles({
         display: "flex",
         padding: 7,
         fontSize: 14,
-        borderBottom: `1px solid ${variables.borderColor}`,
+        //borderBottom: `1px solid ${variables.borderColor}`,
         "&:hover, &:focus": {
             backgroundColor: "rgba(148,190,255, 0.2)",
         }
@@ -64,7 +64,7 @@ const useStyles = makeStyles({
         textDecoration: "line-through"
     },
     completed: {
-        backgroundColor: "rgba(255,255,0,0.05)"
+        //backgroundColor: "rgba(255,255,0,0.05)"
     },
     text: {
         verticalAlign: "middle"
@@ -85,7 +85,8 @@ const TaskRow = (props: { data: TaskData, index: number, isCompleted: boolean, o
                 <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}
                      className={`${classes.row} ${rowClass}`} onClick={props.onClick}>
                     <div className={`${classes.rowItem} ${classes.id}`}>
-                        <span className={`${classes.text} ${taskIdClass}`}>{props.data.id}</span>
+                        <span style={{fontWeight: 500}}
+                              className={`${classes.text} ${taskIdClass}`}>{props.data.id}</span>
                     </div>
                     <div className={`${classes.rowItem} ${classes.title}`}><span className={classes.text}>{props.data.title}</span></div>
                     <div className={`${classes.rowItem} ${classes.assignedTo}`}>
