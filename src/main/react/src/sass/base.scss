@@ -85,11 +85,14 @@ div {
   }
 }
 .primary-btn {
+  box-shadow: 0 3px 5px rgba($primaryShadow, 0.2) !important;
+
   &:hover,
   &:active {
     background-color: scale-color($primary, $lightness: -20%) !important;
     color: #fff !important;
   }
+
   &:focus {
     outline-style: solid;
     outline-color: transparent;
