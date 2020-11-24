@@ -1,5 +1,5 @@
 import React, {ReactNode, useRef, useState} from 'react';
-import {Modal} from "antd";
+import {Button as AntButton, Modal} from "antd";
 import {TaskData} from "../../../types";
 import {makeStyles} from "@material-ui/styles";
 import PrioritySelector from "../Form/PrioritySelector";
@@ -11,7 +11,10 @@ import Editor from "rich-markdown-editor";
 import base from "rich-markdown-editor/dist/theme";
 import {Constants} from "../../../constants";
 import PrimaryButton from "../Button/PrimaryButton";
+import MdIcon from "../Icon/MDIcon";
+import AnimatedSubscribe from "../Icon/AnimatedIcon/AnimatedSubscribe";
 import Button from "../Button/Button";
+import {LinkOutlined} from '@ant-design/icons';
 
 interface TaskDetailsProps {
     visible: boolean
@@ -51,6 +54,10 @@ const useStyles = makeStyles({
     fieldCol: {
         //padding: 5
     },
+    taskActions: {
+        display: "flex",
+        margin: "5px 0",
+    },
     description: {
         margin: "5px 0",
         paddingTop: 10,
@@ -73,11 +80,17 @@ const useStyles = makeStyles({
         padding: "10px 15px"
     },
     detailFields: {
-        marginTop: 10,
-        marginBottom: 10
+        marginTop: 5,
+        marginBottom: 5,
+        display: "flex"
     },
     editor: {
         margin: "10px 0",
+    },
+    commentEditor: {
+        border: `1px solid ${variables.borderColor}`,
+        margin: "5px 0",
+        padding: 5
     },
     descriptionField: {
         margin: "5px 0 5px 0",
@@ -96,6 +109,24 @@ const useStyles = makeStyles({
             borderRadius: 4,
             margin: "0 5px"
         }
+    },
+    commentActions: {
+        "& > button": {
+            fontSize: 12,
+            borderRadius: 4,
+            margin: 3,
+            padding: 5
+        }
+    },
+    taskActionIcon: {
+        margin: "0 7px",
+        cursor: "pointer",
+        "&:hover": {
+            color: variables.primary
+        }
+    },
+    commentArea: {
+        margin: "10px 0"
     }
 })
 const Field = (props: { name: string, value: string | ReactNode, edit?: ReactNode, editable?: boolean }) => {
@@ -119,7 +150,8 @@ const Field = (props: { name: string, value: string | ReactNode, edit?: ReactNod
             {props.name}
         </div>
         {editing ? <FormData onChange={onChange} onSubmit={onSubmit}>
-                <TextField autoFocus onFocus={handleFocus} forwardRef={ref} onBlur={() => setEditing(false)}
+                <TextField style={{width: 140}} autoFocus onFocus={handleFocus} forwardRef={ref}
+                           onBlur={() => setEditing(false)}
                            defaultValue={props.value}/>
             </FormData>
             : <div onClick={() => props.editable && setEditing(true)}
@@ -153,7 +185,11 @@ const TaskDetails = (props: TaskDetailsProps) => {
             afterClose={() => setDescriptionEditorOn(false)}
         >
             <div className={styles.body}>
-                <h2 style={{fontWeight: 500, fontFamily: "Poppins, Arial, serif"}}>{data.title}</h2>
+                <h2 style={{
+                    fontWeight: 500,
+                    color: "rgba(0, 0, 0, 0.65)",
+                    fontFamily: "Poppins, Arial, serif"
+                }}>{data.title}</h2>
                 <div className={styles.description}>
                     <b>Description</b>
                     <div className={styles.descriptionField}>
@@ -164,7 +200,7 @@ const TaskDetails = (props: TaskDetailsProps) => {
                                     key={data.id}
                                     theme={{...base, zIndex: Constants.zIndex.modal + 100}}
                                     defaultValue={data.description}
-                                    onChange={(value) => console.log(value)}
+                                    onChange={(value) => console.log(value().trim())}
                                     placeholder={"Add a description..."}
                                     className={styles.editor}
                                 />
@@ -177,14 +213,43 @@ const TaskDetails = (props: TaskDetailsProps) => {
                     </div>
                     {descriptionEditorOn &&
                     <div className={styles.descriptionActions}>
-                        <Button className={`${styles.descriptionActions} is-light`}>Cancel</Button>
+                        <Button onClick={() => setDescriptionEditorOn(false)}
+                                className={`${styles.descriptionActions} is-light`}>Cancel</Button>
                         <PrimaryButton className={styles.descriptionActions}>Save</PrimaryButton>
                     </div>
                     }
 
                 </div>
-                <div>
-                    <div className={styles.detailFields}>
+                <div className={styles.detailFields}>
+                    <div style={{flexGrow: 1, marginRight: 10}}>
+                        <div className={styles.taskActions}>
+                            <div style={{padding: "5px 0"}}>
+                                <MdIcon value={"mdi-thumb-up-outline mdi-24px"} className={styles.taskActionIcon}/>
+                                <AnimatedSubscribe className={`mdi-24px ${styles.taskActionIcon}`}/>
+                                <MdIcon value={"mdi-share-variant mdi-24px"} className={styles.taskActionIcon}/>
+                            </div>
+                            <div style={{textAlign: "right", flexGrow: 1}}>
+                                <AntButton icon={<LinkOutlined/>}><span>Link work</span></AntButton>
+                            </div>
+                        </div>
+                        <div className={styles.commentArea}>
+                            <b>Comments</b>
+                            <Editor
+                                key={data.id}
+                                theme={{...base, zIndex: Constants.zIndex.modal + 100}}
+                                defaultValue={data.description}
+                                onChange={(value) => console.log(value().trim())}
+                                placeholder={"Add a description..."}
+                                className={styles.commentEditor}
+                            />
+                            <div className={styles.commentActions}>
+                                <PrimaryButton className={styles.commentActions}>Comment</PrimaryButton>
+                                <Button style={{marginLeft: 5}}
+                                        className={`${styles.commentActions} is-light`}>Cancel</Button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{marginLeft: 10}}>
                         <Field editable name={"Created By"} value={<UserCardMin user={data.createdBy}/>}/>
                         {data.assignee &&
                         <Field editable name={"Assignee"} value={<UserCardMin user={data.assignee}/>}/>}
@@ -192,6 +257,7 @@ const TaskDetails = (props: TaskDetailsProps) => {
                                value={<PrioritySelector style={{padding: 5, flexGrow: 1,}} default={data.priority}/>}/>
                         <Field editable name={"Deadline"} value={data.deadline}/>
                     </div>
+
                 </div>
             </div>
         </Modal>
